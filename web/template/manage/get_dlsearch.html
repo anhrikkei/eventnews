@@ -1,0 +1,54 @@
+{% if dl %}
+<table id="tb" class="table table-striped table-border table-hover">
+    <thead>
+        <th>Mã bài viết</th>
+        <th>Tiêu đề</th>
+        <th>Nội dung</th>
+        <th>Ngày tạo</th>
+        <th>Tác giả</th>
+        <th>Lượt xem</th>
+        <th>Trạng thái</th>
+        <th>Tin hot</th>
+        <th>Danh mục</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody>
+        {% for baiviet in dl %}
+            <tr style="color: #00a98f">
+                <td>{{baiviet.ma_bai}}</td>
+                <td style="color: #00a98f">{{baiviet.tieu_de}}</td>
+                <td><small class="tieude-tin">{{baiviet.noi_dung|safe}}</small></td>
+                <td>{{baiviet.ngay_tao|safe}}</td>
+                <td>{{baiviet.tac_gia_id}}</td>
+                <td>{{baiviet.luot_xem}}</td>
+                <td>{{baiviet.trang_thai}}</td>
+                <td>{{baiviet.tin_hot}}</td>
+                <td>{{baiviet.danh_muc_id}}</td>
+                <td><a href="../baiviet_sua/{{baiviet.ma_bai}}">
+                    <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
+                </td>
+                <td>
+                    <button class="btn-link">
+                        <i style="color: #00a98f" onclick="myConfirm()" class="glyphicon glyphicon-trash"></i>
+                    </button>
+                    <script>
+                        function myConfirm(){
+                            if(confirm('Bạn có muốn xóa bài viết?')==true){
+                                window.location='../baiviet_xoa/{{baiviet.ma_bai}}';
+                                }
+                            else{
+                                return false;
+                            }
+                        }
+                    </script>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif dl == null %}
+    khong co dl...
+{% elif dl == "" %}
+    khong co dl...
+{% endif %}

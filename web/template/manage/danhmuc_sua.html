@@ -1,0 +1,87 @@
+{% extends "manage/baseadmin.html" %}
+{% block nd %}
+
+{% load static %}
+<script src="{% static 'bootstrap/js/validator.min.js' %}"></script>
+    <div class="container" style="min-height: 500px">
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#" style="color: #00a98f"><i class="fa fa-dashboard"></i> mange</a></li>
+                <li class="active">Cập nhật danh mục</li>
+            </ol>
+        </section>
+        <section class="content">
+            <!--form sửa danh mục-->
+            <form role="form" action="" method="post" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+                <hr>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label>Mã danh mục:</label>
+                            <input type="text" name="txtma" value="{{dm.ma_danhmuc}}" readonly="readonly" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày tạo:</label>
+                            <input type="text" name="txtngaytao" name="txtngaytao" value="{{ dm.ngay_tao|safe }}"
+                                   class="form-control" readonly="readonly"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày cập nhật:</label>
+                            <input type="text" name="txtngaysua" name="txtngaysua" value="{{ ngay_hientai|safe }}"
+                                   class="form-control" readonly="readonly"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Người tạo:</label>
+                            <input type="text" name="txtnguoitao" class="form-control"
+                                   value="{{nguoitao}}" readonly="readonly"/>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Tên danh mục:</label>
+                            <input type="text" name="txtten" value="{{dm.ten_danhmuc}}" id="txtten" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả:</label>
+                            <input type="text" name="txtmota" value="{{dm.mo_ta}}" id="txtmota" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Đưa lên menu:</label>
+                            {% if dm.is_menu == 'no' %}
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="rbn" value="yes">yes
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                    </label>
+                                </div>
+                            {% elif dm.is_menu == 'yes' %}
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="rbn" value="yes" checked="checked">yes
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="rbn" value="no">no
+                                    </label>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <br/>
+                            <input type="submit" style="background-color: #00a98f" class="btn-sm btn-success btn-block" name="btnsua" value="Cập nhật danh mục">
+                        </div>
+                    </div>
+
+                    {% if form.errors %}
+                        Co loi xay ra. {{ form.errors }}
+                    {% endif %}
+                </div>
+
+            </form>
+            <!--//form sửa dah mục-->
+        </section>
+    </div>
+{% endblock %}

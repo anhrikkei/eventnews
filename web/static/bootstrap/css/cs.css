@@ -1,0 +1,16 @@
+
+.phongto:hover{
+    -webkit-transform:scale(1.1); /*Webkit: Scale up image to 1.2x original size*/
+    -moz-transform:scale(1.1); /*Mozilla scale version*/
+    -o-transform:scale(1.1);
+}
+.dobong:hover{
+    box-shadow: 10px 10px 10px #888888;
+
+}
+.lammo{
+    opacity: 0.3
+}
+.lammo:hover{
+    opacity:1
+}

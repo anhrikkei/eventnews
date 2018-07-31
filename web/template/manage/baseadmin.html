@@ -1,0 +1,286 @@
+<head>
+	<!-- custom-giao diện -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="Treasurer Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+		Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+	<script type="application/x-javascript">
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- //custom-giao diện -->
+	<!--load thư mục tĩnh để sử dụng cho các dường dẫn-->
+    {% load static %}
+	<!--//load thư mục tĩnh để sử dụng cho các dường dẫn-->
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+	<!--<link href="{% static 'css/slicebox.css' %}" rel="stylesheet" type="text/css">-->
+	<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+
+	<!-- font-awesome-icons -->
+	<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+	<!-- //font-awesome-icons -->
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic'
+	    rel='stylesheet' type='text/css'>
+	<link href="//fonts.googleapis.com/css?family=Raleway:100i,200,200i,300,400,500,500i,600,700,700i,800,800i" rel="stylesheet">
+
+</head>
+<body>
+
+
+{% if user.loai_user_id == 2 %}
+<!--phần hiển thị khi đăng nhập với tài khoản user-->
+	<div class="agileits_w3layouts_banner_nav">
+		<nav class="navbar navbar-default">
+			<!--logo, tên web-->
+			<div class="navbar-header navbar-left">
+				<h1><a class="navbar-brand" href="{%url 'trangchu' %}"><i class="fa fa-list-alt" aria-hidden="true"></i> Event news</a></h1>
+			</div>
+			<!--//logo, tên web-->
+			<!--menu profile + đăng xuất-->
+			<div class="collapse navbar-collapse navbar-right">
+				<nav>
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">
+								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.anh_dai_dien}}" alt="">
+								<b class="fa fa-caret-down"></b>
+							</a>
+							<ul class="dropdown-menu agile_short_dropdown">
+								<li><a href="{%url 'canhan'%}">Cài dặt cá nhân</a></li>
+								<li>
+									<a href="#">
+										<form action="/dangxuat/" method="POST">{% csrf_token %}
+											<div class="tp">
+												<input type="submit" class="btn" style="background-color:white" name="btndangxuat" value="Đăng xuất">
+											</div>
+										</form>
+									</a>
+
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<!-- //menu profile + đăng xuất-->
+			<!--menu quản lý-->
+			<div class="collapse navbar-collapse navbar-right">
+				<nav>
+					<ul class="nav navbar-nav">
+
+						<li class="active"><a href="{%url 'admin' %}" class="hvr-underline-from-center"><i class="fa fa-tachometer"></i></a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">Quản lí <b class="fa fa-caret-down"></b></a>
+
+							<ul class="dropdown-menu agile_short_dropdown">
+								<li><a href="../baiviet_ds/?page=1">Bài viết</a></li>
+							</ul>
+
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+			<!-- //menu quản lý-->
+		</nav>
+		<div class="clearfix"> </div>
+	</div>
+<!--//phần hiển thị khi đăng nhập với tài khoản user-->
+
+{% elif user.loai_user_id == 1 %}
+<!--phần hiển thị khi đăng nhập với tài khoản admin-->
+	<div class="agileits_w3layouts_banner_nav">
+		<nav class="navbar navbar-default">
+			<!--logo, tên web-->
+			<div class="navbar-header navbar-left">
+				<h1><a class="navbar-brand" href="{%url 'trangchu' %}"><i class="fa fa-list-alt" aria-hidden="true"></i> Event news</a></h1>
+			</div>
+			<!--//logo, tên web-->
+			<!--menu profile + đăng xuất-->
+			<div class="collapse navbar-collapse navbar-right">
+				<nav>
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">
+								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.anh_dai_dien}}" alt="">
+								<b class="fa fa-caret-down"></b>
+							</a>
+							<ul class="dropdown-menu agile_short_dropdown">
+								<li><a href="{%url 'canhan'%}">Cài dặt cá nhân</a></li>
+								<li>
+									<a href="#">
+										<form action="/dangxuat/" method="POST">{% csrf_token %}
+											<div class="tp">
+												<input type="submit" class="btn" style="background-color:white" name="btndangxuat" value="Đăng xuất">
+											</div>
+										</form>
+									</a>
+
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<!--//menu profile + đăng xuất-->
+			<!--menu quản lý-->
+			<div class="collapse navbar-collapse navbar-right">
+				<nav>
+					<ul class="nav navbar-nav">
+
+						<li class="active"><a href="{%url 'admin' %}" class="hvr-underline-from-center"><i class="fa fa-tachometer"></i></a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">Quản lí <b class="fa fa-caret-down"></b></a>
+
+							<ul class="dropdown-menu agile_short_dropdown">
+								<li><a href="../danhmuc_ds/?page=1">Danh mục</a></li>
+								<li><a href="../baiviet_ds/?page=1">Bài viết</a></li>
+								<li><a href="../nguoidung_ds/?page=1">Người dùng</a></li>
+							</ul>
+
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+			<!--//menu quản lý-->
+		</nav>
+		<div class="clearfix"></div>
+	</div>
+<!--//phần hiển thị khi đăng nhập với tài khoản admin-->
+{% else %}
+<!--phần hiển thị khi chưa đăng nhập-->
+	<div class="agileits_w3layouts_banner_nav">
+		<nav class="navbar navbar-default">
+			<div class="navbar-header navbar-left">
+				<h1><a class="navbar-brand" href="{%url 'trangchu' %}"><i class="fa fa-list-alt" aria-hidden="true"></i> Event news</a></h1>
+			</div>
+			<ul class="agile_forms">
+				<li><a class="active" href="../dangnhap"> đăng nhập</a> </li>
+			</ul>
+		</nav>
+	</div>
+	<div class="container">
+		<h4>Để tham gia hệ thống quản lí bạn phải đăng nhập, nếu không hãy trở về trang chủ của <a href="{%url 'trangchu' %}">Newspaper</a></h4>
+		<hr>
+        <br>
+        <br>
+		<div>
+			<div class="col-md-12 agileits_banner_bottom_right">
+                <center>
+                    <img src="{% static 'images/newspaper.jpg' %}" style="width: 60%;"/>
+                </center>
+			</div>
+		</div>
+	</div>
+<!--//phần hiển thị khi đăng nhập với tài khoản user-->
+{% endif %}
+<hr>
+{% block nd %}{%endblock%}
+<div class="footer">
+		<div class="container">
+			<div class="agileinfo_copyright">
+				<p>Hỗ trợ Newspaper</p>
+				<p>Facebook page: <a href="https://www.facebook.com/newpaper/">facebook.com/newspaper</a></p>
+				<p><span>hotline:</span> <a>0968 747 838</a></p>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- js -->
+	<script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/modernizr.custom.46884.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.flexisel.js' %}"></script>
+	<!-- flexisel -->
+	<script type="text/javascript">
+		$(window).load(function () {
+			$("#flexiselDemo1").flexisel({
+				visibleItems: 4,
+				animationSpeed: 1000,
+				autoPlay: true,
+				autoPlaySpeed: 3000,
+				pauseOnHover: true,
+				enableResponsiveBreakpoints: true,
+				responsiveBreakpoints: {
+					portrait: {
+						changePoint: 480,
+						visibleItems: 1
+					},
+					landscape: {
+						changePoint: 640,
+						visibleItems: 2
+					},
+					tablet: {
+						changePoint: 768,
+						visibleItems: 2
+					}
+				}
+			});
+
+		});
+	</script>
+	<!-- //flexisel -->
+	<!-- //flexisel -->
+	<!-- js for portfolio lightbox -->
+	<script src="{% static 'js/jquery.chocolat.js' %}"></script>
+	<!-- //menu -->
+	<!-- for bootstrap working -->
+	<script src="{% static 'js/bootstrap.js' %}"></script>
+	<!-- //for bootstrap working -->
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" src="{% static 'js/move-top.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/easing.js' %}"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function ($) {
+			$(".scroll").click(function (event) {
+				event.preventDefault();
+				$('html,body').animate({
+					scrollTop: $(this.hash).offset().top
+				}, 1000);
+			});
+		});
+	</script>
+	<!-- start-smoth-scrolling -->
+	<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			/*
+				var defaults = {
+				containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear'
+				};
+			*/
+
+			$().UItoTop({
+				easingType: 'easeOutQuart'
+			});
+
+		});
+	</script>
+<!--cung cấp để sử dụng cho thao tác facebook-->
+<div id="fb-root"></div>
+  <script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+  <style>#cfacebook{position:fixed;bottom:0px;right:100px;z-index:999999999999999;width:250px;height:auto;box-shadow:6px 6px 6px 10px rgba(0,0,0,0.2);border-top-left-radius:5px;border-top-right-radius:5px;overflow:hidden;}#cfacebook .fchat{float:left;width:100%;height:270px;overflow:hidden;display:none;background-color:#fff;}#cfacebook .fchat .fb-page{margin-top:-130px;float:left;}#cfacebook a.chat_fb{float:left;padding:0 25px;width:250px;color:#fff;text-decoration:none;height:40px;line-height:40px;text-shadow:0 1px 0 rgba(0,0,0,0.1);background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAqCAMAAABFoMFOAAAAWlBMV…8/UxBxQDQuFwlpqgBZBq6+P+unVY1GnDgwqbD2zGz5e1lBdwvGGPE6OgAAAABJRU5ErkJggg==);background-repeat:repeat-x;background-size:auto;background-position:0 0;background-color:#3a5795;border:0;border-bottom:1px solid #133783;z-index:9999999;margin-right:12px;font-size:18px;}#cfacebook a.chat_fb:hover{color:yellow;text-decoration:none;}</style>
+  <script>
+  jQuery(document).ready(function () {
+  jQuery(".chat_fb").click(function() {
+jQuery('.fchat').toggle('slow');
+  });
+  });
+  </script>
+  <!--//cung cấp để sử dụng cho thao tác facebook-->
+</body>

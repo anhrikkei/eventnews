@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block nd %}
+{% load static %}
+
+<section class="container-fluid">
+    <div class="col-md-12" style="min-height: 550">
+        <div class="col-md-7">
+            <br/>
+            <!-- <hr></hr> -->
+            <center style="border-top-right-radius: 20%; border-top: 5px solid gray">
+            <div class="signin-form profile" style="margin-top:10%;">
+                <h3 class="agileinfo_sign">Đăng kí tài khoản NEWS PAPER</h3>
+                <div class="login-form">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" name="txttendangnhap" id="tendangnhap" placeholder="Tên đăng nhập" required=""/>
+                        <input type="password" name="txtmatkhau1" id="matkhau1" placeholder="Mật khẩu" required=""/>
+                        <input type="password" name="txtmatkhau2" id="matkhau2" placeholder="Nhập lại mật khẩu" required=""/>
+                        <input type="text" name="txthoten" id="hoten" placeholder="Họ và tên" required=""/>
+                        <input type="email" name="txtmail" id="mail" placeholder="Địa chỉ mail" required=""/>
+                        <input type="submit" name="btndangki" id="btndangki" value="Đăng kí"/>
+                        <br/>
+                    </form>
+                    {% if thongbao != "" %}
+                        <label style="color: rgb(3, 139, 139)">{{thongbao}}</label>
+                    {% endif %}
+                </div>
+            </div>
+
+            </center>
+        </div>
+        <div class="col-md-5" style="border-bottom-left-radius: 30%; border-bottom:5px solid gray">
+            <hr>
+            <center style="margin-bottom: 15%">
+                <br/>
+                <img src="{% static 'images/newspaper.jpg' %}" width="80%" height="auto"/>
+                <br/>
+            </center>
+        </div>
+
+
+    </div>
+</section>
+<script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
+<!--validate form đăng kí-->
+<script type="text/javascript">
+        jQuery( document ).ready(
+            jQuery("#btndangki").click(function(){
+                var user = $("#tendangnhap").val();
+                var pass = $("#matkhau1").val();
+                var pass2 = $("#matkhau2").val();
+                var hoten = $("#hoten").val();
+                var mail = $("#mail").val();
+
+                document.getElementById("tendangnhap").setCustomValidity("");
+                document.getElementById("matkhau1").setCustomValidity("");
+                document.getElementById("matkhau2").setCustomValidity("");
+                document.getElementById("hoten").setCustomValidity("");
+                document.getElementById("mail").setCustomValidity("");
+
+            <!--tên đăng nhập-->
+                if(user.length < 1)
+                    document.getElementById("tendangnhap").setCustomValidity("Vui lòng nhập tên đăng nhập");
+
+                if(user.length>0){
+                    if(user.charAt(0)== " "){
+                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if (!isNaN(user.charAt(0)))
+                        {
+                            document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng số");
+                        }
+                        else{
+                            if(user.length<3 || user.length>15){
+                                document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập từ 3 đến 15 kí tự");
+                            }
+                            else{
+                                for (i = 0; i < user.length; i++) {
+                                    if(user[i] == " ")
+                                    document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không chứa dấu cách");
+                                }
+                            }
+
+                        }
+                    }
+                }
+            <!--//tên đăng nhập-->
+            <!--mật khẩu-->
+                if(pass.length < 1)
+                    document.getElementById("matkhau1").setCustomValidity("Vui lòng nhập mật khẩu");
+                if(pass.length>0){
+                    if(pass.charAt(0)== " "){
+                        document.getElementById("matkhau1").setCustomValidity("mật khẩu không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if(pass.length<3 || pass.length>15){
+                            document.getElementById("matkhau1").setCustomValidity("Từ 3 đến 15 kí tự");
+                        }
+                        else{
+                            for (i = 0; i < pass.length; i++) {
+                                if(pass[i] == " ")
+                                document.getElementById("matkhau1").setCustomValidity("Không chứa dấu cách");
+                            }
+                        }
+                    }
+                }
+
+                if(pass2 != pass){
+                    document.getElementById("matkhau2").setCustomValidity("Mật khẩu không trùng khớp");
+                }
+            <!--//mật khẩu-->
+            <!--ho tên-->
+                if(hoten.length < 1)
+                    document.getElementById("hoten").setCustomValidity("Vui lòng nhập họ tên");
+                if(hoten.length>0){
+                    if(hoten.charAt(0)== " "){
+                        document.getElementById("hoten").setCustomValidity("Họ tên không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if(hoten.length<5){
+                            document.getElementById("hoten").setCustomValidity("họ tên phải từ 5 kí tự");
+                        }
+                    }
+                }
+            <!--//họ tên-->
+            <!--email-->
+                if(mail.length < 1)
+                    document.getElementById("mail").setCustomValidity("Vui lòng nhập địa chỉ mail");
+                else{
+                    var dinhdang = /([a-zA-Z0-9])+@([a-zA-Z0-9])+\.([a-zA-Z0-9])/;
+                    if (!dinhdang.test(mail)) {
+                        document.getElementById("mail").setCustomValidity("Mail phải theo đúng định dạng: user@domain01.domain2");
+                    }
+                }
+
+            <!--//email-->
+            })
+        );
+	</script>
+<!--<//validate form đăng kí-->
+{%endblock%}

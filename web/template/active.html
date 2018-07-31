@@ -1,0 +1,29 @@
+{% load static %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+<div class="agileits_w3layouts_banner_nav">
+		<nav class="navbar navbar-default">
+			<div class="navbar-header navbar-left">
+				<h1><a class="navbar-brand" href="{%url 'trangchu' %}"><i class="fa fa-home" aria-hidden="true"></i> Event news</a></h1>
+			</div>
+        </nav>
+</div>
+<section class="container-fluid">
+    <div class="col-md-12" style="min-height: 550;">
+        <div class="col-md-12">
+            <br/>
+            <center style="border-top-right-radius: 20%; border-top: 5px solid gray">
+            <div class="signin-form profile" style="margin-top:20%;">
+                <h3 class="agileinfo_sign">{{ thongbao }}</h3>
+                <div>
+                {% if thongbao != "" %}
+                <a href="{%url 'dangnhap'%}" style="color: rgb(3, 139, 139)">Đăng nhập tài khoản</a>
+                {% endif %}
+                </div>
+            </div>
+            </center>
+        </div>
+    </div>
+</section>
+

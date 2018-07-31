@@ -1,0 +1,185 @@
+{% extends "manage/baseadmin.html" %}
+{% block nd %}
+{% load static %}
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a style="color:#00a98f" href="../admin"><i class="fa fa-dashboard"></i> mange</a></li>
+            <li class="active">Thiết lập cá nhân</li>
+        </ol>
+        <form action="" method="post">{% csrf_token %}
+            <div class="col-md-8">
+            <div class="">
+                <!-- Modal content-->
+                <div class="">
+                    <div class="signin-form profile">
+                        <h3 class="">Thông tin cá nhân</h3>
+                        <div class="login-form">
+                            <form action="../canhan/" method="post" enctype="multipart/form-data">{%csrf_token%}
+                                <input style="color:#00a98f" value="{{user.ten_dang_nhap}}" class="form-control" type="Text"
+                                       id="tendangnhap" readonly="readonly" placeholder="Username" required="">
+                                <input style="color:#00a98f" class="form-control" type="password" name="txtmoi"
+                                       id="matkhau1" placeholder="Mật khẩu mới" required="">
+                                <input style="color:#00a98f" class="form-control" type="password" name="txtlai"
+                                       id="matkhau2" placeholder="Nhập lại mật khẩu" required="">
+                                <input style="color:#00a98f" value="{{user.ho_ten}}" class="form-control" type="Text"
+                                       id="hoten" name="txthoten" placeholder="Họ và tên" required="">
+                                <input style="color:#00a98f" value="{{user.email}}" class="form-control" type="email"
+                                       id="mail" name="txtemail" placeholder="Email" readonly="readonly" required="">
+                                <div class="form-control">
+                                    <label class="radio-inline">Giới tính:</label>
+                                    {% if user.gioi_tinh == 'nam' %}
+                                        <label class="radio-inline">
+                                            <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
+                                        </label>
+                                        <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                    {% elif user.gioi_tinh == 'nu' %}
+                                        <label class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
+                                        <label class="radio-inline">
+                                            <input style="color:#00a98f" type="radio" name="rbngt" value="nu" checked="checked">nữ
+                                        </label>
+                                    {% else %}
+                                        <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
+                                        <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                    {% endif %}
+                                </div>
+                                <input class="form-control" type='file' name="file" class="form-control"
+                                       id="Anh" style="margin-top: 7"/>
+                                <input type="submit" name="btncapnhat" id="btncapnhat" value="Cập nhật">
+                            </form>
+                            {% if thongbao != "" %}
+                                <br>
+                                <label style="color:00a98f">{{thongbao}}</label>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-md-4" style="border-left: 2px dashed gray; margin-top: 30">
+                <div class="modal-sm">
+                    <div class="modal-content">
+
+                        <div class="form-group" id="divImage" style="height: 300px; width:300px; padding:5px">
+                            <img style='margin: auto;' width='100%' height='100%' class="tes" src="/media/{{user.anh_dai_dien}}"/>
+                        </div>
+                        <hr>
+                        <center>
+                            username: <label>{{ user.ten_dang_nhap }}</label><br>
+                            Họ tên: {{user.ho_ten}}<br>
+                            Giới tính: {{user.gioi_tinh}}<br>
+                        </center>
+                        <hr>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+<script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
+<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>-->
+<script>
+    $("#Anh").change(function () {
+        var noImageExits = $('.tes');
+        if (noImageExits) {
+            noImageExits.remove();
+        }
+        if (this.files) {
+            for (i = 0; i < this.files.length; i++) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    $('#divImage').append(
+                        "<img class='tes' src=" + e.target.result + " style='margin: auto;' width='100%' height='100%' />"
+                    );
+                }
+                reader.readAsDataURL(this.files[i]);
+            }
+        }
+    });
+</script>
+<!--validate form đăng kí-->
+<script type="text/javascript">
+        jQuery( document ).ready(
+            jQuery("#btncapnhat").click(function(){
+                var user = $("#tendangnhap").val();
+                var pass = $("#matkhau1").val();
+                var pass2 = $("#matkhau2").val();
+                var hoten = $("#hoten").val();
+
+                document.getElementById("tendangnhap").setCustomValidity("");
+                document.getElementById("matkhau1").setCustomValidity("");
+                document.getElementById("matkhau2").setCustomValidity("");
+                document.getElementById("hoten").setCustomValidity("");
+
+            <!--tên đăng nhập-->
+                if(user.length < 1)
+                    document.getElementById("tendangnhap").setCustomValidity("Vui lòng nhập tên đăng nhập");
+
+                if(user.length>0){
+                    if(user.charAt(0)== " "){
+                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if (!isNaN(user.charAt(0)))
+                        {
+                            document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng số");
+                        }
+                        else{
+                            if(user.length<3 || user.length>15){
+                                document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập từ 3 đến 15 kí tự");
+                            }
+                            else{
+                                for (i = 0; i < user.length; i++) {
+                                    if(user[i] == " ")
+                                    document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không chứa dấu cách");
+                                }
+                            }
+
+                        }
+                    }
+                }
+            <!--//tên đăng nhập-->
+            <!--mật khẩu-->
+                if(pass.length < 1)
+                    document.getElementById("matkhau1").setCustomValidity("Vui lòng nhập mật khẩu");
+                if(pass.length>0){
+                    if(pass.charAt(0)== " "){
+                        document.getElementById("matkhau1").setCustomValidity("mật khẩu không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if(pass.length<3 || pass.length>15){
+                            document.getElementById("matkhau1").setCustomValidity("Từ 3 đến 15 kí tự");
+                        }
+                        else{
+                            for (i = 0; i < pass.length; i++) {
+                                if(pass[i] == " ")
+                                document.getElementById("matkhau1").setCustomValidity("Không chứa dấu cách");
+                            }
+                        }
+                    }
+                }
+
+                if(pass2 != pass){
+                    document.getElementById("matkhau2").setCustomValidity("Mật khẩu không trùng khớp");
+                }
+            <!--//mật khẩu-->
+            <!--ho tên-->
+                if(hoten.length < 1)
+                    document.getElementById("hoten").setCustomValidity("Vui lòng nhập họ tên");
+                if(hoten.length>0){
+                    if(hoten.charAt(0)== " "){
+                        document.getElementById("hoten").setCustomValidity("Họ tên không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if(hoten.length<5){
+                            document.getElementById("hoten").setCustomValidity("họ tên phải từ 5 kí tự");
+                        }
+                    }
+                }
+            <!--//họ tên-->
+            })
+        );
+	</script>
+<!--<//validate form đăng kí-->
+{%endblock%}

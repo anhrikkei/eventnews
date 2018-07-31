@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block nd %}
+{% load static %}
+
+    <section class="container-fluid">
+            <div class="col-md-12" style="min-height: 550;">
+                <div class="col-md-7">
+                    <br/>
+                    <center style="border-top-right-radius: 20%; border-top: 5px solid gray">
+                    <div class="signin-form profile" style="margin-top:20%;">
+                        <h3 class="agileinfo_sign">Đăng nhập tài khoản NEWS PAPER</h3>
+                        <div>
+                            <form action="../dangnhap/" method="POST" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+                                <input type="Text" name="username" id="tendangnhap" placeholder="Tên đăng nhập" required="">
+                                <input type="password" name="password" id="matkhau1" placeholder="Mật khẩu" required="">
+                                <div class="tp">
+                                    <input type="submit" name="btnlogin" id="btnlogin" value="Đăng nhập">
+                                </div>
+                                <br/>
+                                {% if thongbao != "" %}
+                                <label style="color: rgb(3, 139, 139)">{{ thongbao }}</label>
+                                {% endif %}
+                            </form>
+                        </div>
+                        <!--<p><a href="#"> Click vào đăng kí, đồng ý với các điều khoản</a></p>-->
+                    </div>
+                    </center>
+                </div>
+                <div class="col-md-5" style="border-bottom-left-radius: 30%; border-bottom:5px solid gray">
+                    <hr></hr>
+                    <center style="margin-bottom: 15%">
+                        <br/>
+                        <img src="{% static 'images/newspaper.jpg' %}" width="80%" height="auto"/>
+                        <br/>
+                    </center>
+                </div>
+            </div>
+    </section>
+    <script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
+    <script>
+        jQuery( document ).ready(
+            jQuery("#btnlogin").click(function(){
+                var user = $("#tendangnhap").val();
+                var pass = $("#matkhau1").val();
+
+                document.getElementById("tendangnhap").setCustomValidity("");
+                document.getElementById("matkhau1").setCustomValidity("");
+
+                <!--tên đăng nhập-->
+                if(user.length < 1)
+                    document.getElementById("tendangnhap").setCustomValidity("Vui lòng nhập tên đăng nhập");
+
+                if(user.length>0){
+                    if(user.charAt(0)== " "){
+                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if (!isNaN(user.charAt(0)))
+                        {
+                            document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng số");
+                        }
+                        else{
+                            if(user.length<3 || user.length>15){
+                                document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập từ 3 đến 15 kí tự");
+                            }
+                            else{
+                                for (i = 0; i < user.length; i++) {
+                                    if(user[i] == " ")
+                                    document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không chứa dấu cách");
+                                }
+                            }
+
+                        }
+                    }
+                }
+            <!--//tên đăng nhập-->
+            <!--mật khẩu-->
+                if(pass.length < 1)
+                    document.getElementById("matkhau1").setCustomValidity("Vui lòng nhập mật khẩu");
+                if(pass.length>0){
+                    if(pass.charAt(0)== " "){
+                        document.getElementById("matkhau1").setCustomValidity("mật khẩu không bắt đầu bằng khoảng trống");
+                    }
+                    else{
+                        if(pass.length<3 || pass.length>15){
+                            document.getElementById("matkhau1").setCustomValidity("Từ 3 đến 15 kí tự");
+                        }
+                        else{
+                            for (i = 0; i < pass.length; i++) {
+                                if(pass[i] == " ")
+                                document.getElementById("matkhau1").setCustomValidity("Không chứa dấu cách");
+                            }
+                        }
+                    }
+                }
+            <!--//mật khẩu-->
+            })
+        );
+    </script>
+{%endblock%}
