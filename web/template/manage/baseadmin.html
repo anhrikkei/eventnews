@@ -54,7 +54,7 @@
 								<li><a href="{%url 'canhan'%}">Cài dặt cá nhân</a></li>
 								<li>
 									<a href="#">
-										<form action="/dangxuat/" method="POST">{% csrf_token %}
+										<form action="/dangxuat/" method="POST" enctype="multipart/form-data">{% csrf_token %}
 											<div class="tp">
 												<input type="submit" class="btn" style="background-color:white" name="btndangxuat" value="Đăng xuất">
 											</div>
@@ -114,7 +114,7 @@
 								<li><a href="{%url 'canhan'%}">Cài dặt cá nhân</a></li>
 								<li>
 									<a href="#">
-										<form action="/dangxuat/" method="POST">{% csrf_token %}
+										<form action="/dangxuat/" method="POST" enctype="multipart/form-data">{% csrf_token %}
 											<div class="tp">
 												<input type="submit" class="btn" style="background-color:white" name="btndangxuat" value="Đăng xuất">
 											</div>

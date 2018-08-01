@@ -19,7 +19,7 @@ def index(request, danhmuc_id):
     ds_tinhot = Baiviet.objects.filter(tin_hot='yes', trang_thai='on').order_by('luot_xem')[::-1][0:4]
     # //xử lý dữ liệu
     # phân trang
-    paginator = Paginator(ds_baiviet, 8)
+    paginator = Paginator(ds_baiviet, 10)
     pageNumber = request.GET.get('page')
     try:
         ds_baiviet_danhmuc = paginator.page(pageNumber)
@@ -28,12 +28,7 @@ def index(request, danhmuc_id):
     except EmptyPage:
         ds_baiviet_danhmuc = paginator.page(paginator.num_pages)
     # //phân trang
-    # search
-    ds_timkiem = ""
-    query = request.GET.get("q")
-    if query:
-        ds_timkiem = Baiviet.objects.filter(tieu_de__icontains=query, danh_muc_id=danhmuc_id)[0:5]
-    # //search
+
     # load template
     temp = loader.get_template('danhmuc.html')
     # tạo dict truyền biến qua temp
@@ -44,8 +39,7 @@ def index(request, danhmuc_id):
         "ds_tinhot": ds_tinhot,
         "ds_tintop": ds_tintop,
         "user": user,
-        "q": query,
-        "ds_timkiem": ds_timkiem,
+        "q":"",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))

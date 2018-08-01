@@ -23,12 +23,7 @@ def index(request, baiviet_id):
     baiviets.luot_xem = baiviets.luot_xem + 1
     baiviets.save()
     # //cập nhật lượt xem bài viết
-    # xử lý tìm kiếm
-    ds_timkiem = ""
-    query = request.GET.get("q")
-    if query:
-        ds_timkiem = Baiviet.objects.filter(tieu_de__icontains=query)[0:5]
-    # //xửa lý tìm kiếm
+
     # load template
     temp = loader.get_template('baiviet.html')
     # tạo dict truyền biến qua temp
@@ -41,8 +36,7 @@ def index(request, baiviet_id):
         "ds_tintop": ds_tintop,
         "user": user,
         "so_bai_viet": so_bai_viet,
-        "q": query,
-        "ds_timkiem": ds_timkiem,
+        "q":"",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))

@@ -7,23 +7,24 @@
                 <div class="col-md-7">
                     <br/>
                     <center style="border-top-right-radius: 20%; border-top: 5px solid gray">
-                    <div class="signin-form profile" style="margin-top:20%;">
-                        <h3 class="agileinfo_sign">Đăng nhập tài khoản NEWS PAPER</h3>
-                        <div>
-                            <form action="../dangnhap/" method="POST" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
-                                <input type="Text" name="username" id="tendangnhap" placeholder="Tên đăng nhập" required="">
-                                <input type="password" name="password" id="matkhau1" placeholder="Mật khẩu" required="">
-                                <div class="tp">
-                                    <input type="submit" name="btnlogin" id="btnlogin" value="Đăng nhập">
-                                </div>
-                                <br/>
-                                {% if thongbao != "" %}
-                                <label style="color: rgb(3, 139, 139)">{{ thongbao }}</label>
-                                {% endif %}
-                            </form>
+                        <div class="signin-form profile" style="margin-top:20%;">
+                            <h3 class="agileinfo_sign">Đăng nhập tài khoản NEWS PAPER</h3>
+                            <div>
+                                <form action="../dangnhap/" method="POST" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+                                    <input type="Text" name="username" id="tendangnhap" placeholder="Tên đăng nhập" required="">
+                                    <input type="password" name="password" id="matkhau1" placeholder="Mật khẩu" required="">
+                                    <div class="tp">
+                                        <input type="submit" name="btnlogin" id="btnlogin" value="Đăng nhập">
+                                    </div>
+                                    <a style="color:#00a98f" href="../quenpass/"><small>--Quên mật khẩu--</small></a>
+                                    <br/>
+                                    {% if thongbao != "" %}
+                                    <label style="color: rgb(3, 139, 139)">{{ thongbao }}</label>
+                                    {% endif %}
+                                </form>
+                            </div>
+                            <!--<p><a href="#"> Click vào đăng kí, đồng ý với các điều khoản</a></p>-->
                         </div>
-                        <!--<p><a href="#"> Click vào đăng kí, đồng ý với các điều khoản</a></p>-->
-                    </div>
                     </center>
                 </div>
                 <div class="col-md-5" style="border-bottom-left-radius: 30%; border-bottom:5px solid gray">

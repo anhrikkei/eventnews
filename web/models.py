@@ -18,6 +18,7 @@ class Nguoidung(models.Model):
     anh_dai_dien = models.FileField(upload_to='uploads')
     loai_user = models.ForeignKey('Loaiuser', on_delete=models.CASCADE)
     mailactive = models.CharField(max_length= 200)
+    xacnhan = models.CharField(max_length= 50)
     trang_thai = models.CharField(max_length= 10)
 
 
@@ -38,7 +39,7 @@ class Baiviet(models.Model):
     tieu_de = models.CharField(max_length= 200)
     noi_dung = RichTextField('Soạn thảo theo cách của riêng bạn')
     ngay_tao = models.DateField()
-    ngay_sua = models.DateField(auto_now_add=True)
+    ngay_sua = models.DateField()
     tac_gia = models.ForeignKey('Nguoidung', null=True, on_delete=models.CASCADE)
     luot_xem = models.IntegerField(default=0)
     trang_thai = models.CharField(max_length=3)

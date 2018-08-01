@@ -1,161 +1,67 @@
 {% extends "base.html" %}
 {% block nd %}
 {% load static %}
-<div style="vartical-align: middle; height: 300px; background-image: url( {% static 'images/baner2.jpg' %});">
-    <center>
-        <h2 style="fontstyle:; padding: 10%; color: white">{{ danhmucs.mo_ta}} </h2>
-    </center>
-	<p></p>
-</div>
-<div class="services">
-	<div class="container">
-		<h3 class="tittle_agile_w3">Danh sách tin {{ danhmucs.ten_danhmuc }}</h3>
-		<div class="heading-underline">
-			<div class="h-u1"></div>
-			<div class="h-u2"></div>
-			<div class="h-u3"></div>
-			<div class="clearfix"></div>
-		</div>
-
-		<div class="w3l-news_info_agile_its">
-			<div class="col-md-8">
-				{% if ds_baiviet_danhmuc %}
-					{% for baiviet in ds_baiviet_danhmuc %}
-					<div class="w3l-news col-md-6">
-						<div class="media response-info hop">
-							<div>
-								<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-								<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-								<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-								<br/>
-								<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-									{{ baiviet.noi_dung| safe }}
-								</a>
-
-								<div class="media-body">
-									<p>
-										<small style="float:left; font-family: italy; color: gray">
-											--{{baiviet.tac_gia.ten_dang_nhap}}--
-										</small>
-									</p>
-									<p>
-										<br/>
-										<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
-											<small style="font-family: italy;">chi tiết...</small>
-										</a>
-									</p>
-								</div>
-							</div>
-						</div>
-						<hr>
-					</div>
-					{% endfor %}
-				{% endif %}
-				<div class="clearfix"> </div>
-			</div>
-			<div class="col-md-4" style="border-left: 1px solid gray">
-				<ul class="nav nav-tabs col-md-10" style="float:left;">
-					<li class="active"><a data-toggle="tab" href="#tintop" style="color: #00a98f">Top người xem</a></li>
-					<li><a data-toggle="tab" href="#tinhot" style="color: #00a98f">Tin hot</a></li>
-				</ul>
-				<div class="tab-content">
-					<div id="tintop" class="tab-pane fade in active">
-						<div class="w3l-news_info_agile_its">
-							{% if ds_tintop %}
-								{% for baiviet in ds_tintop %}
-								<div style="float:left;" class="w3l-news">
-									<div class="media response-info box">
-										<div class="">
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-											<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-											<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-											<br/>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
-											</a>
-											<div class="media-body">
-												<p>
-													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
-													</small>
-													<br/><a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">chi tiết...</a>
-												</p>
-											</div>
-
-										</div>
-
-
-									</div>
-									<hr>
-								</div>
-								{% endfor %}
-							{% endif %}
-							<div class="clearfix"> </div>
-						</div>
-					</div>
-					<div id="tinhot" class="tab-pane fade">
-						<div class="w3l-news_info_agile_its">
-						{% if ds_tinhot %}
-							{% for baiviet in ds_tinhot %}
-							<div class="w3l-news" style="float:left">
-								<div class="media response-info box">
-									<div class="media-left">
+<hr>
+	<div class="container" style="min-height: 500px">
+		<div class="w3l-news-content events">
+			<div class="container fluid">
+				<!--tiêu đề-->
+				<h3 class="tittle_agile_w3">Kết quả tìm kiếm</h3>
+				<div class="heading-underline">
+					<div class="h-u1"></div>
+					<div class="h-u2"></div>
+					<div class="h-u3"></div>
+					<div class="clearfix"></div>
+				</div>
+				<!--//tiêu đề-->
+				<!--hiện nội dung kết quả tìm kiếm-->
+				<div class="w3l-news_info_agile_its">
+					<div class="col-md-12">
+					{% if ds_timkiem %}
+						{% for baiviet in ds_timkiem %}
+							<div class="w3l-news col-md-4">
+								<div class="media response-info hop">
+									<div>
 										<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
+										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao|safe }}</small>
 										<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-										<br/>
-										<a href="../baiviet/{{ma_bai}}" class="max-lines">
+										<hr>
+										<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
 											{{ baiviet.noi_dung| safe }}
 										</a>
+
 										<div class="media-body">
 											<p>
 												<small style="float:left; font-family: italy; color: gray">
 													--{{baiviet.tac_gia.ten_dang_nhap}}--
 												</small>
-												<br/><a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">chi tiết...</a>
+											</p>
+											<p>
+												<br/>
+												<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<small style="font-family: italy;">chi tiết...</small>
+												</a>
 											</p>
 										</div>
 									</div>
-
-
 								</div>
 								<hr>
 							</div>
-							{% endfor %}
-						{% endif %}
+						{% endfor %}
+					{% else %}
+						<center>
+							<h3>Không tìm thấy kết quả, nhập lại tìm kiếm...</h3>
+						</center>
+					{% endif %}
 						<div class="clearfix"> </div>
 					</div>
 				</div>
-				</div>
+				<!--//hiện nội dung kết quả tìm kiếm-->
 			</div>
 		</div>
 	</div>
-</div>
-<div class="services">
-	<center>
-	<ul class="pagination pagintion-sm">
-		<div class="pagination">
-			<span class="step-links">
-				{% if ds_baiviet_danhmuc.has_previous %}
-					<a href="?page={{ ds_baiviet_danhmuc.previous_page_number }}"><i class="glyphicon glyphicon-chevron-left"></i></a>
-				{% endif %}
-			</span>
-
-			<span class="current">
-				Trang {{ ds_baiviet_danhmuc.number }} / {{ ds_baiviet_danhmuc.paginator.num_pages }}
-			</span>
-
-			<span>
-				{% if ds_khoa_hoc.has_next %}
-					<a href="?page={{ ds_khoa_hoc.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
-				{% endif %}
-			</span>
-		</div>
-	</ul>
-	</center>
-</div>
 <style>
-.max-lines{
+	.max-lines{
 			color: gray;
 		   overflow: hidden;
 		   text-overflow: ellipsis;

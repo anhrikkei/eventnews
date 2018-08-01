@@ -1,7 +1,7 @@
 from django.urls import path
 from web.views.guest import trangchu, danhmuc, baiviet, timkiem
 from web.views.manage import admin, canhan, danhmuc_ad, baiviet_ad, ajax, nguoidung
-from web.views import dangki, dangnhap, dangxuat, active
+from web.views import dangki, log
 
 urlpatterns = [
     path('trangchu/', trangchu.index, name='trangchu'),
@@ -9,12 +9,14 @@ urlpatterns = [
     # path('danhmuc/(?P<danh_muc_id>[0-9]+)/', danhmuc.index),
     path('danhmuc/<int:danhmuc_id>', danhmuc.index),
     path('baiviet/<int:baiviet_id>', baiviet.index),
-    path('timkiem/>', timkiem.index, name="timkiem"),
+    path('timkiem/', timkiem.index, name="timkiem"),
 
-    path('dangki/', dangki.index, name="dangki"),
-    path('dangnhap/', dangnhap.index, name="dangnhap"),
-    path('dangxuat/', dangxuat.index, name="dangxuat"),
-    path('Active/<str:active_id>', active.index, name="Active"),
+    path('dangki/', dangki.nguoidung_view.dangki, name="dangki"),
+    path('dangnhap/', log.nguoidung_view.dangnhap, name="dangnhap"),
+    path('dangxuat/', log.nguoidung_view.dangxuat, name="dangxuat"),
+    path('Active/<str:active_id>', dangki.nguoidung_view.active, name="Active"),
+    path('quenpass/', dangki.nguoidung_view.quenpass, name="quenpass"),
+    path('taolaipass/', dangki.nguoidung_view.taolaipass, name="taolaipass"),
 
     path('admin/', admin.index, name="admin"),
     path('danhmuc_ds/', danhmuc_ad.danhmuc_view.danhsach, name="danhmuc_ds"),

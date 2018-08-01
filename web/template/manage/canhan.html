@@ -6,56 +6,52 @@
             <li><a style="color:#00a98f" href="../admin"><i class="fa fa-dashboard"></i> mange</a></li>
             <li class="active">Thiết lập cá nhân</li>
         </ol>
-        <form action="" method="post">{% csrf_token %}
             <div class="col-md-8">
-            <div class="">
-                <!-- Modal content-->
-                <div class="">
-                    <div class="signin-form profile">
-                        <h3 class="">Thông tin cá nhân</h3>
-                        <div class="login-form">
-                            <form action="../canhan/" method="post" enctype="multipart/form-data">{%csrf_token%}
-                                <input style="color:#00a98f" value="{{user.ten_dang_nhap}}" class="form-control" type="Text"
-                                       id="tendangnhap" readonly="readonly" placeholder="Username" required="">
-                                <input style="color:#00a98f" class="form-control" type="password" name="txtmoi"
-                                       id="matkhau1" placeholder="Mật khẩu mới" required="">
-                                <input style="color:#00a98f" class="form-control" type="password" name="txtlai"
-                                       id="matkhau2" placeholder="Nhập lại mật khẩu" required="">
-                                <input style="color:#00a98f" value="{{user.ho_ten}}" class="form-control" type="Text"
-                                       id="hoten" name="txthoten" placeholder="Họ và tên" required="">
-                                <input style="color:#00a98f" value="{{user.email}}" class="form-control" type="email"
-                                       id="mail" name="txtemail" placeholder="Email" readonly="readonly" required="">
-                                <div class="form-control">
-                                    <label class="radio-inline">Giới tính:</label>
-                                    {% if user.gioi_tinh == 'nam' %}
-                                        <label class="radio-inline">
-                                            <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
-                                        </label>
-                                        <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
-                                    {% elif user.gioi_tinh == 'nu' %}
-                                        <label class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
-                                        <label class="radio-inline">
-                                            <input style="color:#00a98f" type="radio" name="rbngt" value="nu" checked="checked">nữ
-                                        </label>
-                                    {% else %}
-                                        <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
-                                        <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
-                                    {% endif %}
-                                </div>
-                                <input class="form-control" type='file' name="file" class="form-control"
-                                       id="Anh" style="margin-top: 7"/>
-                                <input type="submit" name="btncapnhat" id="btncapnhat" value="Cập nhật">
-                            </form>
-                            {% if thongbao != "" %}
-                                <br>
-                                <label style="color:00a98f">{{thongbao}}</label>
-                            {% endif %}
-                        </div>
+                <div class="signin-form profile">
+                    <h3 class="">Thông tin cá nhân</h3>
+                    <div class="login-form">
+                        <form action="../canhan/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <input style="color:#00a98f" value="{{user.ten_dang_nhap}}" class="form-control" type="Text"
+                                   id="tendangnhap" readonly="readonly" placeholder="Username" required="">
+                            <input style="color:#00a98f" class="form-control" type="password" name="txtmoi"
+                                   id="matkhau1" placeholder="Mật khẩu mới" required="">
+                            <input style="color:#00a98f" class="form-control" type="password" name="txtlai"
+                                   id="matkhau2" placeholder="Nhập lại mật khẩu" required="">
+                            <input style="color:#00a98f" value="{{user.ho_ten}}" class="form-control" type="Text"
+                                   id="hoten" name="txthoten" placeholder="Họ và tên" required="">
+                            <input style="color:#00a98f" value="{{user.email}}" class="form-control" type="email"
+                                   id="mail" name="txtemail" placeholder="Email" readonly="readonly" required="">
+                            <div class="form-control">
+                                <label class="radio-inline">Giới tính:</label>
+                                {% if user.gioi_tinh == 'nam' %}
+                                    <label class="radio-inline">
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
+                                    </label>
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                {% elif user.gioi_tinh == 'nu' %}
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
+                                    <label class="radio-inline">
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nu" checked="checked">nữ
+                                    </label>
+                                {% else %}
+                                    <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
+                                    <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                {% endif %}
+                            </div>
+                            <input class="form-control" type="file" name="fileimg" class="form-control" id="Anh" style="margin-top: 7"/>
+                            <input type="submit" name="btncapnhat" id="btncapnhat" value="Cập nhật">
+                        </form>
+                        {% if thongbao != "" %}
+                            <br>
+                            <label style="color:00a98f">
+                                {{thongbao}}
+                            </label>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        </div>
             <div class="col-md-4" style="border-left: 2px dashed gray; margin-top: 30">
+                <center>
                 <div class="modal-sm">
                     <div class="modal-content">
 
@@ -71,10 +67,8 @@
                         <hr>
                     </div>
                 </div>
-
+                </center>
             </div>
-
-        </form>
     </div>
 <script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
 <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>-->

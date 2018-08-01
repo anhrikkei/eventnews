@@ -3,6 +3,9 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
 import hashlib
+# import os
+# from django.core.files import File  # you need this somewhere
+# import urllib
 
 class nguoidung_view(object):
     # cập nhật lại thông tin cá nhân
@@ -23,14 +26,15 @@ class nguoidung_view(object):
             u.ho_ten = request.POST['txthoten']
             u.email = request.POST['txtemail']
             u.gioi_tinh = request.POST['rbngt']
+            path = u.anh_dai_dien
             # xử lý up ảnh
             try:
-                u.anh_dai_dien = "uploads/"+request.POST["file"]
-                f = request.FILES("file")
-                upload = nguoidung_view()
-                upload.uploaded_file(f)
+                u.anh_dai_dien = request.FILES['fileimg']
+                # f = request.FILES["fileimg"]
+                # nguoidung_view.upload(f.name)
+
             except:
-                u.anh_dai_dien = u.anh_dai_dien
+                u.anh_dai_dien = path
             # //xử lý up ảnh
             u.trang_thai = u.trang_thai
             u.mailactive = u.mailactive
@@ -48,7 +52,18 @@ class nguoidung_view(object):
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context,request))
     # hàm upload ảnh
-    def uploaded_file(f):
-        file = open(f.name, 'w+')
-        for chunk in f.chunks():
-            file.write(chunk)
+    # def uploaded_file(f):
+    #     file = open(f.name, 'w+')
+    #     for chunk in f.chunks():
+    #         file.write(chunk)
+    #
+    # def upload(self,image_url):
+    #     result = urllib.urlretrieve(image_url)  # image_url is a URL to an image
+    #
+    #     # self.photo is the ImageField
+    #     self.photo.save(
+    #         os.path.basename(self.url),
+    #         File(open(result[0]))
+    #     )
+    #
+    #     self.save()

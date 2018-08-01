@@ -7,57 +7,7 @@
     </center>
 	<p></p>
 </div>
-<!--kết quả tìm kiếm-->
-{% if ds_timkiem != "" %}
-		<div class="w3l-news-content events">
-			<div class="container">
-				<h3 class="tittle_agile_w3">Kết quả tìm kiếm cho {{q}}</h3>
-				<div class="heading-underline">
-					<div class="h-u1"></div>
-					<div class="h-u2"></div>
-					<div class="h-u3"></div>
-					<div class="clearfix"></div>
-				</div>
 
-				<div class="w3l-news_info_agile_its">
-					<div class="col-md-12">
-						{% for baiviet in ds_timkiem %}
-							<div class="w3l-news col-md-4">
-								<div class="media response-info hop">
-									<div>
-										<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-										<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-										<br/>
-										<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-											{{ baiviet.noi_dung| safe }}
-										</a>
-
-										<div class="media-body">
-											<p>
-												<small style="float:left; font-family: italy; color: gray">
-													--{{baiviet.tac_gia.ten_dang_nhap}}--
-												</small>
-											</p>
-											<p>
-												<br/>
-												<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
-													<small style="font-family: italy;">chi tiết...</small>
-												</a>
-											</p>
-										</div>
-									</div>
-								</div>
-								<hr>
-							</div>
-						{% endfor %}
-						<div class="clearfix"> </div>
-					</div>
-				</div>
-			</div>
-		</div>
-{% endif %}
-<!--//kết quả tìm kiếm-->
 <!--nội dung-->
 <div class="services">
 	<div class="container">
@@ -70,6 +20,7 @@
 		</div>
 
 		<div class="w3l-news_info_agile_its">
+			<!--danh sách tin-->
 			<div class="col-md-8">
 				{% if ds_baiviet_danhmuc %}
 					{% for baiviet in ds_baiviet_danhmuc %}
@@ -79,7 +30,7 @@
 								<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
 								<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
 								<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-								<br/>
+								<hr>
 								<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
 									{{ baiviet.noi_dung| safe }}
 								</a>
@@ -105,11 +56,16 @@
 				{% endif %}
 				<div class="clearfix"> </div>
 			</div>
+			<!--//danh sách tin-->
+			<!--tin hot, ton top-->
 			<div class="col-md-4" style="border-left: 1px solid gray">
+				<!--danh mục tab tin-->
 				<ul class="nav nav-tabs col-md-10" style="float:left;">
 					<li class="active"><a data-toggle="tab" href="#tintop" style="color: #00a98f">Top người xem</a></li>
 					<li><a data-toggle="tab" href="#tinhot" style="color: #00a98f">Tin hot</a></li>
 				</ul>
+				<!--//danh mục tab tin-->
+				<!--nội dung tab tin-->
 				<div class="tab-content">
 					<div id="tintop" class="tab-pane fade in active">
 						<div class="w3l-news_info_agile_its">
@@ -156,7 +112,7 @@
 										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
 										<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
 										<br/>
-										<a href="../baiviet/{{ma_bai}}" class="max-lines">
+										<a href="../baiviet/{{ baiviet.ma_bai }}" class="max-lines">
 											{{ baiviet.noi_dung| safe }}
 										</a>
 										<div class="media-body">
@@ -179,7 +135,9 @@
 					</div>
 				</div>
 				</div>
+				<!--//nội dung tab tin-->
 			</div>
+			<!--//tin hot, ton top-->
 		</div>
 	</div>
 </div>

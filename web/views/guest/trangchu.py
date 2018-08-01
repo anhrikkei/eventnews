@@ -19,12 +19,7 @@ def index(request):
     so_baiviet = Baiviet.objects.count()
     so_nguoidung = Nguoidung.objects.count()
     # //xử lý dữ liệu
-    # search
-    ds_timkiem=""
-    query = request.GET.get("q")
-    if query:
-        ds_timkiem = Baiviet.objects.filter(tieu_de__icontains=query)[0:5]
-    # //search
+
     # load template
     temp = loader.get_template('home.html')
     # //load template
@@ -38,8 +33,7 @@ def index(request):
         "user": user,
         "so_baiviet": so_baiviet,
         "so_nguoidung": so_nguoidung,
-        "q":query,
-        "ds_timkiem": ds_timkiem,
+        "q":"",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))
