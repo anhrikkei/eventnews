@@ -33,7 +33,7 @@ def index(request):
         "user": user,
         "so_baiviet": so_baiviet,
         "so_nguoidung": so_nguoidung,
-        "q":"",
+        "q":"tìm kiếm bài viết",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))

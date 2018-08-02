@@ -36,7 +36,7 @@ def index(request, baiviet_id):
         "ds_tintop": ds_tintop,
         "user": user,
         "so_bai_viet": so_bai_viet,
-        "q":"",
+        "q":"tìm kiếm bài viết",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))

@@ -49,7 +49,7 @@ class nguoidung_view:
             "thongbao": thongbao,
             "user": user,
             "ds_danhmuc":ds_danhmuc,
-            "q": "nhập bài viết",
+            "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))

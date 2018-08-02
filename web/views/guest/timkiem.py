@@ -15,7 +15,9 @@ def index(request):
     ds_timkiem = ""
     query = request.GET.get("q")
     if query:
-        ds_timkiem = Baiviet.objects.filter(tieu_de__icontains=query)[0:10]
+        ds_timkiem1 = Baiviet.objects.filter(tieu_de__icontains=query, trang_thai='on')[0:10]
+        ds_timkiem2 = Baiviet.objects.filter(ngay_sua__icontains=query, trang_thai='on')[0:10]
+        ds_timkiem = list(ds_timkiem1) + list(ds_timkiem2)
     # //search
     # load template
     temp = loader.get_template('timkiem.html')

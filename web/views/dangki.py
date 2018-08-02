@@ -59,6 +59,7 @@ class nguoidung_view:
             "user":user,
             "ds_danhmuc":ds_danhmuc,
             "thongbao":thongbao,
+            "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
@@ -93,6 +94,7 @@ class nguoidung_view:
         else:
             context = {
                 "thongbao": "Mail đã được kích hoạt trước đó",
+                "q": "tìm kiếm bài viết",
             }
             return HttpResponse(temp.render(context, request))
 # xử lý email để lấy mã xác nhận
@@ -121,6 +123,7 @@ class nguoidung_view:
             "ds_danhmuc": ds_danhmuc,
             "user": user,
             "thongbao": thongbao,
+            "q": "tìm kiếm bài viết",
         }
         temp = loader.get_template('quenpass.html')
         return HttpResponse(temp.render(context, request))
@@ -151,6 +154,7 @@ class nguoidung_view:
             "ds_danhmuc": ds_danhmuc,
             "user": user,
             "thongbao": thongbao,
+            "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền context qua temp
         # load template
