@@ -119,9 +119,9 @@ class danhmuc_view:
                 Danhmuc.objects.get(ma_danhmuc=dm_id).delete()
                 return redirect('danhmuc_ds')
             else:
-                return HttpResponse('Sai quyền truy cập', request)
+                return HttpResponse('Sai quyen truy cap', request)
         else:
-            return HttpResponse('Sai quyền truy cập', request)
+            return redirect("admin")
 
     # chọn danh mục hiện trên menu
     def is_menu(request, dm_id):

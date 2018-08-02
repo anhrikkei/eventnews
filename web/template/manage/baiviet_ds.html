@@ -1,7 +1,7 @@
 {% extends "manage/baseadmin.html" %}
 {% block nd %}
 {% load static %}
-
+<script src="{%static 'js/jquery-2.1.4.min.js'%}"></script>
 <div class="container" style="min-height: 600px">
     <section class="content-header">
         <ol class="breadcrumb">
@@ -9,7 +9,6 @@
             <li class="active">Danh sách bài viết</li>
         </ol>
     </section>
-    <!--hiện danh sách bài viết-->
     <section class="content">
         <div class="fluid">
             <div class="form-group">
@@ -23,6 +22,7 @@
                     <!--</form>-->
                 </div>
             </div>
+            <!--hiện danh sách bài viết-->
             <div class="panel">
                 <div id="ajax_search" class="box box-primary">
                     <table id="tb" class="table table-hover table-striped">
@@ -56,18 +56,18 @@
                                     <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
                                 </td>
                                 <td>
-                                    <button class="btn-link">
-                                        <i style="color: #00a98f" onclick="myConfirm()" class="glyphicon glyphicon-trash"></i>
+                                    <button id="{{baiviet.ma_bai}}" class="btn-link">
+                                        <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
                                     </button>
                                     <script>
-                                        function myConfirm(){
-                                            if(confirm('Bạn có muốn xóa bài viết?')==true){
+                                        $("#{{baiviet.ma_bai}}").click(function(){
+                                            if(confirm('Xóa bài viết {{baiviet.ma_bai}}?')==true){
                                                 window.location='../baiviet_xoa/{{baiviet.ma_bai}}';
                                                 }
                                             else{
                                                 return false;
                                             }
-                                        }
+                                        })
                                     </script>
                                 </td>
 
@@ -77,6 +77,7 @@
 
                     {% endif %}
                     </table>
+                    <!--phân trang-->
                      <div class="pull-right">
                         <ul class="pagination pagintion-sm">
                             <div class="pagination">
@@ -98,11 +99,12 @@
                             </div>
                         </ul>
                     </div>
+                    <!--//phân trang-->
                 </div>
             </div>
+            <!--//hiện danh sách bài viết-->
         </div>
     </section>
-    <!--//hiện danh sách bài viết-->
 </div>
 <!--style hiển thị cho tiêu đề và nội dung-->
 <style>

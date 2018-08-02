@@ -20,13 +20,17 @@ class nguoidung_view:
         if request.POST.get("btnlogin"):
             u = Nguoidung()
             u.ten_dang_nhap = request.POST['username']
+            u.email = request.POST['username']
             u.mat_khau = request.POST['password']
             mat_khaus = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
             try:
                 user = Nguoidung.objects.get(mat_khau=mat_khaus, pk=u.ten_dang_nhap)
             except:
-                user = ""
-                thongbao ="Tên dăng nhập hoặc mật khẩu không chính xác"
+                try:
+                    user = Nguoidung.objects.get(mat_khau=mat_khaus, email=u.email)
+                except:
+                    user = ""
+                    thongbao ="Tên đăng nhập/email hoặc mật khẩu không chính xác"
             if user != "":
                 if user.mailactive != "active":
                     user = ""
@@ -45,14 +49,18 @@ class nguoidung_view:
             "thongbao": thongbao,
             "user": user,
             "ds_danhmuc":ds_danhmuc,
+            "q": "nhập bài viết",
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
 # xử lý đăng xuất
     def dangxuat(request):
-        if request.POST.get("btndangxuat"):
-            del request.session['username']
-            return redirect('dangnhap')
-
-        temp = loader.get_template('trangchu.html')
-        return HttpResponse(temp.render(request))
+        if request.session.has_key('username'):
+            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            if request.POST.get("btndangxuat"):
+                del request.session['username']
+                return redirect('dangnhap')
+            else:
+                return redirect('trangchu')
+        else:
+            return redirect('trangchu')

@@ -12,12 +12,12 @@
                             <h3 class="agileinfo_sign">Đăng nhập tài khoản NEWS PAPER</h3>
                             <div>
                                 <form action="../dangnhap/" method="POST" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
-                                    <input type="Text" name="username" id="tendangnhap" placeholder="Tên đăng nhập" required="">
+                                    <input type="Text" name="username" id="tendangnhap" placeholder="Tên đăng nhập/email" required="">
                                     <input type="password" name="password" id="matkhau1" placeholder="Mật khẩu" required="">
                                     <div class="tp">
                                         <input type="submit" name="btnlogin" id="btnlogin" value="Đăng nhập">
                                     </div>
-                                    <a style="color:#00a98f" href="../quenpass/"><small>--Quên mật khẩu--</small></a>
+                                    <a style="color:#00a98f" href="../quenpass/"><small>-- Quên mật khẩu --</small></a>
                                     <br/>
                                     {% if thongbao != "" %}
                                     <label style="color: rgb(3, 139, 139)">{{ thongbao }}</label>
@@ -51,25 +51,32 @@
 
                 <!--tên đăng nhập-->
                 if(user.length < 1)
-                    document.getElementById("tendangnhap").setCustomValidity("Vui lòng nhập tên đăng nhập");
+                    document.getElementById("tendangnhap").setCustomValidity("Vui lòng nhập tên đăng nhập/email");
 
                 if(user.length>0){
                     if(user.charAt(0)== " "){
-                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng khoảng trống");
+                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập/email không bắt đầu bằng khoảng trống");
                     }
                     else{
                         if (!isNaN(user.charAt(0)))
                         {
-                            document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không bắt đầu bằng số");
+                            document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập/email không bắt đầu bằng số");
                         }
                         else{
-                            if(user.length<3 || user.length>15){
-                                document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập từ 3 đến 15 kí tự");
+                            if(user.length<3){
+                                document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập từ 3 kí tự");
                             }
                             else{
                                 for (i = 0; i < user.length; i++) {
-                                    if(user[i] == " ")
-                                    document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không chứa dấu cách");
+                                    if(user[i] == " "){
+                                        document.getElementById("tendangnhap").setCustomValidity("Tên đăng nhập không chứa dấu cách");
+                                    }
+                                    if(user[i] == "@"){
+                                        var dinhdang = /([a-zA-Z0-9])+@([a-zA-Z0-9])+\.([a-zA-Z0-9])/;
+                                        if (!dinhdang.test(user)) {
+                                            document.getElementById("tendangnhap").setCustomValidity("Email phải theo đúng định dạng: user@domain01.domain2");
+                                        }
+                                    }
                                 }
                             }
 

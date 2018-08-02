@@ -50,6 +50,8 @@ class baiviet_view:
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
+        else:
+            return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         ngay_hientai = timezone.datetime.now().date()
         ds_danhmuc = Danhmuc.objects.all()
@@ -86,6 +88,8 @@ class baiviet_view:
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
+        else:
+            return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         ngay_hientai = timezone.datetime.now().date()
         bv_hientai = Baiviet.objects.get(ma_bai=bv_id)
@@ -127,8 +131,17 @@ class baiviet_view:
         user=""
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
-            Baiviet.objects.get(ma_bai=bv_id).delete()
-            return redirect('baiviet_ds')
+            if user.loai_user_id == 1:
+                Baiviet.objects.get(ma_bai=bv_id).delete()
+                return redirect('baiviet_ds')
+            else:
+                try:
+                    Baiviet.objects.get(ma_bai=bv_id, tac_gia_id=user.ten_dang_nhap).delete()
+                    return redirect('baiviet_ds')
+                except:
+                    return HttpResponse('sai quyen truy cap', request)
+        else:
+            return redirect('admin')
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
         search = request.POST.get("search","")
