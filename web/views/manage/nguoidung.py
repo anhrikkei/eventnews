@@ -1,4 +1,4 @@
-from web.models import Nguoidung, Baiviet, Danhmuc
+from web.models import Nguoidung
 from django.shortcuts import redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -12,11 +12,14 @@ class nguoidung_view:
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
+        else:
+            return redirect("admin")
+        if user.loai_user_id != 1:
+            return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         # lấy danh sách người dùng theo loại user
         ds_nguoidung = Nguoidung.objects.all().order_by('ten_dang_nhap')
-        if user.loai_user_id == 2:
-            return ('admin')
+
         # //lấy danh sách người dùng theo loại user
         # phân trang
         paginator = Paginator(ds_nguoidung, 8)
@@ -69,3 +72,16 @@ class nguoidung_view:
         u.save()
         # //xử lý thay đổi trạng thái tài khoản
         return redirect('nguoidung_ds')
+    # lấy dữ liệu trả về khi search
+    def get_dlsearch(request):
+        search = request.POST.get("search","")
+        ds_nguoidung = Nguoidung.objects.filter(ten_dang_nhap__icontains=search)
+        # load template
+        temp = loader.get_template('manage/nguoidung_ajaxsearch.html')
+        # tạo dict truyền biến qua temp
+        context = {
+            "ds_nguoidung": ds_nguoidung,
+            "search": search,
+        }
+        # //tạo dict truyền biến qua temp
+        return HttpResponse(temp.render(context, request))

@@ -13,12 +13,20 @@
         <div class="fluid">
             <div class="form-group">
                 <a href="../danhmuc_them"><button class="btn-sm btn-success" style="background-color:#00a98f">Thêm danh mục</button></a>
+                <div class="pull-right">
+                    <!--<form name="frm_search" id="frm_search" method="POST" action="">{% csrf_token %}-->
+                    <button class="btn-link">
+                        <a href="/danhmuc_ds/"><i style="color:#00a98f" class="glyphicon glyphicon-refresh"></i></a>
+                    </button>
+                    <input type="search" name="search" id="id_search"/>
+                    <!--</form>-->
+                </div>
             </div>
             <!--hiện danh sách danh mục-->
             <div class="panel">
-                <div class="box box-primary">
+                <div id="ajax_search" class="box box-primary">
                     <table id="tb" class="table table-striped table-hover">
-                        <thead class="table-striped">
+                        <thead>
                             <th>Mã danh mục</th>
                             <th>Tên danh mục</th>
                             <th>Mô tả</th>
@@ -30,7 +38,7 @@
                             <th></th>
                         </thead>
                     {% if ds_danhmuc %}
-                        <tbody class="table-striped">
+                        <tbody>
                         {% for danhmuc in ds_danhmuc %}
                             <tr>
                                 <td>{{danhmuc.ma_danhmuc}}</td>
@@ -108,5 +116,28 @@
     max-height: 35px;
     }
 </style>
+<!--ajax search-->
+<script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script>
+$("#id_search").change(function(){
+    var search = $(this).val();
+    var ajaxDiv = $("#ajax_search");
+    $.ajax({
+        type: 'POST',
+        url: '../danhmuc_ajaxsearch/',
+        data:{
+            'search': $(this).val(),
+            csrfmiddlewaretoken: '{{csrf_token}}'
+        },
+        dataType: 'html',
+        success: function(data){
+            ajaxDiv.replaceWith(ajaxDiv.html(data));
+        }
+    });
 
+});
+
+
+</script>
+<!--//ajax search-->
 {%endblock%}

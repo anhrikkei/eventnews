@@ -91,7 +91,7 @@ class baiviet_view:
         bv_hientai = Baiviet.objects.get(ma_bai=bv_id)
         dm_hientai = Danhmuc.objects.get(ma_danhmuc=bv_hientai.danh_muc_id)
         ds_danhmuc = Danhmuc.objects.all()
-
+        # xử lý sự kiện khi nhấn button sửa
         if request.POST.get('btnsua'):
             try:
                 baiviet = Baiviet.objects.get(ma_bai=bv_id)
@@ -108,6 +108,7 @@ class baiviet_view:
                 return redirect('baiviet_ds')
             except:
                 return HttpResponse('khong de trong cac truong hoac nhap noi dung qua dai', request)
+        # //xử lý sự kiện khi nhấn button sửa
         # load template
         temp = loader.get_template('manage/baiviet_sua.html')
         # tạo dict truyền biến qua temp
@@ -128,5 +129,14 @@ class baiviet_view:
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             Baiviet.objects.get(ma_bai=bv_id).delete()
             return redirect('baiviet_ds')
-
-
+    # lấy dữ liệu trả về khi tìm kiếm
+    def get_dlsearch(request):
+        search = request.POST.get("search","")
+        dl = Baiviet.objects.filter(tieu_de__icontains=search).order_by('ngay_sua')[::-1][0:8]
+        temp = loader.get_template('manage/baiviet_ajaxsearch.html')
+        # tạo dict truyền biến qua temp
+        context = {
+            "dl": dl,
+        }
+        # //tạo dict truyền biến qua temp
+        return HttpResponse(temp.render(context, request))

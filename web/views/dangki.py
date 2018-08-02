@@ -95,7 +95,7 @@ class nguoidung_view:
                 "thongbao": "Mail đã được kích hoạt trước đó",
             }
             return HttpResponse(temp.render(context, request))
-
+# xử lý email để lấy mã xác nhận
     def quenpass(request):
         # kiểm tra trạng thái đăng nhập
         user=""
@@ -124,7 +124,7 @@ class nguoidung_view:
         }
         temp = loader.get_template('quenpass.html')
         return HttpResponse(temp.render(context, request))
-
+# cập nhật lại mật khẩu
     def taolaipass(request):
         # kiểm tra trạng thái đăng nhập
         user=""

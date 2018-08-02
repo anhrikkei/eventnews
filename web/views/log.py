@@ -48,7 +48,7 @@ class nguoidung_view:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
-
+# xử lý đăng xuất
     def dangxuat(request):
         if request.POST.get("btndangxuat"):
             del request.session['username']

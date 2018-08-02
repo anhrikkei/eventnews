@@ -1,0 +1,79 @@
+{% if ds_nguoidung %}
+    <table id="tb" class="table table-striped table-hover">
+        <thead>
+            <th>Tên đăng nhập</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Giới tính</th>
+            <th>Ảnh đại diện</th>
+            <th>Loại user</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </thead>
+        <tbody>
+        {% for nguoidung in ds_nguoidung %}
+            <tr>
+                <td>{{nguoidung.ten_dang_nhap}}</td>
+                <td>{{nguoidung.ho_ten}}</td>
+                <td>{{nguoidung.email}}</td>
+                <td>{{nguoidung.gioi_tinh}}</td>
+                <td>{{nguoidung.anh_dai_dien}}</td>
+                <td>
+                    {% if nguoidung.loai_user_id == 1%}
+                        admin
+                    {% elif nguoidung.loai_user_id == 2 %}
+                        user
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="form-group" style="background-color: gray; max-width: 70px">
+                        {% if nguoidung.loai_user_id == 1 %}
+                            <button style="background-color: gray; color:white" class="btn btn-sm btn-success">
+                                <i class="fa fa-exchange"></i>
+                            </button>
+                        {% else %}
+                            <a href="../nguoidung_trangthai/{{nguoidung.ten_dang_nhap}}">
+                                <button style="background-color: #00a98f; color:white" class="btn btn-sm btn-success">
+                                    <i class="fa fa-exchange"></i>
+                                </button>
+                            </a>
+                        {% endif %}
+                        <small name="btnmenu" class="" style="color:white">
+                            <i>{{nguoidung.trang_thai}}</i>
+                        </small>
+                    </div>
+                </td>
+                <td>
+                    {% if nguoidung.loai_user_id == 1 %}
+                        <button class="btn-link">
+                            <i class="glyphicon glyphicon-trash" onclick="tbxoa()"></i>
+                        </button>
+                        <script>
+                            function tbxoa(){
+                                alert('Không thể xóa tài khoản này');
+                            }
+                        </script>
+                    {% elif nguoidung.loai_user_id == 2 %}
+                    <button id="{{nguoidung.ten_dang_nhap}}" class="btn-link">
+                        <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
+                    </button>
+                    <script>
+                        $("#{{nguoidung.ten_dang_nhap}}").click(function(){
+                            if(confirm('Xóa người dùng {{nguoidung.ten_dang_nhap}} sẽ mất các bài viết trong danh mục?')==true){
+                                window.location='../nguoidung_xoa/{{nguoidung.ten_dang_nhap}}';
+                                }
+                            else{
+                                return false;
+                            }
+                        })
+                    </script>
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+{% else %}
+<center> không có dữ liệu thỏa mãn...</center>
+{% endif %}

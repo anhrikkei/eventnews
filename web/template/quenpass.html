@@ -2,27 +2,27 @@
 {% block nd %}
 {% load static %}
 <hr>
+<!--form nhập email để lấy mã xác nhận-->
 	<div class="container" style="min-height: 500px">
-        <div class="">
-            <div class="signin-form profile">
-                <h3 class="">Nhập email đăng ký tài khoản</h3>
-                <div class="col-md-3"></div>
-                <div class="login-form col-md-6">
-                    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <input style="color:#00a98f" class="form-control" type="email"
-                               id="mail" name="txtemail" placeholder="Email" required="">
-                        <input type="submit" name="btnsent" id="btnsent" value="Gửi mã xác nhận">
-                    </form>
-                    {% if thongbao != "" %}
-                        <br>
-                        <label style="color:00a98f">
-                            {{thongbao}}
-                        </label>
-                    {% endif %}
-                </div>
+        <div class="signin-form profile">
+            <h3 class="">Nhập email đăng ký tài khoản</h3>
+            <div class="col-md-3"></div>
+            <div class="login-form col-md-6">
+                <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <input style="color:#00a98f" class="form-control" type="email"
+                           id="mail" name="txtemail" placeholder="Email" required="">
+                    <input type="submit" name="btnsent" id="btnsent" value="Gửi mã xác nhận">
+                </form>
+                {% if thongbao != "" %}
+                    <br>
+                    <label style="color:00a98f">
+                        {{thongbao}}
+                    </label>
+                {% endif %}
             </div>
         </div>
 	</div>
+<!--//form nhập email để lấy mã xác nhận-->
 <script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
 <!--validate form đăng kí-->
 <script type="text/javascript">

@@ -1,0 +1,60 @@
+{% if ds_danhmuc %}
+    <table id="tb" class="table table-striped table-hover">
+        <thead class="table-striped">
+            <th>Mã danh mục</th>
+            <th>Tên danh mục</th>
+            <th>Mô tả</th>
+            <th>Ngày tạo</th>
+            <th>Ngày sửa</th>
+            <th>Người tạo</th>
+            <th>Đưa lên menu</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody class="table-striped">
+        {% for danhmuc in ds_danhmuc %}
+            <tr>
+                <td>{{danhmuc.ma_danhmuc}}</td>
+                <td>{{danhmuc.ten_danhmuc}}</td>
+                <td>{{danhmuc.mo_ta}}</td>
+                <td>{{danhmuc.ngay_tao|safe}}</td>
+                <td>{{danhmuc.ngay_sua|safe}}</td>
+                <td>{{danhmuc.nguoi_tao_id}}</td>
+                <td>
+                    <div class="form-group" style="background-color: gray; max-width: 70px">
+                        <a href="../is_menu/{{danhmuc.ma_danhmuc}}">
+                            <button type="" style="background-color: #00a98f" class="btn btn-sm btn-success">
+                                <i class="fa fa-exchange"></i>
+                            </button>
+                        </a>
+                        <small name="btnmenu" style="color:white">
+                            <i>{{danhmuc.is_menu}}</i>
+                        </small>
+                    </div>
+                </td>
+                <td><a href="../danhmuc_sua/{{danhmuc.ma_danhmuc}}">
+                    <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
+                </td>
+                <td>
+                    <button id="{{danhmuc.ma_danhmuc}}" class="btn-link">
+                        <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
+                    </button>
+                    <script>
+                        $("#{{danhmuc.ma_danhmuc}}").click(function(){
+                            if(confirm('Xóa danh mục {{danhmuc.ma_danhmuc}} sẽ mất các bài viết trong danh mục?')==true){
+                                window.location='../danhmuc_xoa/{{danhmuc.ma_danhmuc}}';
+                                }
+                            else{
+                                return false;
+                            }
+                        })
+                    </script>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+<center> không có dữ liệu thỏa mãn...</center>
+{% endif %}

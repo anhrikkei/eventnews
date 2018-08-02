@@ -45,6 +45,8 @@ class danhmuc_view:
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
+        else:
+            return redirect("admin")
         if user.loai_user_id != 1:
             return redirect('admin')
         # //kiểm tra trangnj thái đăng nhập
@@ -78,6 +80,8 @@ class danhmuc_view:
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
+        else:
+            return redirect("admin")
         if user.loai_user_id != 1:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
@@ -116,6 +120,8 @@ class danhmuc_view:
                 return redirect('danhmuc_ds')
             else:
                 return HttpResponse('Sai quyền truy cập', request)
+        else:
+            return HttpResponse('Sai quyền truy cập', request)
 
     # chọn danh mục hiện trên menu
     def is_menu(request, dm_id):
@@ -123,6 +129,8 @@ class danhmuc_view:
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
             user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+        else:
+            return redirect("admin")
         if user.loai_user_id != 1:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
@@ -141,3 +149,16 @@ class danhmuc_view:
         dm.save()
         # //xử lý cập nhật trạng thái danh mục
         return redirect('danhmuc_ds')
+    # lấy dữ liệu trả về khi search
+    def get_dlsearch(request):
+        search = request.POST.get("search","")
+        ds_danhmuc = Danhmuc.objects.filter(ten_danhmuc__icontains=search)
+        # load template
+        temp = loader.get_template('manage/danhmuc_ajaxsearch.html')
+        # tạo dict truyền biến qua temp
+        context = {
+            "ds_danhmuc": ds_danhmuc,
+            "search": search,
+        }
+        # //tạo dict truyền biến qua temp
+        return HttpResponse(temp.render(context, request))
