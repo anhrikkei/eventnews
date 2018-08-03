@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
 import hashlib
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class nguoidung_view:
@@ -22,17 +23,20 @@ class nguoidung_view:
             u.ten_dang_nhap = request.POST['username']
             u.email = request.POST['username']
             u.mat_khau = request.POST['password']
-            mat_khaus = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+            # mat_khaus = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+            mat_khaus = make_password(u.mat_khau, None, 'md5')
             try:
-                user = Nguoidung.objects.get(mat_khau=mat_khaus, pk=u.ten_dang_nhap)
+                user = Nguoidung.objects.get(pk=u.ten_dang_nhap)
             except:
                 try:
-                    user = Nguoidung.objects.get(mat_khau=mat_khaus, email=u.email)
+                    user = Nguoidung.objects.get(email=u.email)
                 except:
                     user = ""
-                    thongbao ="Tên đăng nhập/email hoặc mật khẩu không chính xác"
+                    thongbao ="Tên đăng nhập/email không chính xác"
             if user != "":
-                if user.mailactive != "active":
+                if check_password(u.mat_khau, user.mat_khau, None, 'md5') == False:
+                    thongbao = "Sai mật khẩu"
+                elif user.mailactive != "active":
                     user = ""
                     thongbao = "Tài khoản này chưa được kích hoạt"
                 elif user.trang_thai != "on":

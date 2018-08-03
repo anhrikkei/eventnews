@@ -2,9 +2,13 @@
 {% block nd %}
 {% load static %}
     <div class="container-fluid" style="min-height:500px">
-        <center><img src="{%static 'images/newsevent.png'%}"/>
-        <br/>
-            <h1><i style="color:#00a98f" class="glyphicon glyphicon-cog"></i></h1>
-        </center>
+        {% if user %}
+            dad
+        {% else %}
+            <center><img src="{%static 'images/newsevent.png'%}"/>
+            <br/>
+                <h1><i style="color:#00a98f" class="glyphicon glyphicon-cog"></i></h1>
+            </center>
+        {% endif %}
     </div>
 {% endblock %}

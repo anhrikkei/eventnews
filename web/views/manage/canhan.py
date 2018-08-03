@@ -3,9 +3,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
 import hashlib
-# import os
-# from django.core.files import File  # you need this somewhere
-# import urllib
+from django.contrib.auth.hashers import make_password
 
 class nguoidung_view(object):
     # cập nhật lại thông tin cá nhân
@@ -22,7 +20,8 @@ class nguoidung_view(object):
         if request.POST.get("btncapnhat"):
             u = Nguoidung.objects.get(pk=request.session['username'])
             u.mat_khau = request.POST['txtmoi']
-            u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+            # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+            u.mat_khau = make_password(u.mat_khau, None, 'md5')
             u.ho_ten = request.POST['txthoten']
             u.email = request.POST['txtemail']
             u.gioi_tinh = request.POST['rbngt']
@@ -40,7 +39,8 @@ class nguoidung_view(object):
             u.mailactive = u.mailactive
             u.loai_user_id = u.loai_user_id
             u.save()
-            thongbao="cập nhật thành công"
+            return redirect('canhan')
+            # thongbao="cập nhật thành công"
         # //xử lý cập nhật
         # load temp
         temp = loader.get_template('manage/canhan.html')

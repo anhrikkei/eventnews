@@ -5,6 +5,7 @@ from django.template import loader
 import hashlib
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
+from django.contrib.auth.hashers import make_password
 
 class nguoidung_view:
 # xử lý đăng kí
@@ -36,7 +37,8 @@ class nguoidung_view:
                 u = Nguoidung()
                 u.ten_dang_nhap = request.POST.get('txttendangnhap')
                 u.mat_khau = request.POST.get('txtmatkhau1')
-                u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+                # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
+                u.mat_khau = make_password(u.mat_khau, None, 'md5')
                 u.ho_ten = request.POST.get('txthoten')
                 u.email = request.POST.get('txtmail')
                 u.gioi_tinh = " "

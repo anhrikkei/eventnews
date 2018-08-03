@@ -34,8 +34,10 @@
                                         <input style="color:#00a98f" type="radio" name="rbngt" value="nu" checked="checked">nữ
                                     </label>
                                 {% else %}
-                                    <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
-                                    <label style="color:#00a98f" class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                    <label class="radio-inline">
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
+                                    </label>
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
                                 {% endif %}
                             </div>
                             <input class="form-control" type="file" name="fileimg" class="form-control" id="Anh" style="margin-top: 7"/>
@@ -60,9 +62,15 @@
                         </div>
                         <hr>
                         <center>
-                            username: <label>{{ user.ten_dang_nhap }}</label><br>
                             Họ tên: {{user.ho_ten}}<br>
-                            Giới tính: {{user.gioi_tinh}}<br>
+                            username: {{ user.ten_dang_nhap }}<br>
+                            Giới tính:
+                            {% if user.gioi_tinh == 'nam' %}
+                            <i class="fa fa-male"></i>
+                            {% elif user.gioi_tinh == 'nu' %}
+                            <i class="fa fa-female"></i>
+                            {% endif %}
+                            <br>
                         </center>
                         <hr>
                     </div>
