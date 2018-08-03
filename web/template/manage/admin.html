@@ -1,9 +1,44 @@
 {% extends "manage/baseadmin.html" %}
 {% block nd %}
 {% load static %}
-    <div class="container-fluid" style="min-height:500px">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <div class="container" style="min-height:500px">
         {% if user %}
-            dad
+            {% if user.loai_user_id == 1 %}
+                <div class="container fluid">
+                        <div class="col-md-2 agileits-w3layouts-grid">
+                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+								<div class="w3l_social_icon_gridl w3_facebook">
+									<button class="bd btn-link" value="btnnguoidung">
+                                        <i class="fa fa-user" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
+                                    </button>
+								</div>
+								<div class="clearfix"> </div>
+							</div>
+                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+								<div class="w3l_social_icon_gridl w3_facebook">
+									<button class="bd btn-link" value="btnbaiviet">
+                                        <i class="fa fa-pencil" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
+                                    </button>
+								</div>
+                                <div class="clearfix"> </div>
+							</div>
+                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+								<div class="w3l_social_icon_gridl w3_facebook">
+									<button class="bd btn-link" value="btndanhmuc">
+                                        <i class="fa fa-list" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
+                                    </button>
+								</div>
+                                <div class="clearfix"> </div>
+							</div>
+                        </div>
+                        <div class="col-md-10">
+                            <canvas id="chart" class="collapse active" style="width: 300px; height:150px"></canvas>
+                        </div>
+                    </div>
+            {% elif user.loai_user_id == 2 %}
+
+            {% endif %}
         {% else %}
             <center><img src="{%static 'images/newsevent.png'%}"/>
             <br/>
@@ -11,4 +46,53 @@
             </center>
         {% endif %}
     </div>
+<script src="{%static 'js/jquery-2.1.4.min.js'%}"></script>
+<script>
+<!--$(".bd").click(function(){-->
+    <!--var btn = $(this).val();-->
+    <!--$.ajax({-->
+        <!--type: 'POST',-->
+        <!--url: '',-->
+        <!--data:{-->
+            <!--'btn': btn,-->
+            <!--csrfmiddlewaretoken: '{{csrf_token}}'-->
+        <!--},-->
+        <!--dataType: 'html',-->
+        <!--success: function(data){-->
+            <!--ajaxDiv.replaceWith(ajaxDiv.html(data));-->
+        <!--}-->
+    <!--});-->
+
+<!--});-->
+
+    var ct = document.getElementById("chart").getContext('2d');
+    var myChart = new Chart(ct, {
+        type: 'line',
+        data: {
+            labels: ["2", "3", "4", "5", "6", "7"],
+            datasets: [{
+                label: '# thống kê thành viên tham gia',
+                data: [112, 119, 113, 105, 112, 233],
+                backgroundColor: [
+                    '#f6f6f6',
+                ],
+                borderColor: [
+                    '#00a98f',
+                ],
+                borderWidth: 3
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script>
+
 {% endblock %}
