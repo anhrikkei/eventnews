@@ -85,3 +85,4 @@ class nguoidung_view:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+

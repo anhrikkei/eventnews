@@ -6,38 +6,192 @@
         {% if user %}
             {% if user.loai_user_id == 1 %}
                 <div class="container fluid">
-                        <div class="col-md-2 agileits-w3layouts-grid">
-                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
-								<div class="w3l_social_icon_gridl w3_facebook">
-									<button class="bd btn-link" value="btnnguoidung">
-                                        <i class="fa fa-user" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
-                                    </button>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
-								<div class="w3l_social_icon_gridl w3_facebook">
-									<button class="bd btn-link" value="btnbaiviet">
-                                        <i class="fa fa-pencil" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
-                                    </button>
-								</div>
-                                <div class="clearfix"> </div>
-							</div>
-                            <div class="w3l_social_icon_grid w3ls_social_icon_grid">
-								<div class="w3l_social_icon_gridl w3_facebook">
-									<button class="bd btn-link" value="btndanhmuc">
-                                        <i class="fa fa-list" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
-                                    </button>
-								</div>
-                                <div class="clearfix"> </div>
-							</div>
-                        </div>
-                        <div class="col-md-10">
-                            <canvas id="chart" class="collapse active" style="width: 300px; height:150px"></canvas>
+                        <div class="container">
+                            <!--thống kê-->
+                            <div class="agileits-w3layouts-grid">
+                                <!--thống kê-->
+                                    <div class="col-md-3">
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading" style="background: #00a98f">
+                                                <small style="color: white">Tổng số bài viết</small>
+                                            </div>
+                                            <div class="panel-body" style="border:3px solid #00a98f">
+                                                    <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                                    border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                                        <i style="color: #00a98f" class="fa fa-pencil" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                                        border-bottom:2px solid #00a98f;">{{tong_baiviet}}</p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading" style="background: #00a98f">
+                                                <small style="color: white">Tổng số thành viên</small>
+                                            </div>
+                                            <div class="panel-body" style="border:3px solid #00a98f">
+                                                    <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                                    border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                                        <i style="color: #00a98f" class="fa fa-user" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                                        border-bottom:2px solid #00a98f;">{{tong_thanhvien}}</p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading" style="background: #00a98f">
+                                                <small style="color: white">Số danh mục</small>
+                                            </div>
+                                            <div class="panel-body" style="border:3px solid #00a98f">
+                                                    <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                                    border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                                        <i style="color: #00a98f" class="fa fa-list" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                                        border-bottom:2px solid #00a98f;">{{tong_danhmuc}}</p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading" style="background: #00a98f">
+                                                <small style="color: white">Số bài viết đóng góp</small>
+                                            </div>
+                                            <div class="panel-body" style="border:3px solid #00a98f">
+                                                    <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                                    border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                                        <i style="color: #00a98f" class="fa fa-pencil" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                                        border-bottom:2px solid #00a98f;">{{so_baiviet_user}}</p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!--//thống kê-->
+                            </div>
+                            <!--//thống kê-->
+                            <!--danh mục chọn biểu đồ-->
+                            <div class="col-md-2 agileits-w3layouts-grid">
+                                <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+                                    <div class="w3l_social_icon_gridl" style="color:#00a98f; border: 3px solid #00a98f">
+                                        <i class="fa fa-line-chart" aria-hidden="true" data-toggle="collapse" href="#chart"></i>
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+                                    <div class="w3l_social_icon_gridl"style="color:#00a98f; border: 3px solid #00a98f">
+                                        <i class="fa fa-bar-chart" aria-hidden="true" data-toggle="collapse" href="#chart1"></i>
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="w3l_social_icon_grid w3ls_social_icon_grid">
+                                    <div class="w3l_social_icon_gridl"style="color:#00a98f; border: 3px solid #00a98f">
+                                        <i class="fa fa-pie-chart" aria-hidden="true" data-toggle="collapse" href="#chart2"></i>
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                            </div>
+                            <!--//danh mục chọn biểu đồ-->
+                            <hr>
+                            <!--biểu đồ-->
+                            <div class="col-md-10">
+                                <canvas id="chart" class="collapse active" style="width: 600; height:200"></canvas>
+                                <canvas id="chart1" class="collapse fade" style="width: 600; height:200;"></canvas>
+                                <canvas id="chart2" class="collapse fade" style="width: 600; height:200;"></canvas>
+                            </div>
+                            <!--//biểu đồ-->
                         </div>
                     </div>
             {% elif user.loai_user_id == 2 %}
+                <div class="container fluid col-md-5">
+                    <!--thống kê-->
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading" style="background: #00a98f">
+                                    <small style="color: white">Tổng số bài viết</small>
+                                </div>
+                                <div class="panel-body" style="border:3px solid #00a98f">
+                                        <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                        border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                            <i style="color: #00a98f" class="fa fa-pencil" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="pull-right">
+                                            <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                            border-bottom:2px solid #00a98f;">{{tong_baiviet}}</p>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading" style="background: #00a98f">
+                                    <small style="color: white">Tổng số thành viên</small>
+                                </div>
+                                <div class="panel-body" style="border:3px solid #00a98f">
+                                        <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                        border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                            <i style="color: #00a98f" class="fa fa-user" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="pull-right">
+                                            <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                            border-bottom:2px solid #00a98f;">{{tong_thanhvien}}</p>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading" style="background: #00a98f">
+                                    <small style="color: white">Số danh mục</small>
+                                </div>
+                                <div class="panel-body" style="border:3px solid #00a98f">
+                                        <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                        border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                            <i style="color: #00a98f" class="fa fa-list" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="pull-right">
+                                            <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                            border-bottom:2px solid #00a98f;">{{tong_danhmuc}}</p>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading" style="background: #00a98f">
+                                    <small style="color: white">Số bài viết đóng góp</small>
+                                </div>
+                                <div class="panel-body" style="border:3px solid #00a98f">
+                                        <div class="w3l_social_icon_gridl" style="font-size: x-large;
+                                        border-top:2px solid #00a98f; border-right: 2px solid #00a98f">
+                                            <i style="color: #00a98f" class="fa fa-pencil" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="pull-right">
+                                            <p class="counter" style="color: #00a98f;font-size: xx-large;
+                                            border-bottom:2px solid #00a98f;">{{so_baiviet_user}}</p>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!--//thống kê-->
 
+                </div>
+                <!--biểu đồ-->
+                    <div class="col-md-7">
+                        <canvas id="chart3" style="width: 900; height:600"></canvas>
+                    </div>
+                <!--//biểu đồ-->
             {% endif %}
         {% else %}
             <center><img src="{%static 'images/newsevent.png'%}"/>
@@ -48,51 +202,165 @@
     </div>
 <script src="{%static 'js/jquery-2.1.4.min.js'%}"></script>
 <script>
-<!--$(".bd").click(function(){-->
-    <!--var btn = $(this).val();-->
-    <!--$.ajax({-->
-        <!--type: 'POST',-->
-        <!--url: '',-->
-        <!--data:{-->
-            <!--'btn': btn,-->
-            <!--csrfmiddlewaretoken: '{{csrf_token}}'-->
-        <!--},-->
-        <!--dataType: 'html',-->
-        <!--success: function(data){-->
-            <!--ajaxDiv.replaceWith(ajaxDiv.html(data));-->
-        <!--}-->
-    <!--});-->
 
-<!--});-->
-
-    var ct = document.getElementById("chart").getContext('2d');
-    var myChart = new Chart(ct, {
-        type: 'line',
-        data: {
-            labels: ["2", "3", "4", "5", "6", "7"],
-            datasets: [{
-                label: '# thống kê thành viên tham gia',
-                data: [112, 119, 113, 105, 112, 233],
-                backgroundColor: [
-                    '#f6f6f6',
-                ],
-                borderColor: [
-                    '#00a98f',
-                ],
-                borderWidth: 3
-            }]
+    $.ajax({
+        type: 'GET',
+        url: '{% url "baiviet_getchart" %}',
+        data:{
+            csrfmiddlewaretoken: '{{csrf_token}}'
         },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
+        dataType: 'json',
+        success: function(data){
+            var ctx = $("#chart").get(0).getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '# thống kê bài viết theo ngày',
+                        data: data.data,
+                        backgroundColor: [
+                            '#e7e7e7',
+                        ],
+                        borderColor: [
+                            '#00a98f',
+                        ],
+                        borderWidth: 3,
+                    }]
+                },
+                options: {
+                    scales: { yAxes: [{ ticks: {beginAtZero:true} }] }
+                }
+            });
         }
     });
 
-    </script>
 
+
+    <!--$.get('{% url "baiviet_getchart" %}', function(data) {-->
+        <!--if(data.data){-->
+            <!--alert(data.data);-->
+        <!--}-->
+
+    <!--});-->
+</script>
+<script>
+    $.ajax({
+        type: 'GET',
+        url: '{% url "baiviet_getchart_user" %}',
+        data:{
+            csrfmiddlewaretoken: '{{csrf_token}}'
+        },
+        dataType: 'json',
+        success: function(data){
+            var ct = $("#chart1").get(0).getContext("2d");
+            var myChart = new Chart(ct, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '# thống kê bài viết theo user',
+                        data: data.data,
+                        backgroundColor: '#00a98f',
+                        borderColor: '#e7e7e7',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    scales: { yAxes: [{ ticks: {beginAtZero:true} }] }
+                }
+            });
+        }
+    });
+
+
+
+    <!--$.get('{% url "baiviet_getchart" %}', function(data) {-->
+        <!--if(data.data){-->
+            <!--alert(data.data);-->
+        <!--}-->
+
+    <!--});-->
+</script>
+<script>
+    $.ajax({
+        type: 'GET',
+        url: '{% url "baiviet_getchart_danhmuc" %}',
+        data:{
+            csrfmiddlewaretoken: '{{csrf_token}}'
+        },
+        dataType: 'json',
+        success: function(data){
+            var ctz = $("#chart2").get(0).getContext("2d");
+            var myChart = new Chart(ctz, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '# thống kê bài viết theo user',
+                        data: data.data,
+                        backgroundColor: data.backgroundColor,
+                        borderColor: '#e7e7e7',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    scales: { yAxes: [{ ticks: {beginAtZero:true} }] }
+                }
+            });
+        }
+    });
+
+
+
+    <!--$.get('{% url "baiviet_getchart" %}', function(data) {-->
+        <!--if(data.data){-->
+            <!--alert(data.data);-->
+        <!--}-->
+
+    <!--});-->
+</script>
+<script>
+    $.ajax({
+        type: 'GET',
+        url: '{% url "baiviet_getchart_profile" %}',
+        data:{
+            csrfmiddlewaretoken: '{{csrf_token}}'
+        },
+        dataType: 'json',
+        success: function(data){
+            var bv = $("#chart3").get(0).getContext("2d");
+            var myChart = new Chart(bv, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '# thống kê bài viết đã đóng góp',
+                        data: data.data,
+                        backgroundColor: [
+                            '#E7E7E7',
+                        ],
+                        borderColor: [
+                            '#00a98f',
+                        ],
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    scales: { yAxes: [{ ticks: {beginAtZero:true} }] }
+                }
+            });
+        }
+    });
+
+
+
+    <!--$.get('{% url "baiviet_getchart" %}', function(data) {-->
+        <!--if(data.data){-->
+            <!--alert(data.data);-->
+        <!--}-->
+
+    <!--});-->
+</script>
+<hr>
 {% endblock %}

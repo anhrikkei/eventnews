@@ -31,6 +31,10 @@ urlpatterns = [
     path('baiviet_sua/<int:bv_id>', baiviet_ad.baiviet_view.sua, name="baiviet_sua"),
     path('baiviet_xoa/<int:bv_id>', baiviet_ad.baiviet_view.xoa, name="baiviet_xoa"),
     path('baiviet_ajaxsearch/', baiviet_ad.baiviet_view.get_dlsearch, name="baiviet_ajaxsearch"),
+    path('baiviet_getchart/', baiviet_ad.baiviet_view.get_chartdate, name="baiviet_getchart"),
+    path('baiviet_getchart_user/', baiviet_ad.baiviet_view.get_chartuser, name="baiviet_getchart_user"),
+    path('baiviet_getchart_profile/', baiviet_ad.baiviet_view.get_chartprofile, name="baiviet_getchart_profile"),
+    path('baiviet_getchart_danhmuc/', baiviet_ad.baiviet_view.get_chartdanhmuc, name="baiviet_getchart_danhmuc"),
 
     path('nguoidung_ds/', nguoidung.nguoidung_view.danhsach, name="nguoidung_ds"),
     path('nguoidung_xoa/<str:user_id>', nguoidung.nguoidung_view.xoa, name="nguoidung_xoa"),

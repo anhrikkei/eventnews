@@ -4,9 +4,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.template import loader
 from django.utils import timezone
+from django.db import connection
+from django.http import JsonResponse
 
 
-class baiviet_view:
+class baiviet_view():
 
     # hiển thị trang danh sách bài viết
     def danhsach(request):
@@ -19,7 +21,7 @@ class baiviet_view:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         # lấy danh sách bài viết theo loại user
-        ds_baiviet = Baiviet.objects.all().order_by('ngay_sua', 'ma_bai')[::-1]
+        ds_baiviet = Baiviet.objects.all().order_by('ngay_tao', 'ma_bai')[::-1]
         if user.loai_user_id == 2:
             ds_baiviet = Baiviet.objects.filter(tac_gia_id=user.ten_dang_nhap)
         # //lấy danh sách bài viết theo loại user
@@ -153,3 +155,97 @@ class baiviet_view:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+    # lấy dữ liệu tạo biểu đồ line bài viết theo thời gian
+    def get_chartdate(request):
+        # lấy ngày đầu tiên
+        bv = Baiviet.objects.all().order_by('ngay_tao')[::1][0:1]
+        for i in bv:
+            ngay_bd = i.ngay_tao
+        # lấy ngày đầu tiên
+        ngay_kt = timezone.now().date()
+        # lấy danh sách objects theo query
+        cursor = connection.cursor()
+        cursor.execute("Select COUNT(ma_bai) as sl, ngay_tao From web_baiviet WHERE (ngay_tao >= '"+str(ngay_bd)+"' and ngay_tao <= '"+str(ngay_kt)+"') GROUP BY(ngay_tao) ORDER BY(ngay_tao)")
+        dl_chart = cursor.fetchall()
+        # //lấy danh sách objects theo query
+        # xử lý danh sách object về dạng json
+        labels = []
+        data = []
+        for i in dl_chart:
+            labels.append(i[1])
+            data.append(i[0])
+        dl = {
+            "labels": labels,
+            "data": data,
+        }
+        kq = JsonResponse(dl)
+        # //xử lý danh sách object về dạng json
+        return kq
+    # lấy dữ liệu tạo biểu bar đồ bài viết theo user
+    def get_chartuser(request):
+        # lấy danh sách object theo query
+        cursor = connection.cursor()
+        cursor.execute("Select COUNT(ma_bai) as sl, tac_gia_id From web_baiviet GROUP BY(tac_gia_id)")
+        dl_chart = cursor.fetchall()
+        # //lấy danh sách object theo query
+        # xử lý dữ liệu chuyển về json cấp cho chart
+        labels = []
+        data = []
+        for i in dl_chart:
+            labels.append(i[1])
+            data.append(i[0])
+        dl = {
+            "labels": labels,
+            "data": data,
+        }
+        kq = JsonResponse(dl)
+        # //xử lý dữ liệu chuyển về json cấp cho chart
+        return kq
+    # lấy dữ liệu tạo biểu đồ line bài viết của cá nhân đóng góp theo thời gian
+    def get_chartprofile(request):
+        bv = Baiviet.objects.filter(tac_gia_id=request.session['username']).order_by('ngay_tao')[::1][0:1]
+        for i in bv:
+            ngay_bd = i.ngay_tao
+        ngay_kt = timezone.now().date()
+        # lấy danh sách objects theo query
+        cursor = connection.cursor()
+        cursor.execute("Select COUNT(ma_bai) as sl, ngay_tao From web_baiviet WHERE (tac_gia_id='"+request.session['username']+"' and ngay_tao >= '"+str(ngay_bd)+"' and ngay_tao <= '"+str(ngay_kt)+"') GROUP BY(ngay_tao) ORDER BY(ngay_tao)")
+        dl_chart = cursor.fetchall()
+        # //lấy danh sách objects theo query
+        # xử lý về json
+        labels = []
+        data = []
+        for i in dl_chart:
+            labels.append(i[1])
+            data.append(i[0])
+        dl = {
+            "labels": labels,
+            "data": data,
+        }
+        kq = JsonResponse(dl)
+        # //xử lý về json
+        return kq
+    # lấy dữ liệu tạo biểu đồ pie theo danh mục
+    def get_chartdanhmuc(request):
+        # lấy danh sách object theo query
+        cursor = connection.cursor()
+        cursor.execute("Select COUNT(ma_bai) as sl, danh_muc_id, ten_danhmuc From web_baiviet join web_danhmuc on web_baiviet.danh_muc_id = web_danhmuc.ma_danhmuc GROUP BY(danh_muc_id, ten_danhmuc)")
+        dl_chart = cursor.fetchall()
+        # //lấy danh sách object theo query
+        # xử lý đưa dl về dạng json
+        labels = []
+        data = []
+        backgroundColor = []
+        lst_corlor = ['#00a98f', '#00a97f', '#00a96f', '#00a95f', '#00a94f', '#00a93f', '#00a92f', '#00a91f']
+        for i in range(0, len(dl_chart)):
+            labels.append(dl_chart[i][2])
+            data.append(dl_chart[i][0])
+            backgroundColor.append(lst_corlor[i])
+        dl = {
+            "labels": labels,
+            "data": data,
+            "backgroundColor": backgroundColor,
+        }
+        kq = JsonResponse(dl)
+        # //xử lý đưa dl về dạng json
+        return kq
