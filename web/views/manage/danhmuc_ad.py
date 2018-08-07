@@ -52,16 +52,21 @@ class danhmuc_view:
         # //kiểm tra trangnj thái đăng nhập
         ngay_hientai = timezone.datetime.now().date()
         # xử lý thêm danh mục
+        thongbao = ""
         if request.POST.get('btnthem'):
-            dm = Danhmuc()
-            dm.ten_danhmuc = request.POST['txtten']
-            dm.mo_ta = request.POST['txtmota']
-            dm.ngay_tao = request.POST['txtngaytao']
-            dm.ngay_sua = timezone.datetime.today().date()
-            dm.nguoi_tao_id = request.session['username']
-            dm.is_menu = request.POST['rbn']
-            dm.save()
-            return redirect('danhmuc_ds')
+            try:
+                danhmuc = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
+                thongbao="tên danh mục này đã tồn tại"
+            except:
+                dm = Danhmuc()
+                dm.ten_danhmuc = request.POST['txtten']
+                dm.mo_ta = request.POST['txtmota']
+                dm.ngay_tao = request.POST['txtngaytao']
+                dm.ngay_sua = timezone.datetime.today().date()
+                dm.nguoi_tao_id = request.session['username']
+                dm.is_menu = request.POST['rbn']
+                dm.save()
+                return redirect('danhmuc_ds')
         # //xử lý thêm danh mục
         # load template
         temp = loader.get_template('manage/danhmuc_them.html')
@@ -70,6 +75,7 @@ class danhmuc_view:
             "ngay_hientai": ngay_hientai,
             "user": user,
             "nguoitao":request.session['username'],
+            "thongbao": thongbao,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
@@ -88,16 +94,21 @@ class danhmuc_view:
         dm = Danhmuc.objects.get(ma_danhmuc=dm_id)
         ngay_hientai = timezone.now().date()
         # xử lý cập nhật danh mục
+        thongbao = ""
         if request.POST.get('btnsua'):
-            dm = Danhmuc.objects.get(pk=dm_id)
-            dm.ten_danhmuc = request.POST['txtten']
-            dm.mo_ta = request.POST['txtmota']
-            dm.ngay_tao = request.POST['txtngaytao']
-            dm.ngay_sua = timezone.datetime.today().date()
-            dm.nguoi_tao_id = request.session['username']
-            dm.is_menu = request.POST['rbn']
-            dm.save()
-            return redirect('danhmuc_ds')
+            try:
+                danhmuc = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
+                thongbao="tên danh mục này đã tồn tại"
+            except:
+                dm = Danhmuc.objects.get(pk=dm_id)
+                dm.ten_danhmuc = request.POST['txtten']
+                dm.mo_ta = request.POST['txtmota']
+                dm.ngay_tao = request.POST['txtngaytao']
+                dm.ngay_sua = timezone.datetime.today().date()
+                dm.nguoi_tao_id = request.session['username']
+                dm.is_menu = request.POST['rbn']
+                dm.save()
+                return redirect('danhmuc_ds')
         # //xử lý cập nhật danh mục
         # load template
         temp = loader.get_template('manage/danhmuc_sua.html')
@@ -107,6 +118,7 @@ class danhmuc_view:
             "ngay_hientai": ngay_hientai,
             "user": user,
             "nguoitao": request.session['username'],
+            "thongbao":thongbao,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))

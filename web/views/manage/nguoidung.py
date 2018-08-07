@@ -75,12 +75,14 @@ class nguoidung_view:
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
         search = request.POST.get("search","")
-        ds_nguoidung = Nguoidung.objects.filter(ten_dang_nhap__icontains=search)
+        ds_nguoidung1 = Nguoidung.objects.filter(ten_dang_nhap__icontains=search)
+        ds_nguoidung2 = Nguoidung.objects.filter(email__icontains=search)
+        ds_nguoidung = list(ds_nguoidung1) + list(ds_nguoidung2)
         # load template
         temp = loader.get_template('manage/nguoidung_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
-            "ds_nguoidung": ds_nguoidung,
+            "ds_nguoidung": set(ds_nguoidung),
             "search": search,
         }
         # //tạo dict truyền biến qua temp

@@ -17,20 +17,21 @@
                 <!--thanh tìm kiếm-->
                 <div class="pull-right">
                     <button class="btn-link">
-                        <a href="/baiviet_ds/"><i style="color:#00a98f" class="glyphicon glyphicon-refresh"></i></a>
+                        <a href="/nguoidung_ds/"><i style="color:#00a98f" class="glyphicon glyphicon-refresh"></i></a>
                     </button>
                     <input type="search" name="search" id="id_search"/>
                 </div>
                 <!--//thanh tìm kiếm-->
             </div>
+            <!--danh sách người dùng-->
             <div class="panel">
                 <div id="ajax_search" class="box box-primary">
                     <table id="tb" class="table table-striped table-hover">
                         <thead>
+                            <th></th>
                             <th>Tên đăng nhập</th>
                             <th>Họ tên</th>
                             <th>Email</th>
-                            <th>Giới tính</th>
                             <th>Ảnh đại diện</th>
                             <th>Loại user</th>
                             <th>Trạng thái</th>
@@ -40,11 +41,20 @@
                         <tbody>
                         {% for nguoidung in ds_nguoidung %}
                             <tr>
+                                <td>
+                                    {% if nguoidung.gioi_tinh == 'nam' %}
+                                    <i class="fa fa-male"></i>
+                                    {% elif nguoidung.gioi_tinh == 'nu' %}
+                                    <i class="fa fa-female"></i>
+                                    {% endif %}
+                                </td>
                                 <td>{{nguoidung.ten_dang_nhap}}</td>
                                 <td>{{nguoidung.ho_ten}}</td>
                                 <td>{{nguoidung.email}}</td>
-                                <td>{{nguoidung.gioi_tinh}}</td>
-                                <td>{{nguoidung.anh_dai_dien}}</td>
+
+                                <td>
+                                    <img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{nguoidung.anh_dai_dien}}" alt="">
+                                </td>
                                 <td>{{nguoidung.loai_user.ten_loai}}</td>
                                 <td>
                                     <div class="form-group" style="background-color: gray; max-width: 70px">
@@ -95,6 +105,7 @@
                         </tbody>
                     {% endif %}
                     </table>
+                    <!--phân trang-->
                     <div class="pull-right">
                         <ul class="pagination pagintion-sm">
                             <div class="pagination">
@@ -116,8 +127,10 @@
                             </div>
                         </ul>
                     </div>
+                    <!--//phân trang-->
                 </div>
             </div>
+            <!--//danh sách người dùng-->
         </div>
     </section>
     <!--//hiện danh sách người dùng-->

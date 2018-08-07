@@ -36,7 +36,6 @@
                                    value="{{nguoitao}}" readonly="readonly"/>
                         </div>
 
-
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
@@ -75,8 +74,8 @@
                         </div>
                     </div>
 
-                    {% if form.errors %}
-                        Co loi xay ra. {{ form.errors }}
+                    {% if thongbao != ""%}
+                    <center><label style="color:#00a98f">{{thongbao}}</label></center>
                     {% endif %}
                 </div>
 

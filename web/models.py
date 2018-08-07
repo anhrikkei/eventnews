@@ -25,7 +25,7 @@ class Nguoidung(models.Model):
 class Danhmuc(models.Model):
     
     ma_danhmuc = models.AutoField(primary_key= True)
-    ten_danhmuc = models.CharField(max_length= 50)
+    ten_danhmuc = models.CharField(max_length= 50, unique=True)
     mo_ta = models.CharField(max_length=100)
     ngay_tao = models.DateField()
     ngay_sua = models.DateField()
