@@ -2,7 +2,6 @@ from web.models import Nguoidung
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
-import hashlib
 from django.contrib.auth.hashers import make_password
 
 class nguoidung_view(object):
@@ -20,7 +19,6 @@ class nguoidung_view(object):
         if request.POST.get("btncapnhat"):
             u = Nguoidung.objects.get(pk=request.session['username'])
             u.mat_khau = request.POST['txtmoi']
-            # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
             u.mat_khau = make_password(u.mat_khau, None, 'md5')
             u.ho_ten = request.POST['txthoten']
             u.email = request.POST['txtemail']

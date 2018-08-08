@@ -11,9 +11,9 @@ class Loaiuser(models.Model):
 class Nguoidung(models.Model):
     
     ten_dang_nhap = models.CharField(primary_key= True, max_length= 15)
-    mat_khau = models.CharField(max_length= 150)
+    mat_khau = models.CharField(max_length= 150, null=False)
     ho_ten = models.CharField(max_length= 50)
-    email = models.EmailField(max_length=70,blank=True, unique=True)
+    email = models.EmailField(max_length=70,blank=False, unique=True)
     gioi_tinh = models.CharField(max_length= 7)
     anh_dai_dien = models.FileField(upload_to='uploads')
     loai_user = models.ForeignKey('Loaiuser', on_delete=models.CASCADE)

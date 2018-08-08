@@ -20,30 +20,34 @@
 					{% if ds_timkiem %}
 						{% for baiviet in ds_timkiem %}
 							<div class="w3l-news col-md-4">
-								<div class="media response-info hop">
-									<div>
-										<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao|safe }}</small>
-										<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-										<hr>
-										<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-											{{ baiviet.noi_dung| safe }}
-										</a>
+								<div style="max-width: 330px; margin:auto; color:#606060">
+									<div class="media response-info hop">
+										<div>
+											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<small>
+												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+											</small>
+											<hr>
+											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
+												{{ baiviet.noi_dung| safe }}
+											</a>
 
-										<div class="media-body">
-											<p>
-												<small style="float:left; font-family: italy; color: gray">
-													--{{baiviet.tac_gia.ten_dang_nhap}}--
-												</small>
-											</p>
-											<p>
-												<br/>
-												<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
-													<small style="font-family: italy;">chi tiết...</small>
-												</a>
-											</p>
+											<div class="media-body">
+												<p>
+													<small style="float:left; font-family: italy; color: gray">
+														--{{baiviet.tac_gia.ten_dang_nhap}}--
+													</small>
+												</p>
+												<p>
+													<br/>
+													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+														<small style="font-family: italy;">chi tiết...</small>
+													</a>
+												</p>
+											</div>
 										</div>
 									</div>
+									<hr>
 								</div>
 								<hr>
 							</div>

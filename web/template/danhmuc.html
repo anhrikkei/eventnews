@@ -2,10 +2,6 @@
 {% block nd %}
 {% load static %}
 <div style="vartical-align: middle; height: 300px; background-image: url( {% static 'images/baner2.jpg' %});">
-    <center>
-        <h2 style="fontstyle:; padding: 10%; color: white">{{ danhmucs.mo_ta}} </h2>
-    </center>
-	<p></p>
 </div>
 
 <!--nội dung-->
@@ -26,12 +22,13 @@
 			<div class="col-md-8">
 				{% if ds_baiviet_danhmuc %}
 					{% for baiviet in ds_baiviet_danhmuc %}
-					<div class="w3l-news col-md-6">
+					<div class="col-md-6" style="max-width: 330px; margin:auto; color:#606060">
 						<div class="media response-info hop">
 							<div>
 								<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-								<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-								<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
+								<small>
+									<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+								</small>
 								<hr>
 								<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
 									{{ baiviet.noi_dung| safe }}
@@ -60,9 +57,9 @@
 			</div>
 			<!--//danh sách tin-->
 			<!--tin hot, ton top-->
-			<div class="col-md-4" style="border-left: 1px solid gray">
+			<div class="col-md-4" style="border-left: 1px solid #00a98f">
 				<!--danh mục tab tin-->
-				<ul class="nav nav-tabs col-md-10" style="float:left;">
+				<ul class="nav nav-tabs col-md-10" style="">
 					<li class="active"><a data-toggle="tab" href="#tintop" style="color: #00a98f">Top người xem</a></li>
 					<li><a data-toggle="tab" href="#tinhot" style="color: #00a98f">Tin hot</a></li>
 				</ul>
@@ -73,28 +70,32 @@
 						<div class="w3l-news_info_agile_its">
 							{% if ds_tintop %}
 								{% for baiviet in ds_tintop %}
-								<div style="float:left;" class="w3l-news">
-									<div class="media response-info box">
-										<div class="">
+								<div class="col-md-10" style="max-width: 330px; margin:auto">
+									<div class="media response-info hop">
+										<div style="color:gray">
 											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-											<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-											<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-											<br/>
+											<small>
+												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+											</small>
+											<hr>
 											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
 												{{ baiviet.noi_dung| safe }}
 											</a>
+
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
 														--{{baiviet.tac_gia.ten_dang_nhap}}--
 													</small>
-													<br/><a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">chi tiết...</a>
+												</p>
+												<p>
+													<br/>
+													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+														<small style="font-family: italy;">chi tiết...</small>
+													</a>
 												</p>
 											</div>
-
 										</div>
-
-
 									</div>
 									<hr>
 								</div>
@@ -107,30 +108,35 @@
 						<div class="w3l-news_info_agile_its">
 						{% if ds_tinhot %}
 							{% for baiviet in ds_tinhot %}
-							<div class="w3l-news" style="float:left">
-								<div class="media response-info box">
-									<div class="media-left">
-										<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
-										<small style="float:left"><i class="fa fa-calendar" aria-hidden="true"></i>: {{ baiviet.ngay_tao }}</small>
-										<small style="float:right"><i class="fa fa-eye" aria-hidden="true"></i>: {{ baiviet.luot_xem }}</small>
-										<br/>
-										<a href="../baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-											{{ baiviet.noi_dung| safe }}
-										</a>
-										<div class="media-body">
-											<p>
-												<small style="float:left; font-family: italy; color: gray">
-													--{{baiviet.tac_gia.ten_dang_nhap}}--
-												</small>
-												<br/><a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">chi tiết...</a>
-											</p>
+							<div class="col-md-10" style="max-width: 330px; margin:auto">
+									<div class="media response-info hop">
+										<div style="color:gray">
+											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<small>
+												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+											</small>
+											<hr>
+											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
+												{{ baiviet.noi_dung| safe }}
+											</a>
+
+											<div class="media-body">
+												<p>
+													<small style="float:left; font-family: italy; color: gray">
+														--{{baiviet.tac_gia.ten_dang_nhap}}--
+													</small>
+												</p>
+												<p>
+													<br/>
+													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+														<small style="font-family: italy;">chi tiết...</small>
+													</a>
+												</p>
+											</div>
 										</div>
 									</div>
-
-
+									<hr>
 								</div>
-								<hr>
-							</div>
 							{% endfor %}
 						{% endif %}
 						<div class="clearfix"> </div>
@@ -180,7 +186,6 @@
 		   -webkit-line-clamp: 6;
 		   font-size: 10px;
 		   line-height: 1;
-		   height: 10*6*1;   /* chiều cao tối đa đoạn văn bản = (cỡ chữ) x (số dòng) x (chiều cao) */
 		   max-height: 250px;
 		   max-width: 300px;
 		}

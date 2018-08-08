@@ -78,11 +78,13 @@
                                     <option value="{{dm_hientai.ma_danhmuc}}">
                                         --{{dm_hientai.ten_danhmuc}}--
                                     </option>
-                                {% for danhmuc in ds_danhmuc %}
-                                    <option value="{{danhmuc.ma_danhmuc}}">
-                                        {{danhmuc.ten_danhmuc}}
-                                    </option>
-                                {% endfor %}
+                                {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
+                                    {% for danhmuc in ds_danhmuc %}
+                                        <option value="{{danhmuc.ma_danhmuc}}">
+                                            {{danhmuc.ten_danhmuc}}
+                                        </option>
+                                    {% endfor %}
+                                {% endif %}
                                 </select>
                             {% endif %}
                         </div>
@@ -115,14 +117,25 @@
                     </div>
                     </div>
                     <div class="col-md-7">
-                        <div class="form-group">
-                            <small>Tiêu đề:</small>
-                            <input type="text" name="txttieude" value="{{bv_hientai.tieu_de}}" class="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <small>Nội dung bài viết</small>
-                            <textarea name="txtnoidung">{{bv_hientai.noi_dung | safe}}</textarea>
-                        </div>
+                        {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
+                            <div class="form-group">
+                                <small>Tiêu đề:</small>
+                                <input type="text" name="txttieude" value="{{bv_hientai.tieu_de}}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <small>Nội dung bài viết</small>
+                                <textarea name="txtnoidung">{{bv_hientai.noi_dung | safe}}</textarea>
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                <small>Tiêu đề:</small>
+                                <input type="text" name="txttieude" readonly="readonly" value="{{bv_hientai.tieu_de}}" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <small>Nội dung bài viết</small>
+                                <textarea readonly="readonly" name="txtnoidung">{{bv_hientai.noi_dung | safe}}</textarea>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 

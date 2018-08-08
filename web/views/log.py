@@ -2,7 +2,6 @@ from web.models import Nguoidung, Danhmuc
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
-import hashlib
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -23,7 +22,6 @@ class nguoidung_view:
             u.ten_dang_nhap = request.POST['username']
             u.email = request.POST['username']
             u.mat_khau = request.POST['password']
-            # mat_khaus = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
             mat_khaus = make_password(u.mat_khau, None, 'md5')
             try:
                 user = Nguoidung.objects.get(pk=u.ten_dang_nhap)

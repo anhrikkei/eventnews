@@ -37,7 +37,6 @@ class nguoidung_view:
                 u = Nguoidung()
                 u.ten_dang_nhap = request.POST.get('txttendangnhap')
                 u.mat_khau = request.POST.get('txtmatkhau1')
-                # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest()+u.mat_khau
                 u.mat_khau = make_password(u.mat_khau, None, 'md5')
                 u.ho_ten = request.POST.get('txthoten')
                 u.email = request.POST.get('txtmail')
@@ -144,7 +143,8 @@ class nguoidung_view:
             try:
                 u = Nguoidung.objects.get(xacnhan=request.POST['txtma'])
                 u.mat_khau = request.POST['txtmoi']
-                u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest() + u.mat_khau
+                # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest() + u.mat_khau
+                u.mat_khau = make_password(u.mat_khau, None, 'md5')
                 u.xacnhan = ""
                 u.save()
                 thongbao = "Mật khẩu đã được đặt lại thành công"

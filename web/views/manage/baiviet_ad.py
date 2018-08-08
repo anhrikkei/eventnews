@@ -147,7 +147,8 @@ class baiviet_view():
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
         search = request.POST.get("search","")
-        dl = Baiviet.objects.filter(tieu_de__icontains=search).order_by('ngay_sua')[::-1][0:8]
+        dl = Baiviet.objects.filter(tieu_de__icontains=search).order_by('ngay_tao')[::-1][0:8]
+
         temp = loader.get_template('manage/baiviet_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
