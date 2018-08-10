@@ -12,11 +12,11 @@ def index(request, danhmuc_id):
         request.session.set_expiry(900)
     # //kiểm tra trạng thái đăng nhập
     # xử lý dữ liệu
-    ds_danhmuc = Danhmuc.objects.filter(is_menu='yes')
+    ds_danhmuc = Danhmuc.objects.filter(is_menu='True')
     danhmucs = Danhmuc.objects.get(ma_danhmuc = danhmuc_id)
-    ds_baiviet = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='on').order_by('ma_bai')[::-1]
-    ds_tintop = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='on').order_by('luot_xem')[::-1][0:4]
-    ds_tinhot = Baiviet.objects.filter(tin_hot='yes', trang_thai='on').order_by('luot_xem')[::-1][0:4]
+    ds_baiviet = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='False').order_by('ma_bai')[::-1]
+    ds_tintop = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='False').order_by('luot_xem')[::-1][0:4]
+    ds_tinhot = Baiviet.objects.filter(tin_hot='True', trang_thai='False').order_by('luot_xem')[::-1][0:4]
     # //xử lý dữ liệu
     # phân trang
     paginator = Paginator(ds_baiviet, 10)

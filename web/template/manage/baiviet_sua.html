@@ -35,37 +35,37 @@
                         </div>
                         <div class="form-group">
                             <small>Trạng thái:</small>
-                            {% if bv_hientai.trang_thai == 'on' %}
+                            {% if bv_hientai.trang_thai == 0 %}
                                 {% if user.loai_user_id == 1 %}
                                     <div class="form-control">
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="on" checked="checked">on
+                                            <input type="radio" name="rbntt" value="False" checked="checked">unlock
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="off">off
+                                            <input type="radio" name="rbntt" value="True">lock
                                         </label>
                                     </div>
                                 {% elif user.loai_user_id == 2 %}
                                     <div class="form-control" readonly="readonly">
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="on" checked="checked">on
+                                            <input type="radio" name="rbntt" value="False" checked="checked">unlock
                                         </label>
                                     </div>
                                 {% endif %}
-                            {% elif bv_hientai.trang_thai == 'off' %}
+                            {% elif bv_hientai.trang_thai == 1 %}
                                 {% if user.loai_user_id == 1 %}
                                     <div class="form-control">
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="on">on
+                                            <input type="radio" name="rbntt" value="False">unlock
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="off" checked="checked">off
+                                            <input type="radio" name="rbntt" value="True" checked="checked">lock
                                         </label>
                                     </div>
                                 {% elif user.loai_user_id == 2 %}
                                     <div class="form-control" readonly="readonly">
                                         <label class="radio-inline">
-                                            <input type="radio" name="rbntt" value="off" checked="checked">off
+                                            <input type="radio" name="rbntt" value="True" checked="checked">lock
                                         </label>
                                     </div>
                                 {% endif %}
@@ -73,30 +73,31 @@
                         </div>
                         <div class="form-group">
                             <small>Danh mục:</small>
-                            {% if ds_danhmuc %}
+
                                 <select name="sl_danhmuc" class="form-control">
                                     <option value="{{dm_hientai.ma_danhmuc}}">
                                         --{{dm_hientai.ten_danhmuc}}--
                                     </option>
-                                {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
-                                    {% for danhmuc in ds_danhmuc %}
-                                        <option value="{{danhmuc.ma_danhmuc}}">
-                                            {{danhmuc.ten_danhmuc}}
-                                        </option>
-                                    {% endfor %}
-                                {% endif %}
+                                    {% if ds_danhmuc %}
+                                        {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
+                                            {% for danhmuc in ds_danhmuc %}
+                                                <option value="{{danhmuc.ma_danhmuc}}">
+                                                    {{danhmuc.ten_danhmuc}}
+                                                </option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endif %}
                                 </select>
-                            {% endif %}
                         </div>
                         {% if user.loai_user_id == 1 %}
                             <div class="form-group">
                                 <small>Tin hot:</small>
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="yes">yes
+                                        <input type="radio" name="rbn" value="True">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                        <input type="radio" name="rbn" value="False" checked="checked">no
                                     </label>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@
                                 <small>Tin hot:</small>
                                 <div class="form-control" readonly="readonly">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                        <input type="radio" name="rbn" value="False" checked="checked">no
                                     </label>
                                 </div>
                             </div>

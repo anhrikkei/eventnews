@@ -11,11 +11,11 @@ def index(request):
         request.session.set_expiry(900)
     # //kiểm tra trạng thái đăng nhập
     # xử lý dữ liệu
-    ds_danhmuc = Danhmuc.objects.filter(is_menu='yes')
+    ds_danhmuc = Danhmuc.objects.filter(is_menu='True')
     danhmuc_trangchu = Danhmuc.objects.all().order_by('ngay_tao')[0:5]
-    ds_baivietmoi = Baiviet.objects.filter(trang_thai='on').order_by('ngay_sua')[::-1][0:6]
-    ds_tinhot = Baiviet.objects.filter(tin_hot='yes', trang_thai='on')[0:6]
-    ds_tintop = Baiviet.objects.all().order_by('luot_xem')[::-1][0:6]
+    ds_baivietmoi = Baiviet.objects.filter(is_locked='False').order_by('datetime_updated')[::-1][0:6]
+    ds_tinhot = Baiviet.objects.filter(is_hot='True', is_locked='False')[0:6]
+    ds_tintop = Baiviet.objects.all().order_by('views')[::-1][0:6]
     so_baiviet = Baiviet.objects.count()
     so_nguoidung = Nguoidung.objects.count()
     # //xử lý dữ liệu

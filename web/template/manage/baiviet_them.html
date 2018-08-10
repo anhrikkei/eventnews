@@ -37,16 +37,16 @@
                             {% if user.loai_user_id == 1 %}
                             <div class="form-control">
                                 <label class="radio-inline">
-                                    <input type="radio" name="rbntt" value="on" checked="checked">on
+                                    <input type="radio" name="rbntt" value="False" checked="checked">unlock
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="rbntt" value="off">off
+                                    <input type="radio" name="rbntt" value="True">lock
                                 </label>
                             </div>
                             {% elif user.loai_user_id == 2 %}
                             <div class="form-control" readonly="readonly">
                                 <label class="radio-inline">
-                                    <input type="radio" name="rbntt" value="off" checked="checked">off
+                                    <input type="radio" name="rbntt" value="True" checked="checked">lock
                                 </label>
                             </div>
                             {% endif %}
@@ -68,10 +68,10 @@
                                 <small>Tin hot:</small>
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="yes">yes
+                                        <input type="radio" name="rbn" value="True">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                        <input type="radio" name="rbn" value="False" checked="checked">no
                                     </label>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <small>Tin hot:</small>
                                 <div class="form-control" readonly="readonly">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                        <input type="radio" name="rbn" value="False" checked="checked">no
                                     </label>
                                 </div>
                             </div>
@@ -101,7 +101,6 @@
                         </div>
                     </div>
                 </div>
-
             </form>
             <!--//form thêm bài viết-->
         </section>

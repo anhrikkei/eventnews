@@ -48,22 +48,22 @@
                         </div>
                         <div class="form-group">
                             <label>Đưa lên menu:</label>
-                            {% if dm.is_menu == 'no' %}
+                            {% if dm.is_menu == 'False' %}
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="yes">yes
+                                        <input type="radio" name="rbn" value="True">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no" checked="checked">no
+                                        <input type="radio" name="rbn" value="False" checked="checked">no
                                     </label>
                                 </div>
-                            {% elif dm.is_menu == 'yes' %}
+                            {% elif dm.is_menu == 'True' %}
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="yes" checked="checked">yes
+                                        <input type="radio" name="rbn" value="True" checked="checked">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="no">no
+                                        <input type="radio" name="rbn" value="False">no
                                     </label>
                                 </div>
                             {% endif %}

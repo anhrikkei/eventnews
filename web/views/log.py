@@ -37,7 +37,7 @@ class nguoidung_view:
                 elif user.mailactive != "active":
                     user = ""
                     thongbao = "Tài khoản này chưa được kích hoạt"
-                elif user.trang_thai != "on":
+                elif user.trang_thai == 'True':
                     user = ""
                     thongbao = "Tài khoản này đã bị khóa"
                 else:

@@ -55,17 +55,17 @@ class danhmuc_view:
         thongbao = ""
         if request.POST.get('btnthem'):
             try:
-                danhmuc = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
+                category = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
                 thongbao="tên danh mục này đã tồn tại"
             except:
-                dm = Danhmuc()
-                dm.ten_danhmuc = request.POST['txtten']
-                dm.mo_ta = request.POST['txtmota']
-                dm.ngay_tao = request.POST['txtngaytao']
-                dm.ngay_sua = timezone.datetime.today().date()
-                dm.nguoi_tao_id = request.session['username']
-                dm.is_menu = request.POST['rbn']
-                dm.save()
+                category = Danhmuc()
+                category.ten_danhmuc = request.POST['txtten']
+                category.mo_ta = request.POST['txtmota']
+                category.ngay_tao = request.POST['txtngaytao']
+                category.ngay_sua = timezone.datetime.today().date()
+                category.nguoi_tao_id = request.session['username']
+                category.is_menu = request.POST['rbn']
+                category.save()
                 return redirect('danhmuc_ds')
         # //xử lý thêm danh mục
         # load template
@@ -154,10 +154,10 @@ class danhmuc_view:
         dm.ngay_tao = dm.ngay_tao
         dm.ngay_sua = timezone.datetime.today().date()
         dm.nguoi_tao_id = dm.nguoi_tao_id
-        if dm.is_menu == 'yes':
-            dm.is_menu = 'no'
-        elif dm.is_menu == 'no':
-            dm.is_menu = 'yes'
+        if dm.is_menu == 'True':
+            dm.is_menu = 'False'
+        elif dm.is_menu == 'False':
+            dm.is_menu = 'True'
         dm.save()
         # //xử lý cập nhật trạng thái danh mục
         return redirect('danhmuc_ds')

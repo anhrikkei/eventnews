@@ -21,7 +21,7 @@ class baiviet_view():
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         # lấy danh sách bài viết theo loại user
-        ds_baiviet = Baiviet.objects.all().order_by('ngay_tao', 'ma_bai')[::-1]
+        ds_baiviet = Baiviet.objects.all().order_by('datetime_created', 'id')[::-1]
         if user.loai_user_id == 2:
             ds_baiviet = Baiviet.objects.filter(tac_gia_id=user.ten_dang_nhap)
         # //lấy danh sách bài viết theo loại user
@@ -59,17 +59,17 @@ class baiviet_view():
         ds_danhmuc = Danhmuc.objects.all()
         if request.POST.get('btnthem'):
             try:
-                baiviet = Baiviet()
-                baiviet.tieu_de = request.POST["txttieude"]
-                baiviet.noi_dung = request.POST["txtnoidung"]
-                baiviet.ngay_tao = request.POST["txtngaytao"]
-                baiviet.ngay_sua = timezone.now().date()
-                baiviet.tac_gia_id = request.POST["txttacgia"]
-                baiviet.luot_xem = request.POST['txtluotxem']
-                baiviet.trang_thai = request.POST["rbntt"]
-                baiviet.tin_hot = request.POST["rbn"]
-                baiviet.danh_muc_id = request.POST["sl_danhmuc"]
-                baiviet.save()
+                post = Baiviet()
+                post.title = request.POST["txttieude"]
+                post.content = request.POST["txtnoidung"]
+                post.datetime_created = request.POST["txtngaytao"]
+                post.datetime_updated = timezone.now().date()
+                post.tac_gia_id = request.POST["txttacgia"]
+                post.views = request.POST['txtluotxem']
+                post.is_locked = request.POST["rbntt"]
+                post.is_hot = request.POST["rbn"]
+                post.category_id = request.POST["sl_danhmuc"]
+                post.save()
                 return redirect('baiviet_ds')
             except:
                 return HttpResponse('khong de trong hoac nhap noi dung bai viet qua dai', request)
@@ -94,26 +94,26 @@ class baiviet_view():
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         ngay_hientai = timezone.datetime.now().date()
-        bv_hientai = Baiviet.objects.get(ma_bai=bv_id)
-        dm_hientai = Danhmuc.objects.get(ma_danhmuc=bv_hientai.danh_muc_id)
+        bv_hientai = Baiviet.objects.get(id=bv_id)
+        dm_hientai = Danhmuc.objects.get(ma_danhmuc=bv_hientai.category_id)
         ds_danhmuc = Danhmuc.objects.all()
         # xử lý sự kiện khi nhấn button sửa
         if request.POST.get('btnsua'):
-            try:
-                baiviet = Baiviet.objects.get(ma_bai=bv_id)
-                baiviet.tieu_de = request.POST["txttieude"]
-                baiviet.noi_dung = request.POST["txtnoidung"]
-                baiviet.ngay_tao = request.POST["txtngaytao"]
-                baiviet.ngay_sua = timezone.now().date()
-                baiviet.tac_gia_id = request.POST["txttacgia"]
-                baiviet.luot_xem = request.POST['txtluotxem']
-                baiviet.trang_thai = request.POST["rbntt"]
-                baiviet.tin_hot = request.POST["rbn"]
-                baiviet.danh_muc_id = request.POST["sl_danhmuc"]
-                baiviet.save()
+            # try:
+                post = Baiviet.objects.get(id=bv_id)
+                post.title = request.POST["txttieude"]
+                post.content = request.POST["txtnoidung"]
+                post.datetime_created = request.POST["txtngaytao"]
+                post.datetime_updated = timezone.now()
+                post.user_id = request.POST["txttacgia"]
+                post.views = request.POST['txtluotxem']
+                post.is_locked = request.POST["rbntt"]
+                post.is_hot = request.POST["rbn"]
+                post.category_id = request.POST["sl_danhmuc"]
+                post.save()
                 return redirect('baiviet_ds')
-            except:
-                return HttpResponse('khong de trong cac truong hoac nhap noi dung qua dai', request)
+            # except:
+            #     return HttpResponse('khong de trong cac truong hoac nhap noi dung qua dai', request)
         # //xử lý sự kiện khi nhấn button sửa
         # load template
         temp = loader.get_template('manage/baiviet_sua.html')

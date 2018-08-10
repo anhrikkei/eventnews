@@ -43,7 +43,7 @@ class nguoidung_view:
                 u.gioi_tinh = " "
                 u.anh_dai_dien ="uploads/imguser.png"
                 u.loai_user_id = 2
-                u.trang_thai = "on"
+                u.trang_thai = "False"
                 u.xacnhan = " "
                 # tạo link mail active
                 u.mailactive = hashlib.sha256(b"u.ten_dang_nhap").hexdigest()+u.ten_dang_nhap

@@ -19,7 +19,7 @@ class Nguoidung(models.Model):
     loai_user = models.ForeignKey('Loaiuser', on_delete=models.CASCADE)
     mailactive = models.CharField(max_length= 200)
     xacnhan = models.CharField(max_length= 50)
-    trang_thai = models.CharField(max_length= 10)
+    trang_thai = models.BooleanField(default=False)
 
 
 class Danhmuc(models.Model):
@@ -30,18 +30,18 @@ class Danhmuc(models.Model):
     ngay_tao = models.DateField()
     ngay_sua = models.DateField()
     nguoi_tao = models.ForeignKey('Nguoidung', on_delete=models.CASCADE)
-    is_menu = models.CharField(max_length=3)
+    is_menu = models.BooleanField(default=False)
 
 
 class Baiviet(models.Model):
-    
-    ma_bai = models.AutoField(primary_key= True)
-    tieu_de = models.CharField(max_length= 200)
-    noi_dung = RichTextField('Soạn thảo theo cách của riêng bạn')
-    ngay_tao = models.DateField()
-    ngay_sua = models.DateField()
-    tac_gia = models.ForeignKey('Nguoidung', null=True, on_delete=models.CASCADE)
-    luot_xem = models.IntegerField(default=0)
-    trang_thai = models.CharField(max_length=3)
-    tin_hot = models.CharField(max_length=3)
-    danh_muc = models.ForeignKey('Danhmuc', null=True, on_delete=models.CASCADE)
+
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200)
+    content = RichTextField('')
+    datetime_created = models.DateTimeField()
+    datetime_updated = models.DateTimeField()
+    user = models.ForeignKey('Nguoidung', null=True, on_delete=models.CASCADE)
+    views = models.IntegerField(default=0)
+    is_locked = models.BooleanField(default=True)
+    is_hot = models.BooleanField(default=False)
+    category = models.ForeignKey('Danhmuc', null=True, on_delete=models.CASCADE)
