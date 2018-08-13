@@ -48,26 +48,26 @@
                         <tbody id="dl_search">
                         {% for baiviet in ds_baiviet %}
                             <tr>
-                                <td>{{baiviet.ma_bai}}</td>
-                                <td><small class="tieude-tin">{{baiviet.tieu_de}}</small></td>
-                                <td>{{baiviet.ngay_tao|safe}}</td>
-                                <td>{{baiviet.ngay_sua|safe}}</td>
-                                <td>{{baiviet.tac_gia_id}}</td>
-                                <td>{{baiviet.luot_xem}}</td>
-                                <td>{{baiviet.trang_thai}}</td>
-                                <td>{{baiviet.tin_hot}}</td>
-                                <td>{{baiviet.danh_muc.ten_danhmuc}}</td>
-                                <td><a href="../baiviet_sua/{{baiviet.ma_bai}}">
+                                <td>{{baiviet.id}}</td>
+                                <td><small class="tieude-tin">{{baiviet.title}}</small></td>
+                                <td>{{baiviet.datetime_created|date}}</td>
+                                <td>{{baiviet.datetime_updated|date}}</td>
+                                <td>{{baiviet.user_id}}</td>
+                                <td>{{baiviet.views}}</td>
+                                <td>{{baiviet.is_locked}}</td>
+                                <td>{{baiviet.is_hot}}</td>
+                                <td>{{baiviet.category.name}}</td>
+                                <td><a href="../baiviet_sua/{{baiviet.id}}">
                                     <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
                                 </td>
                                 <td>
-                                    <button id="{{baiviet.ma_bai}}" class="btn-link">
+                                    <button id="{{baiviet.id}}" class="btn-link">
                                         <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
                                     </button>
                                     <script>
-                                        $("#{{baiviet.ma_bai}}").click(function(){
-                                            if(confirm('Xóa bài viết {{baiviet.ma_bai}}?')==true){
-                                                window.location='../baiviet_xoa/{{baiviet.ma_bai}}';
+                                        $("#{{baiviet.id}}").click(function(){
+                                            if(confirm('Xóa bài viết {{baiviet.id}}?')==true){
+                                                window.location='../baiviet_xoa/{{baiviet.id}}';
                                                 }
                                             else{
                                                 return false;

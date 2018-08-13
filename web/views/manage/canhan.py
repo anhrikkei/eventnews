@@ -1,4 +1,4 @@
-from web.models import Nguoidung
+from web.models import users
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -9,7 +9,7 @@ class nguoidung_view(object):
     def index(request):
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             request.session.set_expiry(3600)
         else:
             return redirect('admin')
@@ -17,25 +17,22 @@ class nguoidung_view(object):
         # xử lý cập nhật
         thongbao=""
         if request.POST.get("btncapnhat"):
-            u = Nguoidung.objects.get(pk=request.session['username'])
-            u.mat_khau = request.POST['txtmoi']
-            u.mat_khau = make_password(u.mat_khau, None, 'md5')
-            u.ho_ten = request.POST['txthoten']
+            u = users.objects.get(username=request.session['username'])
+            u.password = request.POST['txtmoi']
+            u.password = make_password(u.password, None, 'md5')
+            u.fullname = request.POST['txthoten']
             u.email = request.POST['txtemail']
-            u.gioi_tinh = request.POST['rbngt']
-            path = u.anh_dai_dien
+            u.gender = request.POST['rbngt']
+            path = u.avatar_url
             # xử lý up ảnh
             try:
-                u.anh_dai_dien = request.FILES['fileimg']
+                u.avatar_url = request.FILES['fileimg']
                 # f = request.FILES["fileimg"]
                 # nguoidung_view.upload(f.name)
 
             except:
-                u.anh_dai_dien = path
+                u.avatar_url = path
             # //xử lý up ảnh
-            u.trang_thai = u.trang_thai
-            u.mailactive = u.mailactive
-            u.loai_user_id = u.loai_user_id
             u.save()
             return redirect('canhan')
             # thongbao="cập nhật thành công"

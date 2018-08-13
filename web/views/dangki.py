@@ -1,4 +1,4 @@
-from web.models import Nguoidung, Danhmuc
+from web.models import users, categories
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -11,55 +11,55 @@ class nguoidung_view:
 # xử lý đăng kí
     def dangki(request):
         user = ""
-        thongbao=""
+        notification = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc = Danhmuc.objects.all()
+        ds_danhmuc = categories.objects.all()
         # xử lý đăng ký
         if request.POST.get("btndangki"):
-            tb_username=""
+            notify_username = ""
             try:
-                u1 = Nguoidung.objects.get(ten_dang_nhap = request.POST.get('txttendangnhap'))
-                tb_username="Tên đăng nhập đã được sử dụng"
-                thongbao = tb_username
+                u1 = users.objects.get(username=request.POST.get('txttendangnhap'))
+                notify_username = "Tên đăng nhập đã được sử dụng"
+                notification = notify_username
             except:
-                thongbao = ""
-            if tb_username == "":
+                notification = ""
+            if notify_username == "":
                 try:
-                    u2= Nguoidung.objects.get(email = request.POST.get('txtmail'))
-                    thongbao="Email đã được dùng để đăng kí tài khoản khác"
+                    u2= users.objects.get(email=request.POST.get('txtmail'))
+                    notification = "Email đã được dùng để đăng kí tài khoản khác"
                 except:
-                    thongbao=""
-            if thongbao == "":
-                u = Nguoidung()
-                u.ten_dang_nhap = request.POST.get('txttendangnhap')
-                u.mat_khau = request.POST.get('txtmatkhau1')
-                u.mat_khau = make_password(u.mat_khau, None, 'md5')
-                u.ho_ten = request.POST.get('txthoten')
+                    notification = ""
+            if notification == "":
+                u = users()
+                u.username = request.POST.get('txttendangnhap')
+                u.password = request.POST.get('txtmatkhau1')
+                u.password = make_password(u.password, None, 'md5')
+                u.fullname = request.POST.get('txthoten')
                 u.email = request.POST.get('txtmail')
-                u.gioi_tinh = " "
-                u.anh_dai_dien ="uploads/imguser.png"
-                u.loai_user_id = 2
-                u.trang_thai = "False"
-                u.xacnhan = " "
+                u.gender = True
+                u.avatar_url = "uploads/imguser.png"
+                u.group_id = 2
+                u.is_locked = "False"
                 # tạo link mail active
-                u.mailactive = hashlib.sha256(b"u.ten_dang_nhap").hexdigest()+u.ten_dang_nhap
+                u.status = 0
+                u.token = get_random_string(length=32)+u.username
                 # gửi mail active
-                send_mail('Mail active account', 'Truy cập link để kích hoạt tài khoản cảu bạn: http://127.0.0.1:8000/Active/'+u.mailactive, 'bcnttk12@gmail.com',
+                send_mail('Mail active account', 'Truy cập link để kích hoạt tài khoản cảu bạn: http://127.0.0.1:8000/Active/'+u.token, 'bcnttk12@gmail.com',
                           [u.email], fail_silently=False)
                 u.save()
-                thongbao = "Đăng kí thành công, truy cập mail để kích hoạt tài khoản"
+                notification = "Đăng kí thành công, truy cập mail để kích hoạt tài khoản"
         # //xử lý đăng ký
         # load template
         temp = loader.get_template('dangki.html')
         # tạo dict truyền biến qua temp
         context = {
             "user":user,
-            "ds_danhmuc":ds_danhmuc,
-            "thongbao":thongbao,
+            "ds_danhmuc": ds_danhmuc,
+            "thongbao": notification,
             "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền biến qua temp
@@ -70,21 +70,12 @@ class nguoidung_view:
         temp = loader.get_template('active.html')
         # //load template
         try:
-            u = Nguoidung.objects.get(mailactive=active_id)
+            u = users.objects.get(token=active_id)
         except:
             u = ""
         # xử lý kích hoạt mail khi chưa active
         if u != "":
-            u.ten_dang_nhap = u.ten_dang_nhap
-            u.mat_khau = u.mat_khau
-            u.ho_ten = u.ho_ten
-            u.email = u.email
-            u.gioi_tinh = u.gioi_tinh
-            u.anh_dai_dien = u.anh_dai_dien
-            u.loai_user=u.loai_user
-            u.mailactive='active'
-            u.trang_thai=u.trang_thai
-            u.xacnhan = " "
+            u.status = 1
             u.save()
             context = {
                 "thongbao": "Kích hoạt mail thành công",
@@ -101,61 +92,62 @@ class nguoidung_view:
 # xử lý email để lấy mã xác nhận
     def quenpass(request):
         # kiểm tra trạng thái đăng nhập
-        user=""
-        thongbao = ""
+        user = ""
+        notify = ""
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc = Danhmuc.objects.all()
+        list_category = categories.objects.all()
         if request.POST.get('btnsent'):
             try:
-                users = Nguoidung.objects.get(email=request.POST['txtemail'])
-                users.xacnhan = get_random_string(length=32)
+                u = users.objects.get(email=request.POST['txtemail'])
+
+                u.token = get_random_string(length=32) + str(u.status) + str(u.username)
                 send_mail('Mail active account',
-                          'Mã xác nhận để đặt lại mật khẩu: '+users.xacnhan,
+                          'Mã xác nhận để đặt lại mật khẩu: '+u.token,
                           'bcnttk12@gmail.com',
-                          [users.email], fail_silently=False)
-                users.save()
+                          [u.email], fail_silently=False)
+                u.status = 2
+                u.save()
                 return redirect('taolaipass')
             except:
-                thongbao="Email chưa đăng kí tài khoản"
+                notify = "Email chưa đăng kí tài khoản"
         context = {
-            "ds_danhmuc": ds_danhmuc,
+            "ds_danhmuc": list_category,
             "user": user,
-            "thongbao": thongbao,
-            "q": "tìm kiếm bài viết",
+            "thongbao": notify,
+            "q": "search post",
         }
         temp = loader.get_template('quenpass.html')
         return HttpResponse(temp.render(context, request))
 # cập nhật lại mật khẩu
     def taolaipass(request):
         # kiểm tra trạng thái đăng nhập
-        user=""
-        thongbao = ""
+        user = ""
+        notify = ""
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc = Danhmuc.objects.all()
+        list_category = categories.objects.all()
         # xử lý cập nhật lại mật khẩu
         if request.POST.get('btnpass'):
             try:
-                u = Nguoidung.objects.get(xacnhan=request.POST['txtma'])
+                u = users.objects.get(status=2, token=request.POST['txtma'])
                 u.mat_khau = request.POST['txtmoi']
-                # u.mat_khau = hashlib.sha256(b"u.mat_khau").hexdigest() + u.mat_khau
                 u.mat_khau = make_password(u.mat_khau, None, 'md5')
-                u.xacnhan = ""
+                u.status = 1
                 u.save()
-                thongbao = "Mật khẩu đã được đặt lại thành công"
+                notify = "Mật khẩu đã được đặt lại thành công"
             except:
-                thongbao="Mã xác nhận không chính xác"
+                notify = "Mã xác nhận không chính xác hoặc đã hết hạn"
         # //xử lý cập nhật lại mật khẩu
         # tạo dict truyền context qua temp
         context = {
-            "ds_danhmuc": ds_danhmuc,
+            "ds_danhmuc": list_category,
             "user": user,
-            "thongbao": thongbao,
+            "thongbao": notify,
             "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền context qua temp

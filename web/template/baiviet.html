@@ -12,14 +12,14 @@
                 <div class="modal-content">
 
 					<div style="color: #606060" class="media response-info modal-body">
-						<center><h3>{{baiviets.tieu_de}}</h3></center>
+						<center><h3>{{baiviets.title}}</h3></center>
 						<br/>
 						<small>
-							<i class="fa fa-calendar">: {{baiviets.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviets.luot_xem}}</i>
-							 | <i class="fa fa-user">: {{baiviets.tac_gia_id}}</i>
+							<i class="fa fa-calendar">: {{baiviets.datetime_created|date }}</i> | <i class="fa fa-eye">: {{baiviets.views}}</i>
+							 | <i class="fa fa-user">: {{baiviets.user_id}}</i>
 						</small>
 						<hr>
-						{{baiviets.noi_dung | safe}}
+						{{baiviets.content | safe}}
 					</div>
                 </div>
 				<hr>
@@ -47,14 +47,14 @@
 			<div class="w3_about_grid">
 				<br/>
 				<center>
-					<img width="100" class="img-thumbnail" src="/media/{{ tacgia.anh_dai_dien }}" alt=" " class="img-responsive" /></br>
-					<small>{{ tacgia.ho_ten }}</small></br>
+					<img width="100" class="img-thumbnail" src="/media/{{ tacgia.avatar_url }}" alt=" " class="img-responsive" /></br>
+					<small>{{ tacgia.fullname }}</small></br>
 					<small>
-						<i class="fa fa-user">: {{tacgia.ten_dang_nhap}}</i> | <i class="fa fa-pencil">: {{ so_bai_viet }}</i>
+						<i class="fa fa-user">: {{tacgia.username}}</i> | <i class="fa fa-pencil">: {{ so_bai_viet }}</i>
 					</small> |
-					{% if tacgia.gioi_tinh == 'nam' %}
+					{% if tacgia.gender == 1 %}
 						<small><i class="fa fa-male"></i></small></br>
-					{% elif tacgia.gioi_tinh == 'nu' %}
+					{% elif tacgia.gender == 0 %}
 						<small><i class="fa fa-female"></i></small></br>
 					{% endif %}
 				</center>
@@ -82,24 +82,24 @@
 								<div class="col-md-12" style="max-width: 280px; margin:auto">
 									<div class="media response-info hop">
 										<div style="color:gray;">
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<p><strong class="tieude-tin">{{ baiviet.title }}</strong></p>
 											<small>
-												<i class="fa fa-calendar">: {{baiviets.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+												<i class="fa fa-calendar">: {{baiviets.datetime_created|date}}</i> | <i class="fa fa-eye">: {{baiviet.views}}</i>
 											</small>
 											<hr>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
+											<a href="/baiviet/{{ baiviet.id }}" class="max-lines">
+												{{ baiviet.content| safe }}
 											</a>
 
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
+														--{{baiviet.user.username}}--
 													</small>
 												</p>
 												<p>
 													<br/>
-													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<a href="/baiviet/{{ baiviet.id }}" style="float:right;color:#00a98f" href="#">
 														<small style="font-family: italy;">chi tiết...</small>
 													</a>
 												</p>
@@ -122,24 +122,24 @@
 							<div class="col-md-12" style="max-width: 280px; margin:auto">
 									<div class="media response-info hop">
 										<div style="color:gray">
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<p><strong class="tieude-tin">{{ baiviet.title }}</strong></p>
 											<small>
-												<i class="fa fa-calendar">: {{baiviets.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+												<i class="fa fa-calendar">: {{baiviets.datetime_created|date}}</i> | <i class="fa fa-eye">: {{baiviet.views}}</i>
 											</small>
 											<hr>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
+											<a href="/baiviet/{{ baiviet.id }}" class="max-lines">
+												{{ baiviet.content| safe }}
 											</a>
 
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
+														--{{baiviet.user.username}}--
 													</small>
 												</p>
 												<p>
 													<br/>
-													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<a href="/baiviet/{{ baiviet.id }}" style="float:right;color:#00a98f" href="#">
 														<small style="font-family: italy;">chi tiết...</small>
 													</a>
 												</p>

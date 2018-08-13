@@ -59,8 +59,8 @@
 			</div>
 			<!--nội dung chào mừng-->
 			<div class="col-md-6 agileits_banner_bottom_left">
-				<h3>WELL COME TO <span>   EVENT NEWS</span></h3>
-				<p class="w3l_para" style="color:#333333">Kho thông tin bất tận, bạn đã-đang và sẽ ở đây để cùng chúng tôi phát triển nguồn tin hàng đầu.</p>
+				<h3>WELCOME TO <span>   EVENT NEWS</span></h3>
+				<p class="w3l_para" style="color:#333333">Những bản tin sự kiện mới nhất và nhanh nhất</p>
 				<div class="w3l_social_icons">
 					<div class="w3l_social_icon_grid">
 						<div class="w3l_social_icon_gridl">
@@ -135,7 +135,7 @@
 								</div>
 
 								<div class="w3l_social_icon_grid_pos">
-									<h3><a class="maudm" href="../danhmuc/{{danhmuc.ma_danhmuc}}">{{danhmuc.ten_danhmuc}}</a></h3>
+									<h3><a class="maudm" href="../danhmuc/{{danhmuc.id}}">{{danhmuc.name}}</a></h3>
 								</div>
 								<div class="clearfix"> </div>
 							</div>
@@ -174,24 +174,24 @@
 								<div style="max-width: 330px; margin:auto; color:#606060">
 									<div class="media response-info hop">
 										<div>
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<p><strong class="tieude-tin">{{ baiviet.title }}</strong></p>
 											<small>
-												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+												<i class="fa fa-calendar">: {{baiviet.datetime_created|date}}</i> | <i class="fa fa-eye">: {{baiviet.views}}</i>
 											</small>
 											<hr>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
+											<a href="/baiviet/{{ baiviet.id }}" class="max-lines">
+												{{ baiviet.content| safe }}
 											</a>
 
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
+														--{{baiviet.user.username}}--
 													</small>
 												</p>
 												<p>
 													<br/>
-													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<a href="/baiviet/{{ baiviet.id }}" style="float:right;color:#00a98f" href="#">
 														<small style="font-family: italy;">chi tiết...</small>
 													</a>
 												</p>
@@ -222,24 +222,24 @@
 								<div style="max-width: 330px; margin:auto; color:#606060">
 									<div class="media response-info hop">
 										<div>
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<p><strong class="tieude-tin">{{ baiviet.title }}</strong></p>
 											<small>
-												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+												<i class="fa fa-calendar">: {{baiviet.datetime_created|date}}</i> | <i class="fa fa-eye">: {{baiviet.views}}</i>
 											</small>
 											<hr>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
+											<a href="/baiviet/{{ baiviet.id }}" class="max-lines">
+												{{ baiviet.content| safe }}
 											</a>
 
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
+														--{{baiviet.user.username}}--
 													</small>
 												</p>
 												<p>
 													<br/>
-													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<a href="/baiviet/{{ baiviet.id }}" style="float:right;color:#00a98f" href="#">
 														<small style="font-family: italy;">chi tiết...</small>
 													</a>
 												</p>
@@ -270,24 +270,24 @@
 								<div style="max-width: 330px; margin:auto; color:#606060">
 									<div class="media response-info hop">
 										<div>
-											<p><strong class="tieude-tin">{{ baiviet.tieu_de }}</strong></p>
+											<p><strong class="tieude-tin">{{ baiviet.title }}</strong></p>
 											<small>
-												<i class="fa fa-calendar">: {{baiviet.ngay_tao|safe}}</i> | <i class="fa fa-eye">: {{baiviet.luot_xem}}</i>
+												<i class="fa fa-calendar">: {{baiviet.datetime_created|date}}</i> | <i class="fa fa-eye">: {{baiviet.views}}</i>
 											</small>
 											<hr>
-											<a href="/baiviet/{{ baiviet.ma_bai }}" class="max-lines">
-												{{ baiviet.noi_dung| safe }}
+											<a href="/baiviet/{{ baiviet.id }}" class="max-lines">
+												{{ baiviet.content| safe }}
 											</a>
 
 											<div class="media-body">
 												<p>
 													<small style="float:left; font-family: italy; color: gray">
-														--{{baiviet.tac_gia.ten_dang_nhap}}--
+														--{{baiviet.user.username}}--
 													</small>
 												</p>
 												<p>
 													<br/>
-													<a href="/baiviet/{{ baiviet.ma_bai }}" style="float:right;color:#00a98f" href="#">
+													<a href="/baiviet/{{ baiviet.id }}" style="float:right;color:#00a98f" href="#">
 														<small style="font-family: italy;">chi tiết...</small>
 													</a>
 												</p>

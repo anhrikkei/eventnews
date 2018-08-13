@@ -1,4 +1,4 @@
-from web.models import Nguoidung, Danhmuc
+from web.models import users, categories
 from django.shortcuts import redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -11,14 +11,14 @@ class danhmuc_view:
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
         else:
             return redirect("admin")
         if user.loai_user_id != 1:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc = Danhmuc.objects.all().order_by('ngay_sua')[::-1]
+        ds_danhmuc = categories.objects.all().order_by('ngay_sua')[::-1]
         # phân trang
         paginator = Paginator(ds_danhmuc, 10)
         pageNumber = request.GET.get('page')
@@ -43,7 +43,7 @@ class danhmuc_view:
         user = ""
         # kiểm tra trangnj thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
         else:
             return redirect("admin")
@@ -55,16 +55,16 @@ class danhmuc_view:
         thongbao = ""
         if request.POST.get('btnthem'):
             try:
-                category = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
+                category = categories.objects.get(ten_danhmuc=request.POST['txtten'])
                 thongbao="tên danh mục này đã tồn tại"
             except:
-                category = Danhmuc()
-                category.ten_danhmuc = request.POST['txtten']
-                category.mo_ta = request.POST['txtmota']
-                category.ngay_tao = request.POST['txtngaytao']
-                category.ngay_sua = timezone.datetime.today().date()
+                category = categories()
+                category.name = request.POST['txtten']
+                category.describe = request.POST['txtmota']
+                category.datetime_created = request.POST['txtngaytao']
+                category.datetime_updated = timezone.datetime.today().date()
                 category.nguoi_tao_id = request.session['username']
-                category.is_menu = request.POST['rbn']
+                category.show_as_menu = request.POST['rbn']
                 category.save()
                 return redirect('danhmuc_ds')
         # //xử lý thêm danh mục
@@ -84,23 +84,23 @@ class danhmuc_view:
         user=""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
         else:
             return redirect("admin")
         if user.loai_user_id != 1:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
-        dm = Danhmuc.objects.get(ma_danhmuc=dm_id)
+        dm = categories.objects.get(ma_danhmuc=dm_id)
         ngay_hientai = timezone.now().date()
         # xử lý cập nhật danh mục
         thongbao = ""
         if request.POST.get('btnsua'):
             try:
-                danhmuc = Danhmuc.objects.get(ten_danhmuc=request.POST['txtten'])
+                danhmuc = categories.objects.get(ten_danhmuc=request.POST['txtten'])
                 thongbao="tên danh mục này đã tồn tại"
             except:
-                dm = Danhmuc.objects.get(pk=dm_id)
+                dm = categories.objects.get(pk=dm_id)
                 dm.ten_danhmuc = request.POST['txtten']
                 dm.mo_ta = request.POST['txtmota']
                 dm.ngay_tao = request.POST['txtngaytao']
@@ -126,9 +126,9 @@ class danhmuc_view:
     def xoa(request, dm_id):
         user=""
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
             if user.loai_user_id == 1:
-                Danhmuc.objects.get(ma_danhmuc=dm_id).delete()
+                categories.objects.get(ma_danhmuc=dm_id).delete()
                 return redirect('danhmuc_ds')
             else:
                 return HttpResponse('Sai quyen truy cap', request)
@@ -140,7 +140,7 @@ class danhmuc_view:
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
         else:
             return redirect("admin")
         if user.loai_user_id != 1:
@@ -148,7 +148,7 @@ class danhmuc_view:
         # //kiểm tra trạng thái đăng nhập
         # xử lý cập nhật trạng thái danh mục
         ngay_hientai = timezone.now().date()
-        dm = Danhmuc.objects.get(pk=dm_id)
+        dm = categories.objects.get(pk=dm_id)
         dm.ten_danhmuc = dm.ten_danhmuc
         dm.mo_ta = dm.mo_ta
         dm.ngay_tao = dm.ngay_tao
@@ -164,7 +164,7 @@ class danhmuc_view:
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
         search = request.POST.get("search","")
-        ds_danhmuc = Danhmuc.objects.filter(ten_danhmuc__icontains=search)
+        ds_danhmuc = categories.objects.filter(ten_danhmuc__icontains=search)
         # load template
         temp = loader.get_template('manage/danhmuc_ajaxsearch.html')
         # tạo dict truyền biến qua temp

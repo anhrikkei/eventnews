@@ -1,4 +1,4 @@
-from web.models import Nguoidung, Danhmuc
+from web.models import users, categories
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -8,57 +8,56 @@ from django.contrib.auth.hashers import make_password, check_password
 class nguoidung_view:
 # xử lý đăng nhập
     def dangnhap(request):
-        thongbao=""
+        notify = ""
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc =Danhmuc.objects.all()
+        list_category =categories.objects.all()
         # xử lý đăng nhập
         if request.POST.get("btnlogin"):
-            u = Nguoidung()
-            u.ten_dang_nhap = request.POST['username']
+            u = users()
+            u.username = request.POST['username']
             u.email = request.POST['username']
-            u.mat_khau = request.POST['password']
-            mat_khaus = make_password(u.mat_khau, None, 'md5')
+            u.password = request.POST['password']
             try:
-                user = Nguoidung.objects.get(pk=u.ten_dang_nhap)
+                user = users.objects.get(username=u.username)
             except:
                 try:
-                    user = Nguoidung.objects.get(email=u.email)
+                    user = users.objects.get(email=u.email)
                 except:
                     user = ""
-                    thongbao ="Tên đăng nhập/email không chính xác"
+                    notify ="Tên đăng nhập/email không chính xác"
             if user != "":
-                if check_password(u.mat_khau, user.mat_khau, None, 'md5') == False:
-                    thongbao = "Sai mật khẩu"
-                elif user.mailactive != "active":
+                if check_password(u.password, user.password, None, 'md5') == False:
+                    notify = "Sai mật khẩu"
+                elif user.status == 0:
                     user = ""
-                    thongbao = "Tài khoản này chưa được kích hoạt"
-                elif user.trang_thai == 'True':
+                    notify = "Tài khoản này chưa được kích hoạt"
+                elif user.is_locked == 'True':
                     user = ""
-                    thongbao = "Tài khoản này đã bị khóa"
+                    notify = "Tài khoản này đã bị khóa"
                 else:
-                    request.session['username'] = user.ten_dang_nhap
+                    request.session['username'] = user.username
                     return redirect('trangchu')
         # //xử lý đăng nhập
         # load tempplate
         temp = loader.get_template('dangnhap.html')
         # tạo dict truyền biến qua temp
         context = {
-            "thongbao": thongbao,
+            "thongbao": notify,
             "user": user,
-            "ds_danhmuc":ds_danhmuc,
-            "q": "tìm kiếm bài viết",
+            "ds_danhmuc": list_category,
+            "q": "search post",
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
 # xử lý đăng xuất
     def dangxuat(request):
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             if request.POST.get("btndangxuat"):
                 del request.session['username']
                 return redirect('dangnhap')

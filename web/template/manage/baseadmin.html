@@ -32,7 +32,7 @@
 <body>
 
 
-{% if user.loai_user_id == 2 %}
+{% if user.group_id == 2 %}
 <!--phần hiển thị khi đăng nhập với tài khoản user-->
 	<div class="agileits_w3layouts_banner_nav">
 		<nav class="navbar navbar-default">
@@ -47,7 +47,7 @@
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">
-								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.anh_dai_dien}}" alt="">
+								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.avatar_url}}" alt="">
 								<b class="fa fa-caret-down"></b>
 							</a>
 							<ul class="dropdown-menu agile_short_dropdown">
@@ -92,7 +92,7 @@
 	</div>
 <!--//phần hiển thị khi đăng nhập với tài khoản user-->
 
-{% elif user.loai_user_id == 1 %}
+{% elif user.group_id == 1 %}
 <!--phần hiển thị khi đăng nhập với tài khoản admin-->
 	<div class="agileits_w3layouts_banner_nav">
 		<nav class="navbar navbar-default">
@@ -107,7 +107,7 @@
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">
-								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.anh_dai_dien}}" alt="">
+								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.avatar_url}}" alt="">
 								<b class="fa fa-caret-down"></b>
 							</a>
 							<ul class="dropdown-menu agile_short_dropdown">
@@ -166,7 +166,7 @@
 		</nav>
 	</div>
 	<div class="container">
-		<h4>Để tham gia hệ thống quản lí bạn phải đăng nhập, nếu không hãy trở về trang chủ của <a href="{%url 'trangchu' %}">Newspaper</a></h4>
+		<h4>Để tham gia hệ thống quản lí bạn phải đăng nhập, nếu không hãy trở về trang chủ của <a href="{%url 'trangchu' %}">Event news</a></h4>
 	</div>
 <!--//phần hiển thị khi đăng nhập với tài khoản user-->
 {% endif %}

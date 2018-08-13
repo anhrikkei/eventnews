@@ -42,7 +42,7 @@
 					<ul class="nav navbar-nav">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle hvr-underline-from-center" data-toggle="dropdown">
-								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.anh_dai_dien}}" alt="">
+								<img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{user.avatar_url}}" alt="">
 								<b class="fa fa-caret-down"></b>
 							</a>
 							<!--ul quản lý, đăng xuất-->
@@ -82,7 +82,7 @@
 							{% if ds_danhmuc %}
 							<ul class="dropdown-menu agile_short_dropdown">
 								{% for danhmuc in ds_danhmuc %}
-								<li><a href="../danhmuc/{{ danhmuc.ma_danhmuc }}">{{danhmuc.ten_danhmuc}}</a></li>
+								<li><a href="../danhmuc/{{ danhmuc.id }}">{{danhmuc.name}}</a></li>
 								{% endfor %}
 							</ul>
 							{% endif %}

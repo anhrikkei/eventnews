@@ -21,22 +21,22 @@
 
                         <div class="form-group">
                             <small>Ngày tạo:</small>
-                            <input type="text" name="txtngaytao" name="txtngaytao" value="{{ ngay_hientai|safe }}"
+                            <input type="text" name="txtngaytao" name="txtngaytao" value="{{ ngay_hientai|date }}"
                                    class="form-control" readonly="readonly"/>
                         </div>
                         <div class="form-group">
                             <small>Người tạo:</small>
                             <input type="text" name="txttacgia" class="form-control"
-                                   value="{{user.ten_dang_nhap}}" readonly="readonly"/>
+                                   value="{{user.username}}" readonly="readonly"/>
                         </div>
                         <div class="form-group">
                             <small>Lượt xem:</small>
-                            <input type="text" name="txtluotxem" class="form-control" value="{{bv_hientai.luot_xem}}" readonly="readonly"/>
+                            <input type="text" name="txtluotxem" class="form-control" value="{{ bv_hientai.views }}" readonly="readonly"/>
                         </div>
                         <div class="form-group">
                             <small>Trạng thái:</small>
-                            {% if bv_hientai.trang_thai == 0 %}
-                                {% if user.loai_user_id == 1 %}
+                            {% if bv_hientai.is_locked == 0 %}
+                                {% if user.group_id == 1 %}
                                     <div class="form-control">
                                         <label class="radio-inline">
                                             <input type="radio" name="rbntt" value="False" checked="checked">unlock
@@ -45,15 +45,15 @@
                                             <input type="radio" name="rbntt" value="True">lock
                                         </label>
                                     </div>
-                                {% elif user.loai_user_id == 2 %}
+                                {% elif user.group_id == 2 %}
                                     <div class="form-control" readonly="readonly">
                                         <label class="radio-inline">
                                             <input type="radio" name="rbntt" value="False" checked="checked">unlock
                                         </label>
                                     </div>
                                 {% endif %}
-                            {% elif bv_hientai.trang_thai == 1 %}
-                                {% if user.loai_user_id == 1 %}
+                            {% elif bv_hientai.is_locked == 1 %}
+                                {% if user.group_id == 1 %}
                                     <div class="form-control">
                                         <label class="radio-inline">
                                             <input type="radio" name="rbntt" value="False">unlock
@@ -62,7 +62,7 @@
                                             <input type="radio" name="rbntt" value="True" checked="checked">lock
                                         </label>
                                     </div>
-                                {% elif user.loai_user_id == 2 %}
+                                {% elif user.group_id == 2 %}
                                     <div class="form-control" readonly="readonly">
                                         <label class="radio-inline">
                                             <input type="radio" name="rbntt" value="True" checked="checked">lock
@@ -73,40 +73,52 @@
                         </div>
                         <div class="form-group">
                             <small>Danh mục:</small>
-
                                 <select name="sl_danhmuc" class="form-control">
-                                    <option value="{{dm_hientai.ma_danhmuc}}">
-                                        --{{dm_hientai.ten_danhmuc}}--
+                                    <option value="{{dm_hientai.id}}">
+                                        --{{dm_hientai.name}}--
                                     </option>
                                     {% if ds_danhmuc %}
-                                        {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
+                                        {% if bv_hientai.user_id == user.username %}
                                             {% for danhmuc in ds_danhmuc %}
-                                                <option value="{{danhmuc.ma_danhmuc}}">
-                                                    {{danhmuc.ten_danhmuc}}
+                                                <option value="{{danhmuc.id}}">
+                                                    {{danhmuc.name}}
                                                 </option>
                                             {% endfor %}
                                         {% endif %}
                                     {% endif %}
                                 </select>
                         </div>
-                        {% if user.loai_user_id == 1 %}
+                        {% if user.group_id == 1 %}
                             <div class="form-group">
                                 <small>Tin hot:</small>
                                 <div class="form-control">
-                                    <label class="radio-inline">
+                                    {% if bv_hientai.is_hot == 0 %}
+                                        <label class="radio-inline">
+                                            <input type="radio" name="rbn" value="True">yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="rbn" value="False" checked="checked">no
+                                        </label>
+                                    {% elif bv_hientai == 1 %}
+                                    label class="radio-inline">
                                         <input type="radio" name="rbn" value="True">yes
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="False" checked="checked">no
-                                    </label>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="rbn" value="False" checked="checked">no
+                                        </label>
+                                    {% endif %}
                                 </div>
                             </div>
-                        {% elif  user.loai_user_id == 2 %}
+                        {% elif  user.group_id == 2 %}
                             <div class="form-group">
                                 <small>Tin hot:</small>
                                 <div class="form-control" readonly="readonly">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="False" checked="checked">no
+                                        {% if bv_hientai.is_hot == 0 %}
+                                            <input type="radio" name="rbn" value="False" checked="checked">no
+                                        {% elif bv_hientai.is_hot == 1 %}
+                                            <input type="radio" name="rbn" value="True" checked="checked">yes
+                                        {% endif %}
                                     </label>
                                 </div>
                             </div>
@@ -118,23 +130,23 @@
                     </div>
                     </div>
                     <div class="col-md-7">
-                        {% if bv_hientai.tac_gia_id == user.ten_dang_nhap %}
+                        {% if bv_hientai.user_id == user.username %}
                             <div class="form-group">
                                 <small>Tiêu đề:</small>
-                                <input type="text" name="txttieude" value="{{bv_hientai.tieu_de}}" class="form-control"/>
+                                <input type="text" name="txttieude" value="{{bv_hientai.title}}" class="form-control"/>
                             </div>
                             <div class="form-group">
                                 <small>Nội dung bài viết</small>
-                                <textarea name="txtnoidung">{{bv_hientai.noi_dung | safe}}</textarea>
+                                <textarea name="txtnoidung">{{bv_hientai.content | safe}}</textarea>
                             </div>
                         {% else %}
                             <div class="form-group">
                                 <small>Tiêu đề:</small>
-                                <input type="text" name="txttieude" readonly="readonly" value="{{bv_hientai.tieu_de}}" class="form-control"/>
+                                <input type="text" name="txttieude" readonly="readonly" value="{{bv_hientai.title}}" class="form-control"/>
                             </div>
                             <div class="form-group">
                                 <small>Nội dung bài viết</small>
-                                <textarea readonly="readonly" name="txtnoidung">{{bv_hientai.noi_dung | safe}}</textarea>
+                                <textarea readonly="readonly" name="txtnoidung">{{bv_hientai.content | safe}}</textarea>
                             </div>
                         {% endif %}
                     </div>

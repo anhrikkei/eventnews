@@ -1,4 +1,4 @@
-from web.models import Nguoidung
+from web.models import users
 from django.shortcuts import redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
@@ -10,7 +10,7 @@ class nguoidung_view:
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
             request.session.set_expiry(1800)
         else:
             return redirect("admin")
@@ -18,7 +18,7 @@ class nguoidung_view:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         # lấy danh sách người dùng theo loại user
-        ds_nguoidung = Nguoidung.objects.all().order_by('ten_dang_nhap')
+        ds_nguoidung = users.objects.all().order_by('ten_dang_nhap')
 
         # //lấy danh sách người dùng theo loại user
         # phân trang
@@ -44,27 +44,27 @@ class nguoidung_view:
     def xoa(request,user_id):
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
         else:
             return redirect('admin')
         if user.loai_user_id != 1:
             return HttpResponse('Sai quyền truy cập', request)
         # //kiểm tra trạng thái đăng nhập
         # xử lý xóa người dùng
-        Nguoidung.objects.get(ten_dang_nhap=user_id).delete()
+        users.objects.get(ten_dang_nhap=user_id).delete()
         return redirect('nguoidung_ds')
     # khóa/mở tài khoản người dùng
     def trangthai(request,user_id):
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(ten_dang_nhap=request.session['username'])
         else:
             return redirect('admin')
         if user.loai_user_id != 1:
             return HttpResponse('Sai quyền truy cập', request)
         # //kiểm tra trạng thái đăng nhập
         # xử lý thay đổi trạng thái tài khoản
-        u = Nguoidung.objects.get(ten_dang_nhap=user_id)
+        u = users.objects.get(ten_dang_nhap=user_id)
         if u.trang_thai == 'on':
             u.trang_thai = 'off'
         elif u.trang_thai == 'off':
@@ -75,8 +75,8 @@ class nguoidung_view:
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
         search = request.POST.get("search","")
-        ds_nguoidung1 = Nguoidung.objects.filter(ten_dang_nhap__icontains=search)
-        ds_nguoidung2 = Nguoidung.objects.filter(email__icontains=search)
+        ds_nguoidung1 = users.objects.filter(ten_dang_nhap__icontains=search)
+        ds_nguoidung2 = users.objects.filter(email__icontains=search)
         ds_nguoidung = list(ds_nguoidung1) + list(ds_nguoidung2)
         # load template
         temp = loader.get_template('manage/nguoidung_ajaxsearch.html')

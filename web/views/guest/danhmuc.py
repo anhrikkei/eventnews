@@ -1,4 +1,4 @@
-from web.models import Baiviet, Danhmuc, Nguoidung
+from web.models import posts, categories, users
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.template import loader
@@ -8,38 +8,38 @@ def index(request, danhmuc_id):
     user = ""
     # kiểm tra trạng thái đăng nhập
     if request.session.has_key('username'):
-        user= Nguoidung.objects.get(ten_dang_nhap = request.session['username'])
+        user = users.objects.get(username=request.session['username'])
         request.session.set_expiry(900)
     # //kiểm tra trạng thái đăng nhập
     # xử lý dữ liệu
-    ds_danhmuc = Danhmuc.objects.filter(is_menu='True')
-    danhmucs = Danhmuc.objects.get(ma_danhmuc = danhmuc_id)
-    ds_baiviet = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='False').order_by('ma_bai')[::-1]
-    ds_tintop = Baiviet.objects.filter(danh_muc_id=danhmuc_id, trang_thai='False').order_by('luot_xem')[::-1][0:4]
-    ds_tinhot = Baiviet.objects.filter(tin_hot='True', trang_thai='False').order_by('luot_xem')[::-1][0:4]
+    list_category = categories.objects.filter(show_as_menu='True')
+    category_current = categories.objects.get(id=danhmuc_id)
+    list_post = posts.objects.filter(category_id=danhmuc_id, is_locked='False').order_by('datetime_created')[::-1]
+    list_top = posts.objects.filter(category_id=danhmuc_id, is_locked='False').order_by('views')[::-1][0:4]
+    list_hot = posts.objects.filter(is_hot='True', is_locked='False').order_by('views')[::-1][0:4]
     # //xử lý dữ liệu
     # phân trang
-    paginator = Paginator(ds_baiviet, 10)
+    paginator = Paginator(list_post, 10)
     pageNumber = request.GET.get('page')
     try:
-        ds_baiviet_danhmuc = paginator.page(pageNumber)
+        list_post_category = paginator.page(pageNumber)
     except PageNotAnInteger:
-        ds_baiviet_danhmuc = paginator.page(1)
+        list_post_category = paginator.page(1)
     except EmptyPage:
-        ds_baiviet_danhmuc = paginator.page(paginator.num_pages)
+        list_post_category = paginator.page(paginator.num_pages)
     # //phân trang
 
     # load template
     temp = loader.get_template('danhmuc.html')
     # tạo dict truyền biến qua temp
     context = {
-        "ds_danhmuc": ds_danhmuc,
-        "danhmucs": danhmucs,
-        "ds_baiviet_danhmuc": ds_baiviet_danhmuc,
-        "ds_tinhot": ds_tinhot,
-        "ds_tintop": ds_tintop,
+        "ds_danhmuc": list_category,
+        "danhmucs": category_current,
+        "ds_baiviet_danhmuc": list_post_category,
+        "ds_tinhot": list_hot,
+        "ds_tintop": list_top,
         "user": user,
-        "q":"tìm kiếm bài viết",
+        "q": "search post",
     }
     # //tạo dict truyền biến qua temp
     return HttpResponse(temp.render(context, request))

@@ -1,4 +1,4 @@
-from web.models import Nguoidung, Baiviet, Danhmuc
+from web.models import users, posts, categories
 from django.http import HttpResponse
 from django.template import loader
 from django.utils import timezone
@@ -6,24 +6,24 @@ from django.utils import timezone
 def index(request):
     try:
         user = ""
-        so_baiviet_user = tong_thanhvien= tong_baiviet = tong_danhmuc = 0
+        count_post_user = count_user = count_post = count_category = 0
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
-            user = Nguoidung.objects.get(ten_dang_nhap=request.session['username'])
+            user = users.objects.get(username=request.session['username'])
             request.session.set_expiry(1800)
-            so_baiviet_user = Baiviet.objects.filter(tac_gia_id= request.session['username']).count()
-            tong_baiviet = Baiviet.objects.count()
-            tong_thanhvien = Nguoidung.objects.count()
-            tong_danhmuc = Danhmuc.objects.count()
+            count_post_user = posts.objects.filter(user_id=user.username).count()
+            count_post = posts.objects.count()
+            count_user = users.objects.count()
+            count_category = categories.objects.count()
         # load template
         temp = loader.get_template('manage/admin.html')
         # tạo dict truyền biến qua temp
         context = {
-            "user":user,
-            "so_baiviet_user": so_baiviet_user,
-            "tong_baiviet": tong_baiviet,
-            "tong_thanhvien": tong_thanhvien,
-            "tong_danhmuc": tong_danhmuc,
+            "user": user,
+            "so_baiviet_user": count_post_user,
+            "tong_baiviet": count_post,
+            "tong_thanhvien": count_user,
+            "tong_danhmuc": count_category,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
