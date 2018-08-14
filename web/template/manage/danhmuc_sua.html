@@ -18,11 +18,11 @@
                     <div class="col-md-6">
                          <div class="form-group">
                             <label>Mã danh mục:</label>
-                            <input type="text" name="txtma" value="{{dm.ma_danhmuc}}" readonly="readonly" class="form-control">
+                            <input type="text" name="txtma" value="{{dm.id}}" readonly="readonly" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Ngày tạo:</label>
-                            <input type="text" name="txtngaytao" name="txtngaytao" value="{{ dm.ngay_tao|safe }}"
+                            <input type="text" name="txtngaytao" name="txtngaytao" value="{{ dm.datetime_created|safe }}"
                                    class="form-control" readonly="readonly"/>
                         </div>
                         <div class="form-group">
@@ -40,30 +40,30 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Tên danh mục:</label>
-                            <input type="text" name="txtten" value="{{dm.ten_danhmuc}}" id="txtten" class="form-control"/>
+                            <input type="text" name="txtten" value="{{dm.name}}" id="txtten" class="form-control"/>
                         </div>
                         <div class="form-group">
                             <label>Mô tả:</label>
-                            <input type="text" name="txtmota" value="{{dm.mo_ta}}" id="txtmota" class="form-control"/>
+                            <input type="text" name="txtmota" value="{{dm.describe}}" id="txtmota" class="form-control"/>
                         </div>
                         <div class="form-group">
                             <label>Đưa lên menu:</label>
-                            {% if dm.is_menu == 'False' %}
+                            {% if dm.show_as_menu == 0 %}
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="True">yes
+                                        <input type="radio" name="rbn" value="1">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="False" checked="checked">no
+                                        <input type="radio" name="rbn" value="0" checked="checked">no
                                     </label>
                                 </div>
-                            {% elif dm.is_menu == 'True' %}
+                            {% elif dm.show_as_menu == 1 %}
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="True" checked="checked">yes
+                                        <input type="radio" name="rbn" value="1" checked="checked">yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="rbn" value="False">no
+                                        <input type="radio" name="rbn" value="0">no
                                     </label>
                                 </div>
                             {% endif %}

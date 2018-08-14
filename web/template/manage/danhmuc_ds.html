@@ -28,7 +28,7 @@
                     <!--bảng dữ liệu-->
                     <table id="tb" class="table table-striped table-hover">
                         <thead>
-                            <th>Mã danh mục</th>
+                            <th></th>
                             <th>Tên danh mục</th>
                             <th>Mô tả</th>
                             <th>Ngày tạo</th>
@@ -42,35 +42,35 @@
                         <tbody>
                         {% for danhmuc in ds_danhmuc %}
                             <tr>
-                                <td>{{danhmuc.ma_danhmuc}}</td>
-                                <td>{{danhmuc.ten_danhmuc}}</td>
-                                <td>{{danhmuc.mo_ta}}</td>
-                                <td>{{danhmuc.ngay_tao|safe}}</td>
-                                <td>{{danhmuc.ngay_sua|safe}}</td>
-                                <td>{{danhmuc.nguoi_tao_id}}</td>
+                                <td>#</td>
+                                <td>{{danhmuc.name}}</td>
+                                <td>{{danhmuc.describe}}</td>
+                                <td>{{danhmuc.datetime_created|safe}}</td>
+                                <td>{{danhmuc.datetime_updated|safe}}</td>
+                                <td>{{danhmuc.user_id}}</td>
                                 <td>
                                     <div class="form-group" style="background-color: gray; max-width: 70px">
-                                        <a href="../is_menu/{{danhmuc.ma_danhmuc}}">
+                                        <a href="../is_menu/{{danhmuc.id}}">
                                             <button type="" style="background-color: #00a98f" class="btn btn-sm btn-success">
                                                 <i class="fa fa-exchange"></i>
                                             </button>
                                         </a>
                                         <small name="btnmenu" style="color:white">
-                                            <i>{{danhmuc.is_menu}}</i>
+                                            <i>{{danhmuc.show_as_menu}}</i>
                                         </small>
                                     </div>
                                 </td>
-                                <td><a href="../danhmuc_sua/{{danhmuc.ma_danhmuc}}">
+                                <td><a href="../danhmuc_sua/{{danhmuc.id}}">
                                     <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
                                 </td>
                                 <td>
-                                    <button id="{{danhmuc.ma_danhmuc}}" class="btn-link">
+                                    <button id="{{danhmuc.id}}" class="btn-link">
                                         <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
                                     </button>
                                     <script>
-                                        $("#{{danhmuc.ma_danhmuc}}").click(function(){
-                                            if(confirm('Xóa danh mục {{danhmuc.ma_danhmuc}} sẽ mất các bài viết trong danh mục?')==true){
-                                                window.location='../danhmuc_xoa/{{danhmuc.ma_danhmuc}}';
+                                        $("#{{danhmuc.id}}").click(function(){
+                                            if(confirm('Xóa danh mục {{danhmuc.id}} sẽ mất các bài viết trong danh mục?')==true){
+                                                window.location='../danhmuc_xoa/{{danhmuc.id}}';
                                                 }
                                             else{
                                                 return false;
@@ -78,7 +78,6 @@
                                         })
                                     </script>
                                 </td>
-
                             </tr>
                         {% endfor %}
                         </tbody>

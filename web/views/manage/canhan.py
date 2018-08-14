@@ -15,7 +15,7 @@ class nguoidung_view(object):
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
         # xử lý cập nhật
-        thongbao=""
+        notify = ""
         if request.POST.get("btncapnhat"):
             u = users.objects.get(username=request.session['username'])
             u.password = request.POST['txtmoi']
@@ -34,15 +34,15 @@ class nguoidung_view(object):
                 u.avatar_url = path
             # //xử lý up ảnh
             u.save()
-            return redirect('canhan')
+            notify = "Cập nhật thành công"
             # thongbao="cập nhật thành công"
         # //xử lý cập nhật
         # load temp
         temp = loader.get_template('manage/canhan.html')
         # tạo dict truyền biến qua temp
         context = {
-            "user":user,
-            "thongbao":thongbao,
+            "user": user,
+            "thongbao": notify,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context,request))

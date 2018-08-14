@@ -4,40 +4,40 @@
     <div class="container">
         <ol class="breadcrumb">
             <li><a style="color:#00a98f" href="../admin"><i class="fa fa-dashboard"></i> mange</a></li>
-            <li class="active">Thiết lập cá nhân</li>
+            <li class="active">Cài đặt cá nhân</li>
         </ol>
             <div class="col-md-8">
                 <div class="signin-form profile">
-                    <h3 class="">Thông tin cá nhân</h3>
+                    <h3>Thông tin cá nhân</h3><a style="color:#00a98f" href="../canhan"><i class="fa fa-refresh"></i></a>
                     <div class="login-form">
                         <form action="../canhan/" method="post" enctype="multipart/form-data">{% csrf_token %}
-                            <input style="color:#00a98f" value="{{user.ten_dang_nhap}}" class="form-control" type="Text"
+                            <input style="color:#00a98f" value="{{user.username}}" class="form-control" type="Text"
                                    id="tendangnhap" readonly="readonly" placeholder="Username" required="">
                             <input style="color:#00a98f" class="form-control" type="password" name="txtmoi"
                                    id="matkhau1" placeholder="Mật khẩu mới" required="">
                             <input style="color:#00a98f" class="form-control" type="password" name="txtlai"
                                    id="matkhau2" placeholder="Nhập lại mật khẩu" required="">
-                            <input style="color:#00a98f" value="{{user.ho_ten}}" class="form-control" type="Text"
+                            <input style="color:#00a98f" value="{{user.fullname}}" class="form-control" type="Text"
                                    id="hoten" name="txthoten" placeholder="Họ và tên" required="">
                             <input style="color:#00a98f" value="{{user.email}}" class="form-control" type="email"
                                    id="mail" name="txtemail" placeholder="Email" readonly="readonly" required="">
                             <div class="form-control">
                                 <label class="radio-inline">Giới tính:</label>
-                                {% if user.gioi_tinh == 'nam' %}
+                                {% if user.gender == 1 %}
                                     <label class="radio-inline">
-                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="True" checked="checked">nam
                                     </label>
-                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
-                                {% elif user.gioi_tinh == 'nu' %}
-                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nam">nam</label>
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="False">nữ</label>
+                                {% elif user.gender == 0 %}
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="True">nam</label>
                                     <label class="radio-inline">
-                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nu" checked="checked">nữ
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="False" checked="checked">nữ
                                     </label>
                                 {% else %}
                                     <label class="radio-inline">
-                                        <input style="color:#00a98f" type="radio" name="rbngt" value="nam" checked="checked">nam
+                                        <input style="color:#00a98f" type="radio" name="rbngt" value="True" checked="checked">nam
                                     </label>
-                                    <label class="radio-inline"><input type="radio" name="rbngt" value="nu">nữ</label>
+                                    <label class="radio-inline"><input type="radio" name="rbngt" value="False">nữ</label>
                                 {% endif %}
                             </div>
                             <input class="form-control" type="file" name="fileimg" class="form-control" id="Anh" style="margin-top: 7"/>
@@ -58,18 +58,20 @@
                     <div class="modal-content">
 
                         <div class="form-group" id="divImage" style="height: 300px; width:300px; padding:5px">
-                            <img style='margin: auto;' width='100%' height='100%' class="tes" src="/media/{{user.anh_dai_dien}}"/>
+                            <img style='margin: auto;' width='100%' height='100%' class="tes" src="/media/{{user.avatar_url}}"/>
                         </div>
                         <hr>
                         <center>
-                            Họ tên: {{user.ho_ten}}<br>
-                            username: {{ user.ten_dang_nhap }}<br>
+                            <small style="color:#00a98f">
+                            Họ tên: {{user.fullname}}<br>
+                            username: {{ user.username }}<br>
                             Giới tính:
-                            {% if user.gioi_tinh == 'nam' %}
+                            {% if user.gender == 1 %}
                             <i class="fa fa-male"></i>
-                            {% elif user.gioi_tinh == 'nu' %}
+                            {% elif user.gender == 0 %}
                             <i class="fa fa-female"></i>
                             {% endif %}
+                            </small>
                             <br>
                         </center>
                         <hr>
@@ -79,7 +81,6 @@
             </div>
     </div>
 <script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
-<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>-->
 <script>
     $("#Anh").change(function () {
         var noImageExits = $('.tes');

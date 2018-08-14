@@ -29,10 +29,10 @@
                             <label>Đưa lên menu:</label>
                             <div class="form-control">
                                 <label class="radio-inline">
-                                    <input type="radio" name="rbn" value="True">yes
+                                    <input type="radio" name="rbn" value="1">yes
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="rbn" value="False" checked="checked">no
+                                    <input type="radio" name="rbn" value="0" checked="checked">no
                                 </label>
                             </div>
                         </div>
@@ -53,13 +53,17 @@
                         <input type="submit" style="background-color: #00a98f" class="btn-sm btn-success btn-block" name="btnthem" value="Thêm danh mục">
                     </div>
                 </div>
-
-
                     {% if thongbao != ""%}
-                    <center><label style="color:#00a98f">{{thongbao}}</label></center>
+                        <center>
+                            <label style="color:#00a98f">{{thongbao}}</label>
+                        </center>
+                        <script>
+                                setTimeout(function() {
+                                window.location.replace("../danhmuc_ds")
+                                },3000)
+                        </script>
                     {% endif %}
                 </div>
-
             </form>
         </section>
     </div>

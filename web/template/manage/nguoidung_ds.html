@@ -34,7 +34,7 @@
                             <th>Email</th>
                             <th>Ảnh đại diện</th>
                             <th>Loại user</th>
-                            <th>Trạng thái</th>
+                            <th>Khóa tài khoản</th>
                             <th></th>
                         </thead>
                     {% if ds_nguoidung %}
@@ -42,40 +42,40 @@
                         {% for nguoidung in ds_nguoidung %}
                             <tr>
                                 <td>
-                                    {% if nguoidung.gioi_tinh == 'nam' %}
+                                    {% if nguoidung.gender == 1 %}
                                     <i class="fa fa-male"></i>
-                                    {% elif nguoidung.gioi_tinh == 'nu' %}
+                                    {% elif nguoidung.gender == 2 %}
                                     <i class="fa fa-female"></i>
                                     {% endif %}
                                 </td>
-                                <td>{{nguoidung.ten_dang_nhap}}</td>
-                                <td>{{nguoidung.ho_ten}}</td>
+                                <td>{{nguoidung.username}}</td>
+                                <td>{{nguoidung.fullname}}</td>
                                 <td>{{nguoidung.email}}</td>
 
                                 <td>
-                                    <img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{nguoidung.anh_dai_dien}}" alt="">
+                                    <img height="25" style="float:left; margin:auto" class="img-circle" src="/media/{{nguoidung.avatar_url}}" alt="">
                                 </td>
-                                <td>{{nguoidung.loai_user.ten_loai}}</td>
+                                <td>{{nguoidung.group.name}}</td>
                                 <td>
                                     <div class="form-group" style="background-color: gray; max-width: 70px">
-                                        {% if nguoidung.loai_user_id == 1 %}
+                                        {% if nguoidung.group_id == 1 %}
                                             <button style="background-color: gray; color:white" class="btn btn-sm btn-success">
                                                 <i class="fa fa-exchange"></i>
                                             </button>
                                         {% else %}
-                                            <a href="../nguoidung_trangthai/{{nguoidung.ten_dang_nhap}}">
+                                            <a href="../nguoidung_trangthai/{{nguoidung.username}}">
                                                 <button style="background-color: #00a98f; color:white" class="btn btn-sm btn-success">
                                                     <i class="fa fa-exchange"></i>
                                                 </button>
                                             </a>
                                         {% endif %}
                                         <small name="btnmenu" class="" style="color:white">
-                                            <i>{{nguoidung.trang_thai}}</i>
+                                            <i>{{nguoidung.is_locked}}</i>
                                         </small>
                                     </div>
                                 </td>
                                 <td>
-                                    {% if nguoidung.loai_user_id == 1 %}
+                                    {% if nguoidung.group_id == 1 %}
                                         <button class="btn-link">
                                             <i class="glyphicon glyphicon-trash" onclick="tbxoa()"></i>
                                         </button>
@@ -84,14 +84,14 @@
                                                 alert('Không thể xóa tài khoản này');
                                             }
                                         </script>
-                                    {% elif nguoidung.loai_user_id == 2 %}
-                                    <button id="{{nguoidung.ten_dang_nhap}}" class="btn-link">
+                                    {% elif nguoidung.group_id == 2 %}
+                                    <button id="{{nguoidung.username}}" class="btn-link">
                                         <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
                                     </button>
                                     <script>
-                                        $("#{{nguoidung.ten_dang_nhap}}").click(function(){
-                                            if(confirm('Xóa người dùng {{nguoidung.ten_dang_nhap}} sẽ mất các bài viết trong danh mục?')==true){
-                                                window.location='../nguoidung_xoa/{{nguoidung.ten_dang_nhap}}';
+                                        $("#{{nguoidung.username}}").click(function(){
+                                            if(confirm('Xóa người dùng {{nguoidung.username}} sẽ mất các bài viết trong danh mục?')==true){
+                                                window.location='../nguoidung_xoa/{{nguoidung.username}}';
                                                 }
                                             else{
                                                 return false;

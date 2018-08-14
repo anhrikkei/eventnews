@@ -36,7 +36,7 @@ class nguoidung_view:
                 elif user.status == 0:
                     user = ""
                     notify = "Tài khoản này chưa được kích hoạt"
-                elif user.is_locked == 'True':
+                elif user.is_locked == 1:
                     user = ""
                     notify = "Tài khoản này đã bị khóa"
                 else:

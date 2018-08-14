@@ -143,7 +143,7 @@ class baiviet_view():
             return redirect('admin')
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
-        search = request.POST.get("search","")
+        search = request.POST.get("search", "")
         dl = posts.objects.filter(title__icontains=search).order_by('datetime_created')[::-1][0:8]
 
         temp = loader.get_template('manage/baiviet_ajaxsearch.html')
@@ -160,17 +160,16 @@ class baiviet_view():
         for i in post_first:
             start_date = i.datetime_created
         # lấy ngày đầu tiên
-        end_date = timezone.now()
+        end_date = timezone.datetime.now()
         # lấy danh sách objects theo query
-        cursor = connection.cursor()
-        cursor.execute("Select COUNT(id) as sl, datetime_created From web_posts WHERE (datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)")
-        dl_chart = cursor.fetchall()
+        sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
+        dl_chart = posts.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý danh sách object về dạng json
         labels = []
         data = []
         for i in dl_chart:
-            labels.append(i[1])
+            labels.append(i[1].date())
             data.append(i[0])
         dl = {
             "labels": labels,
@@ -183,8 +182,8 @@ class baiviet_view():
     def get_chartuser(request):
         # lấy danh sách object theo query
         cursor = connection.cursor()
-        cursor.execute("Select COUNT(id) as sl, user_id From web_posts GROUP BY(user_id)")
-        dl_chart = cursor.fetchall()
+        sql = "Select COUNT(id) as sl, user_id From web_posts GROUP BY(user_id)"
+        dl_chart = posts.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý dữ liệu chuyển về json cấp cho chart
         labels = []
@@ -206,15 +205,14 @@ class baiviet_view():
             start_date = i.datetime_created
         end_date = timezone.now()
         # lấy danh sách objects theo query
-        cursor = connection.cursor()
-        cursor.execute("Select COUNT(id) as sl, datetime_created From web_posts WHERE (user_id='"+request.session['username']+"' and datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)")
-        dl_chart = cursor.fetchall()
+        sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (user_id='"+request.session['username']+"' and datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
+        dl_chart = posts.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý về json
         labels = []
         data = []
         for i in dl_chart:
-            labels.append(i[1])
+            labels.append(i[1].date())
             data.append(i[0])
         dl = {
             "labels": labels,
@@ -226,9 +224,8 @@ class baiviet_view():
     # lấy dữ liệu tạo biểu đồ pie theo danh mục
     def get_chartdanhmuc(request):
         # lấy danh sách object theo query
-        cursor = connection.cursor()
-        cursor.execute("Select COUNT(web_posts.id) as sl, category_id, web_categories.name From web_posts join web_categories on web_posts.category_id = web_categories.id GROUP BY(category_id,web_categories.name)")
-        dl_chart = cursor.fetchall()
+        sql = "Select COUNT(web_posts.id) as sl, category_id, web_categories.name From web_posts join web_categories on web_posts.category_id = web_categories.id GROUP BY(category_id,web_categories.name)"
+        dl_chart = posts.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý đưa dl về dạng json
         labels = []
