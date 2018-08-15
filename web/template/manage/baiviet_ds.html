@@ -30,81 +30,90 @@
             <!--hiện danh sách bài viết-->
             <div class="panel">
                 <div id="ajax_search" class="box box-primary">
-                    <table id="tb" class="table table-hover table-striped">
-                        <thead>
-                            <th>Mã bài</th>
-                            <th>Tiêu đề</th>
-                            <th>Ngày tạo</th>
-                            <th>Ngày sửa</th>
-                            <th>Tác giả</th>
-                            <th>Lượt xem</th>
-                            <th>Trạng thái</th>
-                            <th>Tin hot</th>
-                            <th>Danh mục</th>
-                            <th></th>
-                            <th></th>
-                        </thead>
-                    {% if ds_baiviet %}
-                        <tbody id="dl_search">
-                        {% for baiviet in ds_baiviet %}
-                            <tr>
-                                <td>{{baiviet.id}}</td>
-                                <td><small class="tieude-tin">{{baiviet.title}}</small></td>
-                                <td>{{baiviet.datetime_created|date}}</td>
-                                <td>{{baiviet.datetime_updated|date}}</td>
-                                <td>{{baiviet.user_id}}</td>
-                                <td>{{baiviet.views}}</td>
-                                <td>{{baiviet.is_locked}}</td>
-                                <td>{{baiviet.is_hot}}</td>
-                                <td>{{baiviet.category.name}}</td>
-                                <td><a href="../baiviet_sua/{{baiviet.id}}">
-                                    <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
-                                </td>
-                                <td>
-                                    <button id="{{baiviet.id}}" class="btn-link">
-                                        <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
-                                    </button>
-                                    <script>
-                                        $("#{{baiviet.id}}").click(function(){
-                                            if(confirm('Xóa bài viết {{baiviet.id}}?')==true){
-                                                window.location='../baiviet_xoa/{{baiviet.id}}';
+                    <div id="page_id">
+                        <table id="tb" class="table table-hover table-striped">
+                            <thead>
+                                <th></th>
+                                <th>Tiêu đề</th>
+                                <th>Ngày tạo</th>
+                                <th>Ngày sửa</th>
+                                <th>Tác giả</th>
+                                <th>Lượt xem</th>
+                                <th>Trạng thái</th>
+                                <th>Tin hot</th>
+                                <th>Danh mục</th>
+                                <th></th>
+                                <th></th>
+                            </thead>
+                        {% if ds_baiviet %}
+                            <tbody id="dl_search">
+                            {% for baiviet in ds_baiviet %}
+                                <tr>
+                                    <td>#</td>
+                                    <td><small class="tieude-tin">{{baiviet.title}}</small></td>
+                                    <td>{{baiviet.datetime_created|safe}}</td>
+                                    <td>{{baiviet.datetime_updated|safe}}</td>
+                                    <td>{{baiviet.user_id}}</td>
+                                    <td>{{baiviet.views}}</td>
+                                    <td>{{baiviet.is_locked}}</td>
+                                    <td>{{baiviet.is_hot}}</td>
+                                    <td>{{baiviet.category.name}}</td>
+                                    <td><a href="../baiviet_sua/{{baiviet.id}}">
+                                        <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
+                                    </td>
+                                    <td>
+                                        <button id="{{baiviet.id}}" class="btn-link">
+                                            <i style="color: #00a98f" class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        <script>
+                                            $("#{{baiviet.id}}").click(function(){
+                                                if(confirm('Xóa bài viết {{baiviet.id}}?')==true){
+                                                    window.location='../baiviet_xoa/{{baiviet.id}}';
+                                                    }
+                                                else{
+                                                    return false;
                                                 }
-                                            else{
-                                                return false;
-                                            }
-                                        })
-                                    </script>
-                                </td>
+                                            })
+                                        </script>
+                                    </td>
 
-                            </tr>
-                        </tbody>
-                        {% endfor %}
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        {% endif %}
+                        </table>
+                        <!--phân trang-->
+                         <div class="pull-right">
+                            <ul class="pagination pagintion-sm">
+                                <div class="pagination">
+                                    <span class="step-links">
+                                        {% if ds_baiviet.has_previous %}
+                                            <a class="pagination-links btn-link btnpage" href="?page=1"><i class="glyphicon glyphicon-backward"></i></a>
+                                        {% endif %}
+                                    </span>
+                                    <span class="step-links">
+                                        {% if ds_baiviet.has_previous %}
+                                            <a class="pagination-links btn-link btnpage" href="?page={{ ds_baiviet.previous_page_number }}"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                                        {% endif %}
+                                    </span>
 
-                    {% endif %}
-                    </table>
-                    <!--phân trang-->
-                     <div class="pull-right">
-                        <ul class="pagination pagintion-sm">
-                            <div class="pagination">
-                                <span class="step-links">
-                                    {% if ds_baiviet.has_previous %}
-                                        <a href="?page={{ ds_baiviet.previous_page_number }}"><i class="glyphicon glyphicon-chevron-left"></i></a>
-                                    {% endif %}
-                                </span>
+                                    <span class="current">
+                                        Trang {{ ds_baiviet.number }} / {{ ds_baiviet.paginator.num_pages }}
+                                    </span>
 
-                                <span class="current">
-                                    Trang {{ ds_baiviet.number }} / {{ ds_baiviet.paginator.num_pages }}
-                                </span>
-
-                                <span>
-                                    {% if ds_baiviet.has_next %}
-                                        <a href="?page={{ ds_baiviet.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </ul>
+                                    <span>
+                                        {% if ds_baiviet.has_next %}
+                                            <a class="pagination-links btn-link btnpage" href="?page={{ ds_baiviet.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                                        {% endif %}
+                                        {% if ds_baiviet.has_next %}
+                                            <a class="pagination-links btn-link btnpage" href="?page={{ ds_baiviet.paginator.num_pages }}"><i class="glyphicon glyphicon-forward"></i></a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </ul>
+                        </div>
+                        <!--//phân trang-->
                     </div>
-                    <!--//phân trang-->
                 </div>
             </div>
             <!--//hiện danh sách bài viết-->
@@ -140,24 +149,48 @@
 <!--ajax search-->
 <script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
 <script>
-
-$("#id_search").change(function(){
-    var search = $(this).val();
-    var ajaxDiv = $("#ajax_search");
-    $.ajax({
-        type: 'POST',
-        url: '../baiviet_ajaxsearch/',
-        data:{
-            'search': $(this).val(),
-            csrfmiddlewaretoken: '{{csrf_token}}'
-        },
-        dataType: 'html',
-        success: function(data){
-            ajaxDiv.replaceWith(ajaxDiv.html(data));
-        }
+$(document).ready(function(){
+    $("#id_search").change(function(){
+        var search = $(this).val();
+        var ajaxDiv = $("#ajax_search");
+        $.ajax({
+            type: 'POST',
+            url: '../baiviet_ajaxsearch/',
+            data:{
+                'search': $(this).val(),
+                csrfmiddlewaretoken: '{{csrf_token}}'
+            },
+            dataType: 'html',
+            success: function(data){
+                ajaxDiv.replaceWith(ajaxDiv.html(data));
+            }
+        });
     });
 
+    $(".btnpage").click(function(){
+        var tmp = $("#tmp").val()
+        var ajaxDiv = $("#page_id");
+        $.ajax({
+            type: 'POST',
+            url: '../baiviet_ajaxsearch/',
+            data:{
+                'search': tmp,
+                'p': $(this).val(),
+                csrfmiddlewaretoken: '{{csrf_token}}'
+            },
+            dataType: 'html',
+            success: function(data){
+                ajaxDiv.html(data);
+            }
+        });
+    });
 });
+
+</script>
+<script>
+
+
+
 
 
 </script>

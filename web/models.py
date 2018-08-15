@@ -26,7 +26,7 @@ class users(models.Model):
 
 class categories(models.Model):
     
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, )
     name = models.CharField(max_length=50)
     describe = models.CharField(max_length=100)
     datetime_created = models.DateTimeField(default=timezone.datetime.now())
@@ -47,9 +47,3 @@ class posts(models.Model):
     is_locked = models.BooleanField(default=True)
     is_hot = models.BooleanField(default=False)
     category = models.ForeignKey('categories', null=True, on_delete=models.CASCADE)
-
-    def data_chart(sql):
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        dl_chart = cursor.fetchall()
-        return dl_chart

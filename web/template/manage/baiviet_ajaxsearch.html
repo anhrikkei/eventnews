@@ -1,53 +1,96 @@
 {% if dl %}
-<table id="tb" class="table table-striped table-hover">
-    <thead>
-        <th>Mã bài viết</th>
-        <th>Tiêu đề</th>
-        <th>Ngày tạo</th>
-        <th>Ngày sửa</th>
-        <th>Tác giả</th>
-        <th>Lượt xem</th>
-        <th>Trạng thái</th>
-        <th>Tin hot</th>
-        <th>Danh mục</th>
-        <th></th>
-        <th></th>
-    </thead>
-    <tbody>
-        {% for baiviet in dl %}
-            <tr>
-                <td>{{baiviet.id}}</td>
-                <td><small class="tieude-tin">{{baiviet.title}}</small></td>
-                <td>{{baiviet.datetime_created|date}}</td>
-                <td>{{baiviet.datetime_updated|date}}</td>
-                <td>{{baiviet.user_id}}</td>
-                <td>{{baiviet.views}}</td>
-                <td>{{baiviet.is_locked}}</td>
-                <td>{{baiviet.is_hot}}</td>
-                <td>{{baiviet.category.name}}</td>
-                <td><a href="../baiviet_sua/{{baiviet.id}}">
-                    <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
-                </td>
-                <td>
-                    <button class="btn-link">
-                        <i style="color: #00a98f" onclick="myConfirm()" class="glyphicon glyphicon-trash"></i>
-                    </button>
-                    <script>
-                        function myConfirm(){
-                            if(confirm('Bạn có muốn xóa bài viết?')==true){
-                                window.location='../baiviet_xoa/{{baiviet.ma_bai}}';
+<div id="page_id">
+    <table id="tb" class="table table-striped table-hover">
+        <thead>
+            <th></th>
+            <th>Tiêu đề</th>
+            <th>Ngày tạo</th>
+            <th>Ngày sửa</th>
+            <th>Tác giả</th>
+            <th>Lượt xem</th>
+            <th>Trạng thái</th>
+            <th>Tin hot</th>
+            <th>Danh mục</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for baiviet in dl %}
+                <tr>
+                    <td>#</td>
+                    <td><small class="tieude-tin">{{baiviet.title}}</small></td>
+                    <td>{{baiviet.datetime_created|safe}}</td>
+                    <td>{{baiviet.datetime_updated|safe}}</td>
+                    <td>{{baiviet.user_id}}</td>
+                    <td>{{baiviet.views}}</td>
+                    <td>{{baiviet.is_locked}}</td>
+                    <td>{{baiviet.is_hot}}</td>
+                    <td>{{baiviet.category.name}}</td>
+                    <td><a href="../baiviet_sua/{{baiviet.id}}">
+                        <i style="color: #00a98f" class="glyphicon glyphicon-edit"></i></a>
+                    </td>
+                    <td>
+                        <button class="btn-link">
+                            <i style="color: #00a98f" onclick="myConfirm()" class="glyphicon glyphicon-trash"></i>
+                        </button>
+                        <script>
+                            function myConfirm(){
+                                if(confirm('Bạn có muốn xóa bài viết?')==true){
+                                    window.location='../baiviet_xoa/{{baiviet.ma_bai}}';
+                                    }
+                                else{
+                                    return false;
                                 }
-                            else{
-                                return false;
                             }
-                        }
-                    </script>
-                </td>
+                        </script>
+                    </td>
 
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<!--phân trang-->
+ <div class="pull-right">
+    <ul class="pagination pagintion-sm">
+        <div class="pagination">
+            <span class="step-links">
+                {% if dl.has_previous %}
+                <a class="pagination-links btn-link btnpage" href="?page=1"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                {% endif %}
+            </span>
+            <span class="step-links">
+                {% if dl.has_previous %}
+                <a class="pagination-links btn-link btnpage" href="?page={{ dl.previous_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                {% endif %}
+            </span>
+
+            <span class="current">
+                Trang {{ dl.number }} / {{ dl.paginator.num_pages }}
+            </span>
+
+            <span>
+                {% if dl.has_next %}
+                <a class="pagination-links btn-link btnpage" href="?page={{ dl.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                {% endif %}
+            </span>
+            <span>
+                {% if dl.has_next %}
+                <a class="pagination-links btn-link btnpage" href="?page={{ dl.paginator.num_pages }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                {% endif %}
+            </span>
+        </div>
+    </ul>
+</div>
+<!--//phân trang-->
+<div class="pull-left">
+    <span>
+    <a href="../baiviet_export_csv"><i style="color: #00a98f" class="fa fa-download"> CSV</i></a>|
+    <button class="btn btn-link" value=""><i style="color: #00a98f" class="fa fa-download"> EXCEL</i></button>
+        <small>: Tìm thấy {{ count_result }} bản ghi</small>
+    </span>
+</div>
+<input id="tmp" type="button" value="{{search}}" class="hide"/>
+</div>
 {% else %}
 <center>Không có dữ liệu thỏa mãn...</center>
 {% endif %}

@@ -41,7 +41,7 @@ class nguoidung_view:
                     notify = "Tài khoản này đã bị khóa"
                 else:
                     request.session['username'] = user.username
-                    return redirect('trangchu')
+                    return redirect('admin')
         # //xử lý đăng nhập
         # load tempplate
         temp = loader.get_template('dangnhap.html')

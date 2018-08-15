@@ -1,9 +1,11 @@
 {% if ds_danhmuc %}
-    <!--<center>-->
-        <!--<small style="color: #00a98f">-->
-            <!--Có {{count_result}} kết quả được tìm thấy-->
-        <!--</small>-->
-    <!--</center>-->
+{% if count %}
+    <center>
+        <small style="color: #00a98f">
+            Có {{count}} kết quả được tìm thấy
+        </small>
+    </center>
+{% endif %}
     <table id="tb" class="table table-striped table-hover">
         <thead class="table-striped">
             <th></th>

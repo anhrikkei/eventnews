@@ -6,6 +6,7 @@ from django.template import loader
 from django.utils import timezone
 from django.db import connection
 from django.http import JsonResponse
+import csv
 
 
 class baiviet_view():
@@ -22,6 +23,9 @@ class baiviet_view():
         # //kiểm tra trạng thái đăng nhập
         # lấy danh sách bài viết theo loại user
         list_post = posts.objects.all().order_by('datetime_created', 'id')[::-1]
+        for item in list_post:
+            item.datetime_created = item.datetime_created.date()
+            item.datetime_updated = item.datetime_updated.date()
         if user.group_id == 2:
             list_post = posts.objects.filter(user_id=user.username)
         # //lấy danh sách bài viết theo loại user
@@ -144,12 +148,29 @@ class baiviet_view():
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
         search = request.POST.get("search", "")
-        dl = posts.objects.filter(title__icontains=search).order_by('datetime_created')[::-1][0:8]
+        list_post = posts.objects.filter(title__icontains=search)
+        count_result = list_post.count()
+        list_post = list_post.order_by('datetime_created')[::-1]
+        for item in list_post:
+            item.datetime_created = item.datetime_created.date()
+            item.datetime_updated = item.datetime_updated.date()
 
+        # phân trang
+        paginator = Paginator(list_post, 8)
+        pageNumber = request.POST.get('p')
+        try:
+            list_post = paginator.page(pageNumber)
+        except PageNotAnInteger:
+            list_post = paginator.page(1)
+        except EmptyPage:
+            list_post = paginator.page(paginator.num_pages)
+        # //phân trang
         temp = loader.get_template('manage/baiviet_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
-            "dl": dl,
+            "dl": list_post,
+            "count_result": count_result,
+            "search": search,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
@@ -163,7 +184,7 @@ class baiviet_view():
         end_date = timezone.datetime.now()
         # lấy danh sách objects theo query
         sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
-        dl_chart = posts.data_chart(sql)
+        dl_chart = baiviet_view.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý danh sách object về dạng json
         labels = []
@@ -183,7 +204,7 @@ class baiviet_view():
         # lấy danh sách object theo query
         cursor = connection.cursor()
         sql = "Select COUNT(id) as sl, user_id From web_posts GROUP BY(user_id)"
-        dl_chart = posts.data_chart(sql)
+        dl_chart = baiviet_view.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý dữ liệu chuyển về json cấp cho chart
         labels = []
@@ -206,7 +227,7 @@ class baiviet_view():
         end_date = timezone.now()
         # lấy danh sách objects theo query
         sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (user_id='"+request.session['username']+"' and datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
-        dl_chart = posts.data_chart(sql)
+        dl_chart = baiviet_view.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý về json
         labels = []
@@ -225,7 +246,7 @@ class baiviet_view():
     def get_chartdanhmuc(request):
         # lấy danh sách object theo query
         sql = "Select COUNT(web_posts.id) as sl, category_id, web_categories.name From web_posts join web_categories on web_posts.category_id = web_categories.id GROUP BY(category_id,web_categories.name)"
-        dl_chart = posts.data_chart(sql)
+        dl_chart = baiviet_view.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý đưa dl về dạng json
         labels = []
@@ -244,3 +265,31 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý đưa dl về dạng json
         return kq
+
+    def data_chart(sql):
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        dl_chart = cursor.fetchall()
+        return dl_chart
+
+    def export_csv(self):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="posts.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Tiêu đề', 'Ngày tạo', 'Ngày sửa', 'Tác gả', 'Lượt xem', 'Trạng thái', 'Danh mục'])
+        # list_post = posts.
+
+        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+
+        return response
+
+    def export_excel(self):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+
+        return response

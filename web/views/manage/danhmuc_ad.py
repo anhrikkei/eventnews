@@ -169,12 +169,12 @@ class danhmuc_view:
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
         search = request.POST.get("search", "")
-        list_category = categories.objects.filter(name__icontains=search).order_by('datetime_created')[::-1]
+        list_category = categories.objects.filter(name__icontains=search)
+        count_result = list_category.count()
         for i in search:
             if i == "-":
-                list_category1 = categories.objects.filter(datetime_created__icontains=search)
-                list_category2 = categories.objects.filter(datetime_updated__icontains=search)
-                list_category = list(list_category1) + list(list_category2)
+                list_category = categories.objects.filter(datetime_created__icontains=search)
+                count_result = list_category.count()
         for i in list_category:
             i.datetime_updated = i.datetime_updated.date()
             i.datetime_created = i.datetime_created.date()
@@ -184,7 +184,7 @@ class danhmuc_view:
         context = {
             "ds_danhmuc": list_category,
             "search": search,
-            # "count_result": list_category.count(),
+            "count": count_result,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
