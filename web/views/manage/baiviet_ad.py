@@ -21,30 +21,11 @@ class baiviet_view():
         else:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
-        # lấy danh sách bài viết theo loại user
-        list_post = posts.objects.all().order_by('datetime_created', 'id')[::-1]
-        for item in list_post:
-            item.datetime_created = item.datetime_created.date()
-            item.datetime_updated = item.datetime_updated.date()
-        if user.group_id == 2:
-            list_post = posts.objects.filter(user_id=user.username)
-        # //lấy danh sách bài viết theo loại user
-        # phân trang
-        paginator = Paginator(list_post, 8)
-        pageNumber = request.GET.get('page')
-        try:
-            list_post = paginator.page(pageNumber)
-        except PageNotAnInteger:
-            list_post = paginator.page(1)
-        except EmptyPage:
-            list_post = paginator.page(paginator.num_pages)
-        # //phân trang
-        # load template
+
         temp = loader.get_template('manage/baiviet_ds.html')
         # //load template
         # tạo Dict truyền biến qua temp
         context = {
-            "ds_baiviet": list_post,
             "user": user,
         }
         # //tạo Dict truyền biến qua temp
@@ -147,17 +128,20 @@ class baiviet_view():
             return redirect('admin')
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
-        search = request.POST.get("search", "")
+        if request.session.has_key('username'):
+            user = users.objects.get(username=request.session['username'])
+        search = request.GET.get("search", "")
         list_post = posts.objects.filter(title__icontains=search)
+        if user.group_id == 2:
+            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
         count_result = list_post.count()
         list_post = list_post.order_by('datetime_created')[::-1]
         for item in list_post:
             item.datetime_created = item.datetime_created.date()
             item.datetime_updated = item.datetime_updated.date()
-
         # phân trang
         paginator = Paginator(list_post, 8)
-        pageNumber = request.POST.get('p')
+        pageNumber = request.GET.get('page')
         try:
             list_post = paginator.page(pageNumber)
         except PageNotAnInteger:
@@ -168,7 +152,7 @@ class baiviet_view():
         temp = loader.get_template('manage/baiviet_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
-            "dl": list_post,
+            "ds_baiviet": list_post,
             "count_result": count_result,
             "search": search,
         }

@@ -18,30 +18,29 @@ class nguoidung_view:
         list_category =categories.objects.all()
         # xử lý đăng nhập
         if request.POST.get("btnlogin"):
+
             u = users()
             u.username = request.POST['username']
             u.email = request.POST['username']
             u.password = request.POST['password']
-            try:
-                user = users.objects.get(username=u.username)
-            except:
-                try:
-                    user = users.objects.get(email=u.email)
-                except:
-                    user = ""
-                    notify ="Tên đăng nhập/email không chính xác"
-            if user != "":
-                if check_password(u.password, user.password, None, 'md5') == False:
-                    notify = "Sai mật khẩu"
-                elif user.status == 0:
+            list_user = users.objects.all()
+            for i in list_user:
+                if (u.username == i.username or u.email == i.email) and check_password(u.password, i.password, 'none', 'md5'):
+                    user = i
+            if user:
+                if user.status == 0:
                     user = ""
                     notify = "Tài khoản này chưa được kích hoạt"
+                    pass
                 elif user.is_locked == 1:
                     user = ""
                     notify = "Tài khoản này đã bị khóa"
+                    pass
                 else:
                     request.session['username'] = user.username
                     return redirect('admin')
+            else:
+                notify = "Tên đăng nhập hoặc mật khẩu không chính xác"
         # //xử lý đăng nhập
         # load tempplate
         temp = loader.get_template('dangnhap.html')
