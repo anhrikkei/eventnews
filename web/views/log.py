@@ -57,10 +57,7 @@ class nguoidung_view:
     def dangxuat(request):
         if request.session.has_key('username'):
             user = users.objects.get(username=request.session['username'])
-            if request.POST.get("btndangxuat"):
-                del request.session['username']
-                return redirect('dangnhap')
-            else:
-                return redirect('trangchu')
+            del request.session['username']
+            return redirect('dangnhap')
         else:
             return redirect('trangchu')

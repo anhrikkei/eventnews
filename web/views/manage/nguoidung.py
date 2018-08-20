@@ -17,25 +17,10 @@ class nguoidung_view:
         if user.group_id != 1:
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
-        # lấy danh sách người dùng theo loại user
-        list_user = users.objects.all().order_by('username')
-
-        # //lấy danh sách người dùng theo loại user
-        # phân trang
-        paginator = Paginator(list_user, 8)
-        pageNumber = request.GET.get('page')
-        try:
-            list_user = paginator.page(pageNumber)
-        except PageNotAnInteger:
-            list_user = paginator.page(1)
-        except EmptyPage:
-            list_user = paginator.page(paginator.num_pages)
-        # //phân trang
         # load temp
         temp = loader.get_template('manage/nguoidung_ds.html')
         # tạo dict truyền biến qua temp
         context = {
-            "ds_nguoidung": list_user,
             "user": user,
         }
         # //tạo dict truyền biến qua temp
@@ -74,20 +59,29 @@ class nguoidung_view:
         return redirect('nguoidung_ds')
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
-        search = request.POST.get("search", "")
+        search = request.GET.get("search", "")
         list_user = users.objects.filter(username__icontains=search)
         for i in search:
             if i == '@':
                 list_user = users.objects.filter(email__icontains=search)
             elif i == ' ':
                 list_user = users.objects.filter(fullname__icontains=search)
+        count = list_user.count()
+        paginator = Paginator(list_user, 8)
+        pageNumber = request.GET.get('page')
+        try:
+            list_user = paginator.page(pageNumber)
+        except PageNotAnInteger:
+            list_user = paginator.page(1)
+        except EmptyPage:
+            list_user = paginator.page(paginator.num_pages)
         # load template
         temp = loader.get_template('manage/nguoidung_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
-            "ds_nguoidung": set(list_user),
+            "ds_nguoidung": list_user,
             "search": search,
-            "count_result": list_user.count(),
+            "count_result": count,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))

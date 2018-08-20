@@ -7,9 +7,17 @@ from django.utils import timezone
 from django.db import connection
 from django.http import JsonResponse
 import csv
+from django.utils.encoding import smart_str,smart_text
+# from docx import newdocument, savedocx
+# from __future__ import print_function
+# from mailmerge import MailMerge
 
 
 class baiviet_view():
+
+    CONST_GROUP_ID_ADMIN = 1
+    CONST_GROUP_ID_USER = 2
+    CONST_DEFAULT_RESULTS_PER_PAGE = 8
 
     # hiển thị trang danh sách bài viết
     def danhsach(request):
@@ -22,6 +30,16 @@ class baiviet_view():
             return redirect('admin')
         # //kiểm tra trạng thái đăng nhập
 
+        keyword = request.GET.get("keyword", "")
+        page = request.GET.get("page", 1)
+
+        user = users.objects.get(username=request.session['username'])
+        if user.group_id == baiviet_view.CONST_GROUP_ID_USER:
+            list_post = baiviet_view.search(keyword, user.username, page)
+        else:
+            list_post = baiviet_view.search(keyword, "", page)
+        count_result = list_post.count()
+
         temp = loader.get_template('manage/baiviet_ds.html')
         # //load template
         # tạo Dict truyền biến qua temp
@@ -30,6 +48,7 @@ class baiviet_view():
         }
         # //tạo Dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+
     # thêm bài viết
     def them(request):
         user = ""
@@ -128,36 +147,46 @@ class baiviet_view():
             return redirect('admin')
     # lấy dữ liệu trả về khi tìm kiếm
     def get_dlsearch(request):
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-        search = request.GET.get("search", "")
-        list_post = posts.objects.filter(title__icontains=search)
-        if user.group_id == 2:
-            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
+        #TODO If user has not logged in, show error
+
+        keyword = request.GET.get("keyword", "")
+        page = request.GET.get("page", 1)
+
+        user = users.objects.get(username=request.session['username'])
+        if user.group_id == baiviet_view.CONST_GROUP_ID_USER:
+            list_post = baiviet_view.search(keyword, user.username, page)
+        else:
+            list_post = baiviet_view.search(keyword, "", page)
         count_result = list_post.count()
-        list_post = list_post.order_by('datetime_created')[::-1]
-        for item in list_post:
-            item.datetime_created = item.datetime_created.date()
-            item.datetime_updated = item.datetime_updated.date()
-        # phân trang
-        paginator = Paginator(list_post, 8)
-        pageNumber = request.GET.get('page')
-        try:
-            list_post = paginator.page(pageNumber)
-        except PageNotAnInteger:
-            list_post = paginator.page(1)
-        except EmptyPage:
-            list_post = paginator.page(paginator.num_pages)
         # //phân trang
         temp = loader.get_template('manage/baiviet_ajaxsearch.html')
         # tạo dict truyền biến qua temp
         context = {
             "ds_baiviet": list_post,
             "count_result": count_result,
-            "search": search,
+            "keyword": keyword,
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+
+    def search(keyword, user_id, page):
+        list_post = posts.objects.filter(title__icontains=keyword)
+        if user_id:
+            list_post = posts.objects.filter(user_id=user_id, title__icontains=keyword)
+        list_post = list_post.order_by('datetime_created')[::-1]
+        for item in list_post:
+            item.datetime_created = item.datetime_created.date()
+            item.datetime_updated = item.datetime_updated.date()
+        paginator = Paginator(list_post, baiviet_view.CONST_DEFAULT_RESULTS_PER_PAGE)
+
+        try:
+            list_post = paginator.page(page)
+        except PageNotAnInteger:
+            list_post = paginator.page(1)
+        except EmptyPage:
+            list_post = paginator.page(paginator.num_pages)
+        return list_post
+
     # lấy dữ liệu tạo biểu đồ line bài viết theo thời gian
     def get_chartdate(request):
         # lấy ngày đầu tiên
@@ -183,6 +212,7 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý danh sách object về dạng json
         return kq
+
     # lấy dữ liệu tạo biểu bar đồ bài viết theo user
     def get_chartuser(request):
         # lấy danh sách object theo query
@@ -249,31 +279,89 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý đưa dl về dạng json
         return kq
-
+    # thực thi lệnh sql
     def data_chart(sql):
         cursor = connection.cursor()
         cursor.execute(sql)
         dl_chart = cursor.fetchall()
         return dl_chart
+    # xuất dữ liệu tìm kiếm được ra file .csv
+    def export_csv(request, search):
+        if request.session.has_key('username'):
+            user = users.objects.get(username=request.session['username'])
+        list_post = posts.objects.filter(title__icontains=search)
+        if user.group_id == 2:
+            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
 
-    def export_csv(self):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="posts.csv"'
 
         writer = csv.writer(response)
-        writer.writerow(['Tiêu đề', 'Ngày tạo', 'Ngày sửa', 'Tác gả', 'Lượt xem', 'Trạng thái', 'Danh mục'])
-        # list_post = posts.
-
-        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
-
+        writer.writerow(['Tittle', 'date_created', 'date_updated', 'user', 'views', 'categories'])
+        for post in list_post:
+            writer.writerow([post.title, post.datetime_created, post.datetime_updated, post.user_id, post.views, post.category.name])
+        writer.writerow(['Count result: ' + str(list_post.count())])
         return response
 
-    def export_excel(self):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    def export_excel(request, search):
+        if request.session.has_key('username'):
+            user = users.objects.get(username=request.session['username'])
+        list_post = posts.objects.filter(title__icontains=search)
+        if user.group_id == 2:
+            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
+
+        response = HttpResponse(content_type='xls')
+        response['Content-Disposition'] = 'attachment; filename="posts.csv"'
 
         writer = csv.writer(response)
-        writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
-
+        writer.writerow(['Tittle', 'date_created', 'date_updated', 'user', 'views', 'categories'])
+        for post in list_post:
+            writer.writerow([post.title, post.datetime_created, post.datetime_updated, post.user_id, post.views, post.category.name, u"ư"])
+        writer.writerow(['Count result: ' + str(list_post.count())])
         return response
+
+    # def export_docx(request):
+    #     pass
+    #     # document = newdocument()
+    #     # docx_title = "TEST_DOCUMENT.docx"
+    #     # # ---- Cover Letter ----
+    #     # # document.add_picture((r'%s/static/images/my-header.png' % (settings.PROJECT_PATH)), width=Inches(4))
+    #     # document.add_paragraph()
+    #     # document.add_paragraph("%s" % timezone.datetime.date.today().strftime('%B %d, %Y'))
+    #     #
+    #     # document.add_paragraph('Dear Sir or Madam:')
+    #     # document.add_paragraph('We are pleased to help you with your widgets.')
+    #     # document.add_paragraph('Please feel free to contact me for any additional information.')
+    #     # document.add_paragraph('I look forward to assisting you in this project.')
+    #     #
+    #     # document.add_paragraph()
+    #     # document.add_paragraph('Best regards,')
+    #     # document.add_paragraph('Acme Specialist 1]')
+    #     # document.add_page_break()
+    #     #
+    #     # # Prepare document for download
+    #     # # -----------------------------
+    #     # savedocx(document)
+    #     # response = HttpResponse(
+    #     #     content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    #     # )
+    #     # response['Content-Disposition'] = 'attachment; filename=' + docx_title
+    #     # return response
+
+    def import_csv(request):
+        with open('names.csv', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+        for row in reader:
+            post = posts()
+            post.title = row[0]
+            post.content = row[1]
+            post.datetime_created = row[2]
+            post.datetime_updated = row[3]
+            post. views = row[4]
+            post.is_locked = row[5]
+            post.is_hot = row[6]
+            post.category_id = row[7]
+            post.save()
+
+    # def u(s):
+    #     return smart_text(s, encoding='utf-8', strings_only=False, errors='strict')

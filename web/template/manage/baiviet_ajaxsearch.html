@@ -1,10 +1,5 @@
 <div id="posts">
-    <div class="pull-right">
-        <button class="btn-link">
-            <a href="/baiviet_ds/"><i style="color:#00a98f" class="glyphicon glyphicon-refresh"></i></a>
-        </button>
-        <input type="search" name="search" value="{{search}}" id="id_search"/>
-    </div>
+
     {% if ds_baiviet %}
     <table id="tb" class="table table-hover table-striped">
         <thead>
@@ -56,41 +51,63 @@
     </table>
     <!--phân trang-->
      <div id="pagination" class="pull-right">
-        <ul class="pagination pagintion-sm">
-            <div class="pagination">
-                <span class="step-links">
-                    {% if ds_baiviet.has_previous %}
-                        <a class="page-links" href="?page=1&search={{search}}" data-search="{{search}}" data-page="1">
-                            <i class="glyphicon glyphicon-backward"></i>
-                        </a>
-                    {% endif %}
-                </span>
-                <span class="step-links">
-                    {% if ds_baiviet.has_previous %}
-                        <a class="page-links" href="?page={{ ds_baiviet.previous_page_number }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.previous_page_number }}">
-                            <i class="glyphicon glyphicon-chevron-left"></i>
-                        </a>
-                    {% endif %}
-                </span>
-                <span class="current">
-                    Trang {{ ds_baiviet.number }} / {{ ds_baiviet.paginator.num_pages }}
-                </span>
-                <span>
-                    {% if ds_baiviet.has_next %}
-                        <a class="page-links" href="?page={{ ds_baiviet.next_page_number }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
-                    {% endif %}
-                </span>
-                <span>
-                    {% if ds_baiviet.has_next %}
-                        <a class="page-links" href="?page={{ ds_baiviet.paginator.num_pages }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.paginator.num_pages }}"><i class="glyphicon glyphicon-forward"></i></a>
-                    {% endif %}
-                </span>
-            </div>
+        <ul class="pagination pagination-sm">
+            <span class="step-links">
+                {% if ds_baiviet.has_previous %}
+                    <a class="page-links" href="?page=1&search={{search}}" data-search="{{search}}" data-page="1">
+                        <i class="glyphicon glyphicon-backward"></i>
+                    </a>
+                {% endif %}
+            </span>
+            <span class="step-links">
+                {% if ds_baiviet.has_previous %}
+                    <a class="page-links" href="?page={{ ds_baiviet.previous_page_number }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.previous_page_number }}">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                    </a>
+                {% endif %}
+            </span>
+            <span class="current">
+                Trang {{ ds_baiviet.number }} / {{ ds_baiviet.paginator.num_pages }}
+            </span>
+            <span>
+                {% if ds_baiviet.has_next %}
+                    <a class="page-links" href="?page={{ ds_baiviet.next_page_number }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.next_page_number }}"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                {% endif %}
+            </span>
+            <span>
+                {% if ds_baiviet.has_next %}
+                    <a class="page-links" href="?page={{ ds_baiviet.paginator.num_pages }}&search={{search}}" data-search="{{search}}" data-page="{{ ds_baiviet.paginator.num_pages }}"><i class="glyphicon glyphicon-forward"></i></a>
+                {% endif %}
+            </span>
         </ul>
      </div>
+    <div id="export" class="pull-left">
+        <ul class="pagination pagination-sm">
+            <a class="export" href="../baiviet_export_csv/{{search}}"><i class="fa fa-download">.csv</i></a> |
+            <!--<a class="export" href="../baiviet_export_excel/{{search}}"><i class="fa fa-download">Excel</i></a> :-->
+            {{count_result}}
+        </ul>
+    </div>
     <!--//phân trang-->
     {% else %}
             <center>Không có dữ liệu thỏa mãn...</center>
     {% endif %}
-
+    <script>
+    $(document).ready(function(){
+        $("#posts #pagination a.page-links").click(function(event){
+            event.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: '../baiviet_ajaxsearch/',
+                data:{
+                    'search': $(this).data('search'),
+                    'page': $(this).data('page'),
+                },
+                success: function(data){
+                    $("#posts").replaceWith(data);
+                }
+            });
+        });
+    });
+    </script>
 </div>

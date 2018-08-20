@@ -1,6 +1,7 @@
 {% extends "manage/baseadmin.html" %}
 {% block nd %}
 {% load static %}
+<script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
     <div class="container">
         <ol class="breadcrumb">
             <li><a style="color:#00a98f" href="../admin"><i class="fa fa-dashboard"></i> mange</a></li>
@@ -47,6 +48,11 @@
                             <br>
                             <label style="color:00a98f">
                                 {{thongbao}}
+                                <script>
+                                    setTimeout(function() {
+                                        window.location.replace ("../dangxuat");
+                                    }, 5000);
+                                </script>
                             </label>
                         {% endif %}
                     </div>
@@ -80,7 +86,6 @@
                 </center>
             </div>
     </div>
-<script src="{% static 'bootstrap/js/jquery.min.js'%}"></script>
 <script>
     $("#Anh").change(function () {
         var noImageExits = $('.tes');
@@ -101,7 +106,7 @@
         }
     });
 </script>
-<!--validate form đăng kí-->
+<!--validate form-->
 <script type="text/javascript">
         jQuery( document ).ready(
             jQuery("#btncapnhat").click(function(){
@@ -184,5 +189,5 @@
             })
         );
 	</script>
-<!--<//validate form đăng kí-->
+<!--<//validate form-->
 {%endblock%}
