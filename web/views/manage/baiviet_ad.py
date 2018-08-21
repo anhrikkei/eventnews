@@ -7,57 +7,99 @@ from django.utils import timezone
 from django.db import connection
 from django.http import JsonResponse
 import csv
+import os
 from django.utils.encoding import smart_str,smart_text
 # from docx import newdocument, savedocx
 # from __future__ import print_function
 # from mailmerge import MailMerge
 
 
-class baiviet_view():
+class PostsView:
 
-    CONST_GROUP_ID_ADMIN = 1
-    CONST_GROUP_ID_USER = 2
-    CONST_DEFAULT_RESULTS_PER_PAGE = 8
+    _CONST_GROUP_ID_ADMIN = 1
+    _CONST_GROUP_ID_USER = 2
+    _CONST_DEFAULT_RESULTS_PER_PAGE = 8
 
     # hiển thị trang danh sách bài viết
-    def danhsach(request):
-        user = ""
+    def list(request):
         # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
-            return redirect('admin')
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
+        request.session.set_expiry(1800)
+
         # //kiểm tra trạng thái đăng nhập
-
-        keyword = request.GET.get("keyword", "")
-        page = request.GET.get("page", 1)
-
+        keyword = request.GET.get("search", "")
         user = users.objects.get(username=request.session['username'])
-        if user.group_id == baiviet_view.CONST_GROUP_ID_USER:
-            list_post = baiviet_view.search(keyword, user.username, page)
-        else:
-            list_post = baiviet_view.search(keyword, "", page)
-        count_result = list_post.count()
-
+        page = request.GET.get("page", "")
+        data = PostsView.search(request, keyword, user, page)
+        list_post = data["list_post"]
+        count_result = data["count_result"]
         temp = loader.get_template('manage/baiviet_ds.html')
         # //load template
         # tạo Dict truyền biến qua temp
         context = {
             "user": user,
+            "list_post": list_post,
+            "count_result": count_result,
         }
         # //tạo Dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
 
+    # lấy dữ liệu trả về khi tìm kiếm
+    def get_dlsearch(request):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
+        request.session.set_expiry(1800)
+        keyword = request.GET.get("search", "")
+        page = request.GET.get("page", 1)
+
+        user = users.objects.get(username=request.session['username'])
+        data = PostsView.search(request, keyword, user, page)
+        list_post = data["list_post"]
+        count_result = data["count_result"]
+        # //phân trang
+        temp = loader.get_template('manage/baiviet_ajaxsearch.html')
+        # tạo dict truyền biến qua temp
+        context = {
+            "ds_baiviet": list_post,
+            "count_result": count_result,
+            "search": keyword,
+        }
+        # //tạo dict truyền biến qua temp
+        return HttpResponse(temp.render(context, request))
+
+    def search(request, keyword, user, page):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
+        list_post = posts.objects.filter(title__icontains=keyword)
+        if user.group_id == PostsView._CONST_GROUP_ID_USER:
+            list_post = posts.objects.filter(user_id=user.username, title__icontains=keyword)
+        count_result = list_post.count()
+        list_post = list_post.order_by('datetime_created')[::-1]
+        for item in list_post:
+            item.datetime_created = item.datetime_created.date()
+            item.datetime_updated = item.datetime_updated.date()
+        paginator = Paginator(list_post, PostsView._CONST_DEFAULT_RESULTS_PER_PAGE)
+
+        try:
+            list_post = paginator.page(page)
+        except PageNotAnInteger:
+            list_post = paginator.page(1)
+        except EmptyPage:
+            list_post = paginator.page(paginator.num_pages)
+        data = {
+            "count_result": count_result,
+            "list_post": list_post,
+        }
+        return data
+
     # thêm bài viết
-    def them(request):
-        user = ""
+    def create(request):
         # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
+        if not request.session.has_key('username'):
             return redirect('admin')
+        user = users.objects.get(username=request.session['username'])
+        request.session.set_expiry(1800)
         # //kiểm tra trạng thái đăng nhập
         date_current = timezone.datetime.now().date()
         list_category = categories.objects.all()
@@ -87,15 +129,14 @@ class baiviet_view():
             "nguoitao": request.session['username'],
         }
         return HttpResponse(temp.render(context, request))
+
     # cập nhật bài viết
-    def sua(request, bv_id):
-        user = ""
+    def update(request, bv_id):
         # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
+        if not request.session.has_key('username'):
             return redirect('admin')
+        user = users.objects.get(username=request.session['username'])
+        request.session.set_expiry(1800)
         # //kiểm tra trạng thái đăng nhập
         date_current = timezone.datetime.now().date()
         post_current = posts.objects.get(id=bv_id)
@@ -129,8 +170,9 @@ class baiviet_view():
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+
     # xóa bài viết
-    def xoa(request, bv_id):
+    def delete(request, bv_id):
         user = ""
         if request.session.has_key('username'):
             user = users.objects.get(username=request.session['username'])
@@ -145,50 +187,11 @@ class baiviet_view():
                     return HttpResponse('sai quyen truy cap', request)
         else:
             return redirect('admin')
-    # lấy dữ liệu trả về khi tìm kiếm
-    def get_dlsearch(request):
-        #TODO If user has not logged in, show error
-
-        keyword = request.GET.get("keyword", "")
-        page = request.GET.get("page", 1)
-
-        user = users.objects.get(username=request.session['username'])
-        if user.group_id == baiviet_view.CONST_GROUP_ID_USER:
-            list_post = baiviet_view.search(keyword, user.username, page)
-        else:
-            list_post = baiviet_view.search(keyword, "", page)
-        count_result = list_post.count()
-        # //phân trang
-        temp = loader.get_template('manage/baiviet_ajaxsearch.html')
-        # tạo dict truyền biến qua temp
-        context = {
-            "ds_baiviet": list_post,
-            "count_result": count_result,
-            "keyword": keyword,
-        }
-        # //tạo dict truyền biến qua temp
-        return HttpResponse(temp.render(context, request))
-
-    def search(keyword, user_id, page):
-        list_post = posts.objects.filter(title__icontains=keyword)
-        if user_id:
-            list_post = posts.objects.filter(user_id=user_id, title__icontains=keyword)
-        list_post = list_post.order_by('datetime_created')[::-1]
-        for item in list_post:
-            item.datetime_created = item.datetime_created.date()
-            item.datetime_updated = item.datetime_updated.date()
-        paginator = Paginator(list_post, baiviet_view.CONST_DEFAULT_RESULTS_PER_PAGE)
-
-        try:
-            list_post = paginator.page(page)
-        except PageNotAnInteger:
-            list_post = paginator.page(1)
-        except EmptyPage:
-            list_post = paginator.page(paginator.num_pages)
-        return list_post
 
     # lấy dữ liệu tạo biểu đồ line bài viết theo thời gian
     def get_chartdate(request):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
         # lấy ngày đầu tiên
         post_first = posts.objects.all().order_by('datetime_created')[::1][0:1]
         for i in post_first:
@@ -197,7 +200,7 @@ class baiviet_view():
         end_date = timezone.datetime.now()
         # lấy danh sách objects theo query
         sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
-        dl_chart = baiviet_view.data_chart(sql)
+        dl_chart = PostsView.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý danh sách object về dạng json
         labels = []
@@ -215,10 +218,11 @@ class baiviet_view():
 
     # lấy dữ liệu tạo biểu bar đồ bài viết theo user
     def get_chartuser(request):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
         # lấy danh sách object theo query
-        cursor = connection.cursor()
         sql = "Select COUNT(id) as sl, user_id From web_posts GROUP BY(user_id)"
-        dl_chart = baiviet_view.data_chart(sql)
+        dl_chart = PostsView.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý dữ liệu chuyển về json cấp cho chart
         labels = []
@@ -233,15 +237,18 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý dữ liệu chuyển về json cấp cho chart
         return kq
+
     # lấy dữ liệu tạo biểu đồ line bài viết của cá nhân đóng góp theo thời gian
     def get_chartprofile(request):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
         post_first = posts.objects.filter(user_id=request.session['username']).order_by('datetime_created')[::1][0:1]
         for i in post_first:
             start_date = i.datetime_created
         end_date = timezone.now()
         # lấy danh sách objects theo query
         sql = "Select COUNT(id) as sl, datetime_created From web_posts WHERE (user_id='"+request.session['username']+"' and datetime_created >= '"+str(start_date)+"' and datetime_created <= '"+str(end_date)+"') GROUP BY(datetime_created) ORDER BY(datetime_created)"
-        dl_chart = baiviet_view.data_chart(sql)
+        dl_chart = PostsView.data_chart(sql)
         # //lấy danh sách objects theo query
         # xử lý về json
         labels = []
@@ -256,11 +263,14 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý về json
         return kq
+
     # lấy dữ liệu tạo biểu đồ pie theo danh mục
     def get_chartdanhmuc(request):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
         # lấy danh sách object theo query
         sql = "Select COUNT(web_posts.id) as sl, category_id, web_categories.name From web_posts join web_categories on web_posts.category_id = web_categories.id GROUP BY(category_id,web_categories.name)"
-        dl_chart = baiviet_view.data_chart(sql)
+        dl_chart = PostsView.data_chart(sql)
         # //lấy danh sách object theo query
         # xử lý đưa dl về dạng json
         labels = []
@@ -279,20 +289,22 @@ class baiviet_view():
         kq = JsonResponse(dl)
         # //xử lý đưa dl về dạng json
         return kq
+
     # thực thi lệnh sql
     def data_chart(sql):
         cursor = connection.cursor()
         cursor.execute(sql)
         dl_chart = cursor.fetchall()
         return dl_chart
+
     # xuất dữ liệu tìm kiếm được ra file .csv
     def export_csv(request, search):
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
+        if not request.session.has_key('username'):
+            return redirect("dangnhap")
+        user = users.objects.get(username=request.session['username'])
         list_post = posts.objects.filter(title__icontains=search)
-        if user.group_id == 2:
+        if user.group_id == PostsView._CONST_GROUP_ID_USER:
             list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
-
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="posts.csv"'
 
@@ -348,8 +360,8 @@ class baiviet_view():
     #     # response['Content-Disposition'] = 'attachment; filename=' + docx_title
     #     # return response
 
-    def import_csv(request):
-        with open('names.csv', newline='') as csvfile:
+    def import_csv(f):
+        with open(f.name, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
         for row in reader:
             post = posts()

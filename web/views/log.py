@@ -5,9 +5,10 @@ from django.template import loader
 from django.contrib.auth.hashers import make_password, check_password
 
 
-class nguoidung_view:
-# xử lý đăng nhập
-    def dangnhap(request):
+class UsersView:
+
+    # xử lý đăng nhập
+    def login(request):
         notify = ""
         user = ""
         # kiểm tra trạng thái đăng nhập
@@ -15,10 +16,9 @@ class nguoidung_view:
             user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        list_category =categories.objects.all()
+        list_category = categories.objects.filter(show_as_menu='True')
         # xử lý đăng nhập
         if request.POST.get("btnlogin"):
-
             u = users()
             u.username = request.POST['username']
             u.email = request.POST['username']
@@ -53,11 +53,10 @@ class nguoidung_view:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
-# xử lý đăng xuất
-    def dangxuat(request):
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            del request.session['username']
-            return redirect('dangnhap')
-        else:
+
+    # xử lý đăng xuất
+    def logout(request):
+        if not request.session.has_key('username'):
             return redirect('trangchu')
+        del request.session['username']
+        return redirect('dangnhap')

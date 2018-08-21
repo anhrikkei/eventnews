@@ -61,6 +61,91 @@
 					</div>
 				</div>
 				<!--//hiện nội dung kết quả tìm kiếm-->
+				<center>
+					<nav aria-label="Page navigation example">
+						<ul class="pagination" style="color: #00a98f">
+							<li class="page-item">
+								{% if ds_timkiem.has_previous %}
+									<a class="page-links" href="../timkiem/?page=1&q={{q}}">
+										<span aria-hidden="true">&larr;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								{% else %}
+									<a aria-label="Previous" class="page-links">
+										<span aria-hidden="true">&larr;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								{% endif %}
+							</li>
+							<li class="page-item">
+								{% if ds_timkiem.has_previous %}
+									<a class="page-links" href="../timkiem/?page={{ds_timkiem.previous_page_number}}&q={{q}}">
+										<span aria-hidden="true">&laquo;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								{% else %}
+									<a aria-label="Previous" class="page-links">
+										<span aria-hidden="true">&laquo;</span>
+										<span class="sr-only">Previous</span>
+									</a>
+								{% endif %}
+							</li>
+
+							<li class="page-item">
+								{% if ds_timkiem.has_previous %}
+									<a class="page-links" href="?page={{ page_pre }}&q={{q}}">
+										{{page_pre}}
+									</a>
+								{% endif %}
+							</li>
+							<li class="page-item">
+								<a class="page-current" style="background: #00a98f; color: white">
+									{{ ds_timkiem.number }}
+								</a>
+							</li>
+							<li class="page-item">
+								{% if ds_timkiem.has_next %}
+								<a class="page-link" href="?page={{ ds_timkiem.paginator.num_pages }}&q={{q}}" aria-label="Next">
+									{{ page_nex }}
+								</a>
+								{% endif %}
+							</li>
+
+							<li class="page-item">
+								{% if ds_timkiem.has_next %}
+								<a class="page-link" href="?page={{ ds_timkiem.next_page_number }}&q={{q}}" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Next</span>
+								</a>
+								{% else %}
+								<a class="page-link" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Next</span>
+								</a>
+								{% endif %}
+							</li>
+							<li class="page-item">
+								{% if ds_timkiem.has_next %}
+								<a class="page-link" href="?page={{ ds_timkiem.paginator.num_pages }}&q={{q}}" aria-label="Next">
+									<span aria-hidden="true">&rarr;</span>
+									<span class="sr-only">Next</span>
+								</a>
+								{% else %}
+								<a class="page-link" aria-label="Next">
+									<span aria-hidden="true">&rarr;</span>
+									<span class="sr-only">Next</span>
+								</a>
+								{% endif %}
+							</li>
+						</ul>
+					</nav>
+
+
+					<small class="current" style="color: gray">
+						Tổng trang: {{ ds_timkiem.paginator.num_pages }}
+					</small>
+
+				</center>
 			</div>
 		</div>
 	</div>

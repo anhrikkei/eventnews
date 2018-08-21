@@ -4,7 +4,9 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.hashers import make_password
 
-class nguoidung_view(object):
+
+class UsersView:
+
     # cập nhật lại thông tin cá nhân
     def index(request):
         # kiểm tra trạng thái đăng nhập

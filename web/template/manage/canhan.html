@@ -87,6 +87,7 @@
             </div>
     </div>
 <script>
+$(document).ready(function(){
     $("#Anh").change(function () {
         var noImageExits = $('.tes');
         if (noImageExits) {
@@ -105,10 +106,11 @@
             }
         }
     });
+});
 </script>
 <!--validate form-->
 <script type="text/javascript">
-        jQuery( document ).ready(
+        $(document).ready(function(){
             jQuery("#btncapnhat").click(function(){
                 var user = $("#tendangnhap").val();
                 var pass = $("#matkhau1").val();
@@ -187,7 +189,7 @@
                 }
             <!--//họ tên-->
             })
-        );
+        });
 	</script>
 <!--<//validate form-->
 {%endblock%}

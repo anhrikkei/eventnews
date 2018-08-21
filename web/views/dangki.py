@@ -7,7 +7,12 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
 
-class nguoidung_view:
+
+class UsersView:
+
+    _STATUS_FORGOT_PASSWORD = 2
+    _STATUS_ACTIVATED = 1
+
 # xử lý đăng kí
     def dangki(request):
         user = ""
@@ -17,7 +22,7 @@ class nguoidung_view:
             user = users.objects.get(username=request.session['username'])
             return redirect("trangchu")
         # //kiểm tra trạng thái đăng nhập
-        ds_danhmuc = categories.objects.all()
+        list_category = categories.objects.filter(show_as_menu='True')
         # xử lý đăng ký
         if request.POST.get("btndangki"):
             notify_username = ""
@@ -58,12 +63,13 @@ class nguoidung_view:
         # tạo dict truyền biến qua temp
         context = {
             "user":user,
-            "ds_danhmuc": ds_danhmuc,
+            "ds_danhmuc": list_category,
             "thongbao": notification,
             "q": "tìm kiếm bài viết",
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+
 # xử lý kích hoạt mail
     def active(request, active_id):
         # load template
@@ -89,6 +95,7 @@ class nguoidung_view:
                 "q": "tìm kiếm bài viết",
             }
             return HttpResponse(temp.render(context, request))
+
 # xử lý email để lấy mã xác nhận
     def quenpass(request):
         # kiểm tra trạng thái đăng nhập
@@ -108,7 +115,7 @@ class nguoidung_view:
                           'Mã xác nhận để đặt lại mật khẩu: '+u.token,
                           'bcnttk12@gmail.com',
                           [u.email], fail_silently=False)
-                u.status = 2
+                u.status = UsersView._STATUS_FORGOT_PASSWORD
                 u.save()
                 return redirect('taolaipass')
             except:
@@ -121,6 +128,7 @@ class nguoidung_view:
         }
         temp = loader.get_template('quenpass.html')
         return HttpResponse(temp.render(context, request))
+
 # cập nhật lại mật khẩu
     def taolaipass(request):
         # kiểm tra trạng thái đăng nhập
@@ -134,10 +142,10 @@ class nguoidung_view:
         # xử lý cập nhật lại mật khẩu
         if request.POST.get('btnpass'):
             try:
-                u = users.objects.get(status=2, token=request.POST['txtma'])
+                u = users.objects.get(status=UsersView._STATUS_FORGOT_PASSWORD, token=request.POST['txtma'])
                 u.mat_khau = request.POST['txtmoi']
                 u.mat_khau = make_password(u.mat_khau, None, 'md5')
-                u.status = 1
+                u.status = UsersView._STATUS_ACTIVATED
                 u.save()
                 notify = "Mật khẩu đã được đặt lại thành công"
             except:

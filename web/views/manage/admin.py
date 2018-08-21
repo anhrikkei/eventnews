@@ -4,6 +4,7 @@ from django.template import loader
 from django.shortcuts import redirect
 from django.utils import timezone
 
+
 def index(request):
     try:
         # kiểm tra trạng thái đăng nhập
@@ -28,6 +29,6 @@ def index(request):
             return HttpResponse(temp.render(context, request))
         else:
             return redirect('dangnhap')
-    except:
+    except():
         return HttpResponse('error 404')
 

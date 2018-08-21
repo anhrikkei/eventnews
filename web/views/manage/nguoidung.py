@@ -4,7 +4,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.template import loader
 
-class nguoidung_view:
+
+class UsersView:
     # hiển thị danh sách người dùng
     def danhsach(request):
         user = ""
@@ -25,6 +26,7 @@ class nguoidung_view:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
+
     # xóa người dùng
     def xoa(request,user_id):
         # kiểm tra trạng thái đăng nhập
@@ -38,6 +40,7 @@ class nguoidung_view:
         # xử lý xóa người dùng
         users.objects.get(username=user_id).delete()
         return redirect('nguoidung_ds')
+
     # khóa/mở tài khoản người dùng
     def trangthai(request,user_id):
         # kiểm tra trạng thái đăng nhập
@@ -57,6 +60,7 @@ class nguoidung_view:
         u.save()
         # //xử lý thay đổi trạng thái tài khoản
         return redirect('nguoidung_ds')
+
     # lấy dữ liệu trả về khi search
     def get_dlsearch(request):
         search = request.GET.get("search", "")

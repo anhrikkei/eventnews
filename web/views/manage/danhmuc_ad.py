@@ -6,9 +6,10 @@ from django.template import loader
 from django.utils import timezone
 # import time
 
-class danhmuc_view:
+class CategoriesView:
+
     # hiện thị danh sách danh mục
-    def danhsach(request):
+    def list(request):
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
@@ -44,7 +45,7 @@ class danhmuc_view:
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
     # tạo danh mục
-    def them(request):
+    def create(request):
         user = ""
         # kiểm tra trangnj thái đăng nhập
         if request.session.has_key('username'):
@@ -95,7 +96,7 @@ class danhmuc_view:
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
     # cập nhật danh mục
-    def sua(request, dm_id):
+    def update(request, dm_id):
         user=""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
@@ -133,7 +134,7 @@ class danhmuc_view:
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
     # xóa danh mục
-    def xoa(request, dm_id):
+    def delete(request, dm_id):
         user=""
         if request.session.has_key('username'):
             user = users.objects.get(username=request.session['username'])
@@ -146,7 +147,7 @@ class danhmuc_view:
             return redirect("admin")
 
     # chọn danh mục hiện trên menu
-    def is_menu(request, dm_id):
+    def show_as_menu(request, dm_id):
         user = ""
         # kiểm tra trạng thái đăng nhập
         if request.session.has_key('username'):
