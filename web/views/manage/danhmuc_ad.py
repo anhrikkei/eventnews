@@ -4,60 +4,63 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.template import loader
 from django.utils import timezone
-# import time
+import csv
+
 
 class CategoriesView:
 
-    # hiện thị danh sách danh mục
+    _CONST_GROUP_ID_ADMIN = 1
+    _CONST_GROUP_ID_USERS = 2
+    _CONST_STATUS_SHOW_AS_MENU = 1
+    _CONST_STATUS_HIDE_AS_MENU = 0
+    _CONST_DEFAULT_RESULTS_PER_PAGE = 8
+
+    # Display categories
     def list(request):
-        user = ""
-        # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
+        # check the login status
+        if not request.session.has_key('username'):
             return redirect("admin")
-        if user.group_id != 1:
+        user = users.objects.get(username=request.session['username'])
+        request.session.set_expiry(1800)
+        if user.group_id != CategoriesView._CONST_GROUP_ID_ADMIN:
             return redirect('admin')
-        # //kiểm tra trạng thái đăng nhập
+        # //check the login status
         list_category = categories.objects.all().order_by('datetime_created')[::-1]
         for i in list_category:
             i.datetime_updated = i.datetime_updated.date()
             i.datetime_created = i.datetime_created.date()
-        # phân trang
+        # paging
         paginator = Paginator(list_category, 8)
-        pageNumber = request.GET.get('page')
+        page_number = request.GET.get('page')
         try:
-            list_category = paginator.page(pageNumber)
+            list_category = paginator.page(page_number)
         except PageNotAnInteger:
             list_category = paginator.page(1)
         except EmptyPage:
             list_category = paginator.page(paginator.num_pages)
-        # //phân trang
+        # //paging
         # load template
         temp = loader.get_template('manage/danhmuc_ds.html')
-        # tạo dict truyền biến qua temp
-        index = []
+        # dict provide for temp using
         context = {
             "ds_danhmuc": list_category,
             "user": user,
         }
-        # //tạo dict truyền biến qua temp
+        # //dict provide for temp using
         return HttpResponse(temp.render(context, request))
-    # tạo danh mục
+
+    # Action processing create a category
     def create(request):
-        user = ""
-        # kiểm tra trangnj thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
+        # check the login status
+        if not request.session.has_key('username'):
             return redirect("admin")
-        if user.group_id != 1:
+        user = users.objects.get(username=request.session['username'])
+        request.session.set_expiry(1800)
+        if user.group_id != CategoriesView._CONST_GROUP_ID_ADMIN:
             return redirect('admin')
-        # //kiểm tra trangnj thái đăng nhập
+        # //check the login status
         ngay_hientai = timezone.datetime.now().date()
-        # xử lý thêm danh mục
+        # action processing to create a category
         thongbao = ""
         if request.POST.get('btnthem'):
             try:
@@ -71,8 +74,6 @@ class CategoriesView:
                 category.show_as_menu = request.POST['rbn']
                 category.save()
                 thongbao = "Thêm thành công, tên được thêm _2 do có tên trùng lặp"
-                # time.sleep(5)
-                # return redirect('danhmuc_ds')
             except:
                 category = categories()
                 category.name = request.POST['txtten']
@@ -83,7 +84,7 @@ class CategoriesView:
                 category.show_as_menu = request.POST['rbn']
                 category.save()
                 return redirect('danhmuc_ds')
-        # //xử lý thêm danh mục
+        # //action processing to create a category
         # load template
         temp = loader.get_template('manage/danhmuc_them.html')
         # tạo dict truyền biến qua temp
@@ -95,22 +96,21 @@ class CategoriesView:
         }
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
-    # cập nhật danh mục
+
+    #  Action processing update category
     def update(request, dm_id):
-        user=""
-        # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-            request.session.set_expiry(1800)
-        else:
+        # check the login status
+        if not request.session.has_key('username'):
             return redirect("admin")
-        if user.group_id != 1:
+        user = users.objects.get(username=request.session['username'])
+        request.session.set_expiry(1800)
+        if user.group_id != CategoriesView._CONST_GROUP_ID_ADMIN:
             return redirect('admin')
-        # //kiểm tra trạng thái đăng nhập
+        # //check the login status
         dm = categories.objects.get(id=dm_id)
         dm.datetime_created = dm.datetime_created.date()
         ngay_hientai = timezone.datetime.now().date()
-        # xử lý cập nhật danh mục
+        # action processing update a category
         thongbao = ""
         if request.POST.get('btnsua'):
             dm = categories.objects.get(id=dm_id)
@@ -120,10 +120,10 @@ class CategoriesView:
             dm.show_as_menu = request.POST['rbn']
             dm.save()
             return redirect('danhmuc_ds')
-        # //xử lý cập nhật danh mục
+        # //action processing update a category
         # load template
         temp = loader.get_template('manage/danhmuc_sua.html')
-        # tạo dict truyền biến qua temp
+        # dict provide for temp using
         context = {
             "dm": dm,
             "ngay_hientai": ngay_hientai,
@@ -131,14 +131,14 @@ class CategoriesView:
             "nguoitao": request.session['username'],
             "thongbao": thongbao,
         }
-        # //tạo dict truyền biến qua temp
+        # //dict provide for temp using
         return HttpResponse(temp.render(context, request))
-    # xóa danh mục
+
+    #  Action processing delete category
     def delete(request, dm_id):
-        user=""
         if request.session.has_key('username'):
             user = users.objects.get(username=request.session['username'])
-            if user.group_id == 1:
+            if user.group_id == CategoriesView._CONST_GROUP_ID_ADMIN:
                 categories.objects.get(id=dm_id).delete()
                 return redirect('danhmuc_ds')
             else:
@@ -146,46 +146,67 @@ class CategoriesView:
         else:
             return redirect("admin")
 
-    # chọn danh mục hiện trên menu
+    # Select category show as menu
     def show_as_menu(request, dm_id):
-        user = ""
-        # kiểm tra trạng thái đăng nhập
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
-        else:
+        # check the login status
+        if not request.session.has_key('username'):
             return redirect("admin")
-        if user.group_id != 1:
+        user = users.objects.get(username=request.session['username'])
+        if user.group_id != CategoriesView._CONST_GROUP_ID_ADMIN:
             return redirect('admin')
-        # //kiểm tra trạng thái đăng nhập
-        # xử lý cập nhật trạng thái danh mục
-        dm = categories.objects.get(id=dm_id)
-        dm.datetime_updated = timezone.datetime.now()
-        if dm.show_as_menu == 1:
-            dm.show_as_menu = 0
-        elif dm.show_as_menu == 0:
-            dm.show_as_menu = 1
-        dm.save()
-        # //xử lý cập nhật trạng thái danh mục
+        # //check the login status
+        # actions processing update category status
+        category = categories.objects.get(id=dm_id)
+        category.datetime_updated = timezone.datetime.now()
+        if category.show_as_menu == CategoriesView._CONST_STATUS_SHOW_AS_MENU:
+            category.show_as_menu = CategoriesView._CONST_STATUS_HIDE_AS_MENU
+        elif category.show_as_menu == CategoriesView._CONST_STATUS_HIDE_AS_MENU:
+            category.show_as_menu = CategoriesView._CONST_STATUS_SHOW_AS_MENU
+        category.save()
+        # //actions processing update category status
         return redirect('danhmuc_ds')
-    # lấy dữ liệu trả về khi search
+
+    # Get data for search
     def get_dlsearch(request):
-        search = request.POST.get("search", "")
+        search = request.GET.get("search", "")
+        page = request.GET.get("page", 1)
         list_category = categories.objects.filter(name__icontains=search)
         count_result = list_category.count()
         for i in search:
             if i == "-":
                 list_category = categories.objects.filter(datetime_created__icontains=search)
                 count_result = list_category.count()
+        list_category = list_category.order_by('datetime_created')
         for i in list_category:
             i.datetime_updated = i.datetime_updated.date()
             i.datetime_created = i.datetime_created.date()
+
+        paginator = Paginator(list_category, CategoriesView._CONST_DEFAULT_RESULTS_PER_PAGE)
+        try:
+            list_category = paginator.page(page)
+        except PageNotAnInteger:
+            list_category = paginator.page(1)
+        except EmptyPage:
+            list_category = paginator.page(paginator.num_pages)
         # load template
         temp = loader.get_template('manage/danhmuc_ajaxsearch.html')
-        # tạo dict truyền biến qua temp
+        # dict provide for temp using
         context = {
             "ds_danhmuc": list_category,
             "search": search,
-            "count": count_result,
+            "count_result": count_result,
         }
-        # //tạo dict truyền biến qua temp
+        # //dict provide for temp using
         return HttpResponse(temp.render(context, request))
+
+    def export_csv(request, search):
+        if not request.session.has_key('username'):
+            return redirect('dangnhap')
+        list_category = categories.objects.filter(name__icontains=search)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="categories.csv"'
+        writer = csv.writer(response)
+        for category in list_category:
+            writer.writerow([category.name, category.datetime_created, category.datetime_updated, category.user_id, category.show_as_menu])
+        writer.writerow(['Count result: ' + str(list_category.count())])
+        return response

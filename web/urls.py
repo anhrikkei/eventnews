@@ -25,6 +25,7 @@ urlpatterns = [
     path('danhmuc_xoa/<int:dm_id>', danhmuc_ad.CategoriesView.delete, name="danhmuc_xoa"),
     path('is_menu/<int:dm_id>', danhmuc_ad.CategoriesView.show_as_menu, name="is_menu"),
     path('danhmuc_ajaxsearch/', danhmuc_ad.CategoriesView.get_dlsearch, name="danhmuc_ajaxsearch"),
+    path('danhmuc_export_csv/<str:search>', danhmuc_ad.CategoriesView.export_csv, name="danhmuc_export_csv"),
 
     path('baiviet_ds/', baiviet_ad.PostsView.list, name="baiviet_ds"),
     path('baiviet_them/', baiviet_ad.PostsView.create, name="baiviet_them"),
@@ -36,12 +37,13 @@ urlpatterns = [
     path('baiviet_getchart_profile/', baiviet_ad.PostsView.get_chartprofile, name="baiviet_getchart_profile"),
     path('baiviet_getchart_danhmuc/', baiviet_ad.PostsView.get_chartdanhmuc, name="baiviet_getchart_danhmuc"),
     path('baiviet_export_csv/<str:search>', baiviet_ad.PostsView.export_csv, name="baiviet_export_csv"),
-    path('baiviet_export_excel/<str:search>', baiviet_ad.PostsView.export_excel, name="baiviet_export_excel"),
+    # path('baiviet_export_excel/<str:search>', baiviet_ad.PostsView.export_excel, name="baiviet_export_excel"),
     # path('baiviet_export_docx/', baiviet_ad.baiviet_view.export_docx, name="baiviet_export_excel"),
 
-    path('nguoidung_ds/', nguoidung.UsersView.danhsach, name="nguoidung_ds"),
-    path('nguoidung_xoa/<str:user_id>', nguoidung.UsersView.xoa, name="nguoidung_xoa"),
-    path('nguoidung_trangthai/<str:user_id>', nguoidung.UsersView.trangthai, name="nguoidung_trangthai"),
-    path('canhan/', canhan.UsersView.index, name="canhan"),
+    path('nguoidung_ds/', nguoidung.UsersView.list, name="nguoidung_ds"),
+    path('nguoidung_xoa/<str:user_id>', nguoidung.UsersView.delete, name="nguoidung_xoa"),
+    path('nguoidung_trangthai/<str:user_id>', nguoidung.UsersView.is_lock, name="nguoidung_trangthai"),
+    path('canhan/', nguoidung.UsersView.update_profile, name="canhan"),
     path('nguoidung_ajaxsearch/', nguoidung.UsersView.get_dlsearch, name="nguoidung_ajaxsearch"),
+    path('nguoidung_export_csv/<str:search>', nguoidung.UsersView.export_csv, name="nguoidung_export_csv"),
 ]

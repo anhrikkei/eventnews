@@ -109,6 +109,14 @@
                 </span>
             </ul>
         </div>
+        {% if search %}
+         <div id="export" class="pull-left">
+            <ul class="pagination pagination-sm">
+                <a class="export" href="../nguoidung_export_csv/{{search}}"><i class="fa fa-download">.csv</i></a> |
+                {{count_result}}
+             </ul>
+         </div>
+        {% endif %}
         <!--//phân trang-->
     {% else %}
         <center> không có dữ liệu thỏa mãn...</center>

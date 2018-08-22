@@ -7,11 +7,6 @@ from django.utils import timezone
 from django.db import connection
 from django.http import JsonResponse
 import csv
-import os
-from django.utils.encoding import smart_str,smart_text
-# from docx import newdocument, savedocx
-# from __future__ import print_function
-# from mailmerge import MailMerge
 
 
 class PostsView:
@@ -20,7 +15,7 @@ class PostsView:
     _CONST_GROUP_ID_USER = 2
     _CONST_DEFAULT_RESULTS_PER_PAGE = 8
 
-    # hiển thị trang danh sách bài viết
+    # Display posts
     def list(request):
         # kiểm tra trạng thái đăng nhập
         if not request.session.has_key('username'):
@@ -39,13 +34,14 @@ class PostsView:
         # tạo Dict truyền biến qua temp
         context = {
             "user": user,
-            "list_post": list_post,
+            "ds_baiviet": list_post,
             "count_result": count_result,
+            "search": keyword,
         }
         # //tạo Dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
 
-    # lấy dữ liệu trả về khi tìm kiếm
+    # Get html for search action
     def get_dlsearch(request):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -66,8 +62,10 @@ class PostsView:
             "search": keyword,
         }
         # //tạo dict truyền biến qua temp
+        # return JsonResponse(context)
         return HttpResponse(temp.render(context, request))
 
+    # Get data for search
     def search(request, keyword, user, page):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -93,7 +91,7 @@ class PostsView:
         }
         return data
 
-    # thêm bài viết
+    # Action processing create a post
     def create(request):
         # kiểm tra trạng thái đăng nhập
         if not request.session.has_key('username'):
@@ -130,7 +128,7 @@ class PostsView:
         }
         return HttpResponse(temp.render(context, request))
 
-    # cập nhật bài viết
+    # Action processing update a post
     def update(request, bv_id):
         # kiểm tra trạng thái đăng nhập
         if not request.session.has_key('username'):
@@ -171,7 +169,7 @@ class PostsView:
         # //tạo dict truyền biến qua temp
         return HttpResponse(temp.render(context, request))
 
-    # xóa bài viết
+    # Action processing delete a post
     def delete(request, bv_id):
         user = ""
         if request.session.has_key('username'):
@@ -188,7 +186,7 @@ class PostsView:
         else:
             return redirect('admin')
 
-    # lấy dữ liệu tạo biểu đồ line bài viết theo thời gian
+    # Get data for posts chart from time to time(chart line)
     def get_chartdate(request):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -216,7 +214,7 @@ class PostsView:
         # //xử lý danh sách object về dạng json
         return kq
 
-    # lấy dữ liệu tạo biểu bar đồ bài viết theo user
+    # Get data for posts chart by author (chart bar)
     def get_chartuser(request):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -238,7 +236,7 @@ class PostsView:
         # //xử lý dữ liệu chuyển về json cấp cho chart
         return kq
 
-    # lấy dữ liệu tạo biểu đồ line bài viết của cá nhân đóng góp theo thời gian
+    # Get data for posts of user chart from time to time (chart line)
     def get_chartprofile(request):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -264,7 +262,7 @@ class PostsView:
         # //xử lý về json
         return kq
 
-    # lấy dữ liệu tạo biểu đồ pie theo danh mục
+    # Get data for posts by category (chart pie)
     def get_chartdanhmuc(request):
         if not request.session.has_key('username'):
             return redirect('dangnhap')
@@ -290,21 +288,23 @@ class PostsView:
         # //xử lý đưa dl về dạng json
         return kq
 
-    # thực thi lệnh sql
+    # Processing sql by user put info
     def data_chart(sql):
         cursor = connection.cursor()
         cursor.execute(sql)
         dl_chart = cursor.fetchall()
         return dl_chart
 
-    # xuất dữ liệu tìm kiếm được ra file .csv
+    # Get data searched to .csv file
     def export_csv(request, search):
         if not request.session.has_key('username'):
             return redirect("dangnhap")
         user = users.objects.get(username=request.session['username'])
+        if not search:
+            search = ""
         list_post = posts.objects.filter(title__icontains=search)
         if user.group_id == PostsView._CONST_GROUP_ID_USER:
-            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
+            list_post = posts.objects.filter(username=user.username, title__icontains=search)
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="posts.csv"'
 
@@ -315,50 +315,24 @@ class PostsView:
         writer.writerow(['Count result: ' + str(list_post.count())])
         return response
 
-    def export_excel(request, search):
-        if request.session.has_key('username'):
-            user = users.objects.get(username=request.session['username'])
+    def export_xsl(request, search):
+        if not request.session.has_key('username'):
+            return redirect("dangnhap")
+        user = users.objects.get(username=request.session['username'])
+        if not search:
+            search = ""
         list_post = posts.objects.filter(title__icontains=search)
-        if user.group_id == 2:
-            list_post = posts.objects.filter(user_id=user.username, title__icontains=search)
-
-        response = HttpResponse(content_type='xls')
+        if user.group_id == PostsView._CONST_GROUP_ID_USER:
+            list_post = posts.objects.filter(username=user.username, title__icontains=search)
+        response = HttpResponse(content_type='text/xsl')
         response['Content-Disposition'] = 'attachment; filename="posts.csv"'
 
-        writer = csv.writer(response)
+        writer = csv.writer(response, dialect='excel')
         writer.writerow(['Tittle', 'date_created', 'date_updated', 'user', 'views', 'categories'])
         for post in list_post:
-            writer.writerow([post.title, post.datetime_created, post.datetime_updated, post.user_id, post.views, post.category.name, u"ư"])
+            writer.writerow([post.title, post.datetime_created, post.datetime_updated, post.user_id, post.views, post.category.name])
         writer.writerow(['Count result: ' + str(list_post.count())])
         return response
-
-    # def export_docx(request):
-    #     pass
-    #     # document = newdocument()
-    #     # docx_title = "TEST_DOCUMENT.docx"
-    #     # # ---- Cover Letter ----
-    #     # # document.add_picture((r'%s/static/images/my-header.png' % (settings.PROJECT_PATH)), width=Inches(4))
-    #     # document.add_paragraph()
-    #     # document.add_paragraph("%s" % timezone.datetime.date.today().strftime('%B %d, %Y'))
-    #     #
-    #     # document.add_paragraph('Dear Sir or Madam:')
-    #     # document.add_paragraph('We are pleased to help you with your widgets.')
-    #     # document.add_paragraph('Please feel free to contact me for any additional information.')
-    #     # document.add_paragraph('I look forward to assisting you in this project.')
-    #     #
-    #     # document.add_paragraph()
-    #     # document.add_paragraph('Best regards,')
-    #     # document.add_paragraph('Acme Specialist 1]')
-    #     # document.add_page_break()
-    #     #
-    #     # # Prepare document for download
-    #     # # -----------------------------
-    #     # savedocx(document)
-    #     # response = HttpResponse(
-    #     #     content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    #     # )
-    #     # response['Content-Disposition'] = 'attachment; filename=' + docx_title
-    #     # return response
 
     def import_csv(f):
         with open(f.name, newline='') as csvfile:
